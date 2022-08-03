@@ -1,2 +1,2 @@
-# nixos-configuration
+# noonos: nixos-configuration
 wip
