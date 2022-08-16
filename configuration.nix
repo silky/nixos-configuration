@@ -90,28 +90,95 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    alsa-utils
-    blender
+    # net
+    dnsutils
+    httpie
+    inetutils
+    jnettop
+    ngrep
+    nmap
+    rsync
+    socat
+    websocat
+    wget
+    # files
+    bat
+    delta
+    diskonaut
+    dos2unix
+    duf
+    exa
+    fd
+    file
+    lsd
+    ranger
+    ripgrep
+    sd
+    tree
+    unzip
+    watchexec
+    zip
+    # shell
+    bc
+    bpytop
+    choose
+    fx
+    gnupg
+    htop
+    iotop
+    jc
+    jq
+    lsof
+    pass
+    zsh
+    # dev
     customNvim
-    dmenu
+    difftastic
     docker
     docker-compose
+    gdb
+    git
+    konsole
+    lazygit
+    tmate
+    universal-ctags
+    vscode-with-extensions
+    # os
+    cachix
+    efibootmgr
     firefox
     flameshot
-    git
     google-chrome
+    nix-diff
+    nix-du
+    nix-index
+    nix-output-monitor
+    nox
+    pciutils
+    usbutils
+    # build
+    autoconf
+    automake
+    binutils
+    gcc
+    gmp
+    gnumake
+    libffi
+    libffi.dev
+    libtool
+    pkg-config
+    stack
+    zlib
+    zlib.dev
+    # misc
+    alsa-utils
+    blender
+    dmenu
     home-manager
-    httpie
     inkscape
-    jq
-    konsole
     obsidian
     pandoc
-    stack
-    tmate
-    vscode-with-extensions
-    wget
-    zsh
+    xsel
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
