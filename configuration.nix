@@ -146,6 +146,7 @@
     # os
     cachix
     efibootmgr
+    feh
     firefox
     flameshot
     google-chrome
