@@ -94,8 +94,10 @@
     blender
     customNvim
     dmenu
+    firefox
     flameshot
     git
+    google-chrome
     home-manager
     httpie
     inkscape
