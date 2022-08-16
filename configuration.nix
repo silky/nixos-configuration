@@ -1,12 +1,9 @@
 # /etc/nixos/configuration.nix
 
-
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-
 { config, pkgs, ... }:
-
   let customNvim =
     pkgs.neovim.override {
       configure = {
@@ -19,8 +16,6 @@
 
   in
 {
-
-
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
@@ -59,17 +54,18 @@
   # Select internationalisation properties.
   i18n.defaultLocale = "en_GB.utf8";
 
-  # Configure keymap in X11
   services.xserver = {
     enable = true;
     layout = "us";
     xkbVariant = "";
-    windowManager.xmonad.enable = true;
-    windowManager.xmonad.enableContribAndExtras = true;
-    windowManager.xmonad.config = ./xmonad.hs;
-    windowManager.xmonad.extraPackages = p: [
-        p.split
-    ];
+    windowManager {
+      xmonad = {
+        enable = true;
+        enableContribAndExtras = true;
+        extraPackages = p: [ p.split ];
+        config = /home/noon/dev/dotfiles/.xmonad/xmonad.hs;
+      };
+    };
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -79,7 +75,10 @@
     extraGroups = [ "networkmanager" "wheel" "dialout" ];
     packages = with pkgs; [];
     shell = pkgs.zsh;
-    openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGpcsiEomaNhn2TWqq30hnjLcNCXfbNmoVCGygkiFWXR noon@tweaglt" ];
+    openssh = {
+      authorizedKeys.keys = [];
+    }
+    # openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGpcsiEomaNhn2TWqq30hnjLcNCXfbNmoVCGygkiFWXR noon@tweaglt" ];
   };
 
   # Enable automatic login for the user.
@@ -91,18 +90,24 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    wget
-    # neovim
-    customNvim
-    git
-    home-manager
-    zsh
-    stack
-    pandoc
-    konsole
     alsa-utils
+    blender
+    customNvim
     dmenu
     flameshot
+    git
+    home-manager
+    httpie
+    inkscape
+    jq
+    konsole
+    obsidian
+    pandoc
+    stack
+    tmate
+    vscode-with-extensions
+    wget
+    zsh
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -131,5 +136,4 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "22.05"; # Did you read the comment?
-
 }
