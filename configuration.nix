@@ -94,6 +94,8 @@
     blender
     customNvim
     dmenu
+    docker
+    docker-compose
     firefox
     flameshot
     git
