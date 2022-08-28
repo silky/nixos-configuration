@@ -1,24 +1,73 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
+# Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 { config, pkgs, lib, ... }:
   let customNvim =
+
+   let vim-autoread = pkgs.vimUtils.buildVimPlugin {
+        name = "vim-autoread";
+        src = pkgs.fetchFromGitHub {
+          owner = "djoshea";
+          repo = "vim-autoread";
+          rev = "7e83d47a71fdafc271005fc39c89863204278c77";
+          sha256 = "sha256-IGgJ/D2AGDtbO+RZk2zd+zO9ZtANsle4QSjsh+VOXpg=";
+        };
+      };
+      vim-syntax-shakespeare = pkgs.vimUtils.buildVimPlugin {
+        name = "vim-syntax-shakespeare";
+        src = pkgs.fetchFromGitHub {
+          owner = "pbrisbin";
+          repo = "vim-syntax-shakespeare";
+          rev = "2f4f61eae55b8f1319ce3a086baf9b5ab57743f3";
+          sha256 = "sha256-sdCXJOvB+vJE0ir+qsT/u1cHNxrksMnqeQi4D/Vg6UA=";
+        };
+      };
+      cabal-project-vim = pkgs.vimUtils.buildVimPlugin {
+        name = "cabal-project-vim";
+        src = pkgs.fetchFromGitHub {
+          owner = "vmchale";
+          repo = "cabal-project-vim";
+          rev = "0d41e7e41b1948de84847d9731023407bf2aea04";
+          sha256 = "sha256-j1igpjk1+j/1/y99ZaI3W5+VYNmQqsFp2qX4qzkpNpc=";
+        };
+      };
+    in
+
+
     pkgs.neovim.override {
       configure = {
         customRC = "source " + /home/noon/dev/dotfiles/init.vim;
         plug.plugins = with pkgs.vimPlugins; [
+          cabal-project-vim
+          dhall-vim
+          editorconfig-vim
+          elm-vim
+          fzf-vim
           fzfWrapper
+          haskell-vim
+          purescript-vim
+          supertab
+          typescript-vim
+          unicode-vim
+          vim-autoread
+          vim-commentary
+          vim-easy-align
+          vim-easymotion
+          vim-nix
+          vim-ormolu
+          vim-syntax-shakespeare
+          vim-toml
+          vim-vue
+          xterm-color-table
         ];
       };
     };
-in
-
+  in
 {
   imports =
     [ # Include the results of the hardware scan.
       <nixos-hardware/lenovo/thinkpad/x1/9th-gen>
-      ./hardware-configuration.nix
+      /etc/nixos/hardware-configuration.nix
     ];
 
   fonts.fonts = with pkgs; [
