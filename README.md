@@ -4,8 +4,7 @@ wip
 
 #### Todo
 
-- [ ] Vim plugins
-- [ ] Vim plugins
+- [x] Vim plugins
 - [ ] Vim colourscheme
 - [ ] Ssh key
 - [ ] Terminal colour scheme
