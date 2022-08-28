@@ -12,3 +12,7 @@ wip
 - [ ] Aliases on root:
       - `rb` -> `nixos-rebuild switch -p`
       - ???
+
+#### Longer todos/maybe todos
+
+- [ ] Properly use home manager?
