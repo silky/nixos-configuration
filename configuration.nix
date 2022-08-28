@@ -1,31 +1,35 @@
-# /etc/nixos/configuration.nix
-
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-{ config, pkgs, ... }:
+
+{ config, pkgs, lib, ... }:
   let customNvim =
     pkgs.neovim.override {
       configure = {
         customRC = "source " + /home/noon/dev/dotfiles/init.vim;
         plug.plugins = with pkgs.vimPlugins; [
-          vim-go
+          fzfWrapper
         ];
       };
     };
+in
 
-  in
 {
   imports =
     [ # Include the results of the hardware scan.
+      <nixos-hardware/lenovo/thinkpad/x1/9th-gen>
       ./hardware-configuration.nix
-      <home-manager/nixos>
     ];
 
-  fonts.fonts = [
-    (pkgs.nerdfonts.override { fonts = ["FiraCode" "VictorMono"]; })
-    pkgs.raleway
+  fonts.fonts = with pkgs; [
+    (nerdfonts.override { fonts = ["FiraCode"]; })
+    raleway
+    source-code-pro
+    source-sans-pro
+    source-serif-pro
   ];
+
+  hardware.video.hidpi.enable = lib.mkDefault true;
 
   nix.extraOptions = ''
       experimental-features = nix-command flakes recursive-nix ca-derivations
@@ -34,12 +38,22 @@
     '';
 
   # Bootloader.
-  boot.loader.grub.enable = true;
-  boot.loader.grub.device = "/dev/sda";
-  boot.loader.grub.useOSProber = true;
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.efi.efiSysMountPoint = "/boot/efi";
+
+  boot.kernelPackages = pkgs.linuxKernel.packages.linux_5_19;
+
+  # Setup keyfile
+  boot.initrd.secrets = {
+    "/crypto_keyfile.bin" = null;
+  };
+
+  # Enable swap on luks
+  boot.initrd.luks.devices."luks-a697f63f-f54e-4d05-b906-1062408e785c".device = "/dev/disk/by-uuid/a697f63f-f54e-4d05-b906-1062408e785c";
+  boot.initrd.luks.devices."luks-a697f63f-f54e-4d05-b906-1062408e785c".keyFile = "/crypto_keyfile.bin";
 
   networking.hostName = "otherwise"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -54,11 +68,46 @@
   # Select internationalisation properties.
   i18n.defaultLocale = "en_GB.utf8";
 
+  # Configure console keymap
+  console.keyMap = "us";
+
+  # Define a user account.
+  users.users.noon = {
+    isNormalUser = true;
+    description = "noon";
+    extraGroups = [ "networkmanager" "wheel" "dialout" ];
+    packages = with pkgs; [];
+    shell = pkgs.zsh;
+    openssh = {
+      authorizedKeys.keys = [];
+    };
+  };
+
   services.xserver = {
     enable = true;
+    xkbOptions = "caps:escape";
     layout = "us";
     xkbVariant = "";
-    windowManager {
+
+    displayManager = {
+      sessionCommands = ''
+        # Set a background.
+        /home/noon/.fehbg
+
+        # To kill the screen saver.
+        xset s off -dpms
+
+        # Default to the laptop layout.
+        /home/noon/.screenlayout/laptop.sh
+      '';
+
+      autoLogin = {
+        user = "noon";
+        enable = true;
+      };
+    };
+
+    windowManager = {
       xmonad = {
         enable = true;
         enableContribAndExtras = true;
@@ -68,21 +117,6 @@
     };
   };
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.noon = {
-    isNormalUser = true;
-    description = "noon";
-    extraGroups = [ "networkmanager" "wheel" "dialout" ];
-    packages = with pkgs; [];
-    shell = pkgs.zsh;
-    openssh = {
-      authorizedKeys.keys = [];
-    }
-    # openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGpcsiEomaNhn2TWqq30hnjLcNCXfbNmoVCGygkiFWXR noon@tweaglt" ];
-  };
-
-  # Enable automatic login for the user.
-  services.getty.autologinUser = "noon";
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -142,11 +176,12 @@
     lazygit
     tmate
     universal-ctags
+    kdiff3
     vscode-with-extensions
     # os
-    cachix
-    efibootmgr
     feh
+    service-wrapper
+    arandr
     firefox
     flameshot
     google-chrome
@@ -175,7 +210,6 @@
     alsa-utils
     blender
     dmenu
-    home-manager
     inkscape
     obsidian
     pandoc
@@ -194,6 +228,11 @@
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
+
+  environment.variables = {
+    GDK_SCALE = "2";
+    GDK_DPI_SCALE = "0.5";
+  };
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
