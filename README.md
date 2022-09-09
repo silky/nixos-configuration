@@ -15,3 +15,15 @@ wip
 #### Longer todos/maybe todos
 
 - [ ] Properly use home manager?
+
+
+### Notes
+
+
+To make Stack work (sad):
+
+```
+# ~/.stack/config.yaml
+nix:
+  packages: [ zlib.dev, zlib.out, pkgconfig ]
+```
