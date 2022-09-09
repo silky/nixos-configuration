@@ -13,6 +13,15 @@
           sha256 = "sha256-IGgJ/D2AGDtbO+RZk2zd+zO9ZtANsle4QSjsh+VOXpg=";
         };
       };
+      noon-light-theme = pkgs.vimUtils.buildVimPlugin {
+        name = "noon-light-theme";
+        src = pkgs.fetchFromGitHub {
+          owner = "silky";
+          repo = "noon-light-vim";
+          rev = "5746f68d4a407ddbc3add2f60db758b9b178dcc4";
+          sha256 = "sha256-OLDb/yMs6sUDSrt8fFa82pF6p9eeNi02N2PKrto/C6I=";
+        };
+      };
       vim-syntax-shakespeare = pkgs.vimUtils.buildVimPlugin {
         name = "vim-syntax-shakespeare";
         src = pkgs.fetchFromGitHub {
@@ -31,8 +40,8 @@
           sha256 = "sha256-j1igpjk1+j/1/y99ZaI3W5+VYNmQqsFp2qX4qzkpNpc=";
         };
       };
-    in
 
+    in
 
     pkgs.neovim.override {
       configure = {
@@ -45,6 +54,7 @@
           fzf-vim
           fzfWrapper
           haskell-vim
+          noon-light-theme
           purescript-vim
           supertab
           typescript-vim
@@ -169,6 +179,14 @@
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
+
+  environment.interactiveShellInit = ''
+    alias v='nvim'
+
+    function rb {
+      nixos-rebuild switch -p "$(date '+%Y-%m-%d %H:%M:%S') - $1"
+    }
+  '';
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
