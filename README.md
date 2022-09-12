@@ -5,10 +5,10 @@ wip
 #### Todo
 
 - [x] Vim plugins
-- [ ] Vim colourscheme
+- [x] Vim colourscheme
 - [ ] Ssh key
 - [ ] Terminal colour scheme
-- [ ] Aliases on root:
+- [x] Aliases on root:
       - `rb` -> `nixos-rebuild switch -p`
       - ???
 
