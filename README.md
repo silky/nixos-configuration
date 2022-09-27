@@ -33,6 +33,7 @@ Starting from nothing:
 
 ### Todo
 
+- [ ] `~/.stack/config.yaml`
 - [ ] git config
 - [ ] fix up colours in zsh theme
 - [ ] other random stuff
