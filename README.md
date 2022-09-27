@@ -34,6 +34,10 @@ Starting from nothing:
 - [ ] git config
 - [ ] fix up colours in zsh theme
 - [ ] other random stuff
+- [ ] make home-manager "actually" work;
+  - [ ] i.e. ensure there's a home-manager command
+  - [ ] ensure it can be re-run without being root
+  - [ ] etc
 - [x] noon-light zsh theme
 - [x] konsole configuration
   - [x] symlink to editable files instead of readonly ones.
