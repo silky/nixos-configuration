@@ -1,8 +1,8 @@
-# Help is available in the configuration.nix(5) man page
+# Edit this configuration file to define what should be installed on
+# your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 { config, pkgs, lib, ... }:
-  let customNvim =
 
    let vim-autoread = pkgs.vimUtils.buildVimPlugin {
         name = "vim-autoread";
@@ -41,9 +41,7 @@
         };
       };
 
-    in
-
-    pkgs.neovim.override {
+    customNvim = pkgs.neovim.override {
       configure = {
         customRC = "source " + /home/noon/dev/dotfiles/init.vim;
         plug.plugins = with pkgs.vimPlugins; [
@@ -73,50 +71,42 @@
       };
     };
   in
+
 {
   imports =
-    [ # Include the results of the hardware scan.
-      <nixos-hardware/lenovo/thinkpad/x1/9th-gen>
-      /etc/nixos/hardware-configuration.nix
+    [ ./hardware-configuration.nix
     ];
-
-  fonts.fonts = with pkgs; [
-    (nerdfonts.override { fonts = ["FiraCode"]; })
-    raleway
-    source-code-pro
-    source-sans-pro
-    source-serif-pro
-  ];
-
-  hardware.video.hidpi.enable = lib.mkDefault true;
-
-  nix.extraOptions = ''
-      experimental-features = nix-command flakes recursive-nix ca-derivations
-      log-lines = 30
-      warn-dirty = false
-    '';
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot/efi";
 
-  boot.kernelPackages = pkgs.linuxKernel.packages.linux_5_19;
-
   # Setup keyfile
   boot.initrd.secrets = {
     "/crypto_keyfile.bin" = null;
   };
 
+  hardware.video.hidpi.enable = lib.mkDefault true;
+
+  environment.variables = {
+    GDK_SCALE = "2";
+    GDK_DPI_SCALE = "0.5";
+  };
+
+  boot.kernelPackages = pkgs.linuxKernel.packages.linux_5_19;
+
   # Enable swap on luks
-  boot.initrd.luks.devices."luks-a697f63f-f54e-4d05-b906-1062408e785c".device = "/dev/disk/by-uuid/a697f63f-f54e-4d05-b906-1062408e785c";
-  boot.initrd.luks.devices."luks-a697f63f-f54e-4d05-b906-1062408e785c".keyFile = "/crypto_keyfile.bin";
+  boot.initrd.luks.devices."luks-cfcef1a8-76eb-4434-9e88-277e42b11d87".device = "/dev/disk/by-uuid/cfcef1a8-76eb-4434-9e88-277e42b11d87";
+  boot.initrd.luks.devices."luks-cfcef1a8-76eb-4434-9e88-277e42b11d87".keyFile = "/crypto_keyfile.bin";
 
   networking.hostName = "otherwise"; # Define your hostname.
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+  nix.extraOptions = ''
+    experimental-features = nix-command flakes recursive-nix ca-derivations
+    log-lines = 30
+    warn-dirty = false
+  '';
 
   # Enable networking
   networking.networkmanager.enable = true;
@@ -147,19 +137,8 @@
     xkbOptions = "caps:escape";
     layout = "us";
     xkbVariant = "";
-
+    xkbOptions = "caps:escape";
     displayManager = {
-      sessionCommands = ''
-        # Set a background.
-        /home/noon/.fehbg
-
-        # To kill the screen saver.
-        xset s off -dpms
-
-        # Default to the laptop layout.
-        /home/noon/.screenlayout/laptop.sh
-      '';
-
       autoLogin = {
         user = "noon";
         enable = true;
@@ -176,111 +155,61 @@
     };
   };
 
+  fonts.fonts = with pkgs; [
+    (nerdfonts.override { fonts = ["FiraCode"]; })
+    raleway
+    source-code-pro
+    source-sans-pro
+    source-serif-pro
+  ];
+
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users.noon = {
+    isNormalUser = true;
+    description = "noon";
+    extraGroups = [ "networkmanager" "wheel" "dialout" ];
+  };
+
+  # Enable automatic login for the user.
+  services.getty.autologinUser = "noon";
+
+  # Firmware updating ...
+  # See: https://nixos.wiki/wiki/Fwupd
+  #
+  #   fwupmgr refresh
+  #   fwupmgr get-updates
+  #   fwupmgr update
+  #
+  services.fwupd.enable = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  environment.interactiveShellInit = ''
-    alias v='nvim'
-
-    function rb {
-      nixos-rebuild switch -p "$(date '+%Y-%m-%d %H:%M:%S') - $1"
-    }
-  '';
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
   environment.systemPackages = with pkgs; [
-    # net
-    dnsutils
-    httpie
-    inetutils
-    jnettop
-    ngrep
-    nmap
-    rsync
-    socat
-    websocat
-    wget
-    # files
-    bat
-    delta
-    diskonaut
-    dos2unix
-    duf
-    exa
-    fd
-    file
-    lsd
-    ranger
-    ripgrep
-    sd
-    tree
-    unzip
-    watchexec
-    zip
-    # shell
-    bc
-    bpytop
-    choose
-    fx
-    gnupg
-    htop
-    iotop
-    jc
-    jq
-    lsof
-    pass
-    zsh
-    # dev
-    customNvim
-    difftastic
-    docker
-    docker-compose
-    gdb
-    git
-    konsole
-    lazygit
-    tmate
-    universal-ctags
-    kdiff3
-    vscode-with-extensions
-    # os
-    feh
-    service-wrapper
     arandr
-    firefox
-    flameshot
-    google-chrome
-    nix-diff
-    nix-du
-    nix-index
-    nix-output-monitor
-    nox
-    pciutils
-    usbutils
-    # build
     autoconf
     automake
     binutils
+    customNvim
+    dmenu
+    firefox
     gcc
+    git
     gmp
     gnumake
-    libffi
-    libffi.dev
+    google-chrome
+    jc
+    jq
+    konsole
     libtool
     pkg-config
+    ripgrep
     stack
-    zlib
-    zlib.dev
-    # misc
-    alsa-utils
-    blender
-    dmenu
-    inkscape
-    obsidian
-    pandoc
-    xsel
+    vim
+    wget
+    zsh
+    zip
+    unzip
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
