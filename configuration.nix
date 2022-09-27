@@ -1,49 +1,113 @@
-# /etc/nixos/configuration.nix
-
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-{ config, pkgs, ... }:
-  let customNvim =
-    pkgs.neovim.override {
+
+{ config, pkgs, lib, ... }:
+
+   let vim-autoread = pkgs.vimUtils.buildVimPlugin {
+        name = "vim-autoread";
+        src = pkgs.fetchFromGitHub {
+          owner = "djoshea";
+          repo = "vim-autoread";
+          rev = "7e83d47a71fdafc271005fc39c89863204278c77";
+          sha256 = "sha256-IGgJ/D2AGDtbO+RZk2zd+zO9ZtANsle4QSjsh+VOXpg=";
+        };
+      };
+      noon-light-theme = pkgs.vimUtils.buildVimPlugin {
+        name = "noon-light-theme";
+        src = pkgs.fetchFromGitHub {
+          owner = "silky";
+          repo = "noon-light-vim";
+          rev = "5746f68d4a407ddbc3add2f60db758b9b178dcc4";
+          sha256 = "sha256-OLDb/yMs6sUDSrt8fFa82pF6p9eeNi02N2PKrto/C6I=";
+        };
+      };
+      vim-syntax-shakespeare = pkgs.vimUtils.buildVimPlugin {
+        name = "vim-syntax-shakespeare";
+        src = pkgs.fetchFromGitHub {
+          owner = "pbrisbin";
+          repo = "vim-syntax-shakespeare";
+          rev = "2f4f61eae55b8f1319ce3a086baf9b5ab57743f3";
+          sha256 = "sha256-sdCXJOvB+vJE0ir+qsT/u1cHNxrksMnqeQi4D/Vg6UA=";
+        };
+      };
+      cabal-project-vim = pkgs.vimUtils.buildVimPlugin {
+        name = "cabal-project-vim";
+        src = pkgs.fetchFromGitHub {
+          owner = "vmchale";
+          repo = "cabal-project-vim";
+          rev = "0d41e7e41b1948de84847d9731023407bf2aea04";
+          sha256 = "sha256-j1igpjk1+j/1/y99ZaI3W5+VYNmQqsFp2qX4qzkpNpc=";
+        };
+      };
+
+    customNvim = pkgs.neovim.override {
       configure = {
         customRC = "source " + /home/noon/dev/dotfiles/init.vim;
         plug.plugins = with pkgs.vimPlugins; [
-          vim-go
+          cabal-project-vim
+          dhall-vim
+          editorconfig-vim
+          elm-vim
+          fzf-vim
+          fzfWrapper
+          haskell-vim
+          noon-light-theme
+          purescript-vim
+          supertab
+          typescript-vim
+          unicode-vim
+          vim-autoread
+          vim-commentary
+          vim-easy-align
+          vim-easymotion
+          vim-nix
+          vim-ormolu
+          vim-syntax-shakespeare
+          vim-toml
+          vim-vue
+          xterm-color-table
         ];
       };
     };
 
   in
+
 {
   imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      <home-manager/nixos>
+    [ ./hardware-configuration.nix
     ];
 
-  fonts.fonts = [
-    (pkgs.nerdfonts.override { fonts = ["FiraCode" "VictorMono"]; })
-    pkgs.raleway
-  ];
-
-  nix.extraOptions = ''
-      experimental-features = nix-command flakes recursive-nix ca-derivations
-      log-lines = 30
-      warn-dirty = false
-    '';
-
   # Bootloader.
-  boot.loader.grub.enable = true;
-  boot.loader.grub.device = "/dev/sda";
-  boot.loader.grub.useOSProber = true;
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.efi.efiSysMountPoint = "/boot/efi";
+
+  # Setup keyfile
+  boot.initrd.secrets = {
+    "/crypto_keyfile.bin" = null;
+  };
+
+  hardware.video.hidpi.enable = lib.mkDefault true;
+
+  environment.variables = {
+    GDK_SCALE = "2";
+    GDK_DPI_SCALE = "0.5";
+  };
+
+  boot.kernelPackages = pkgs.linuxKernel.packages.linux_5_19;
+
+  # Enable swap on luks
+  boot.initrd.luks.devices."luks-cfcef1a8-76eb-4434-9e88-277e42b11d87".device = "/dev/disk/by-uuid/cfcef1a8-76eb-4434-9e88-277e42b11d87";
+  boot.initrd.luks.devices."luks-cfcef1a8-76eb-4434-9e88-277e42b11d87".keyFile = "/crypto_keyfile.bin";
 
   networking.hostName = "otherwise"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+  nix.extraOptions = ''
+    experimental-features = nix-command flakes recursive-nix ca-derivations
+    log-lines = 30
+    warn-dirty = false
+  '';
 
   # Enable networking
   networking.networkmanager.enable = true;
@@ -58,7 +122,14 @@
     enable = true;
     layout = "us";
     xkbVariant = "";
-    windowManager {
+    xkbOptions = "caps:escape";
+    displayManager = {
+      autoLogin = {
+        user = "noon";
+        enable = true;
+      };
+    };
+    windowManager = {
       xmonad = {
         enable = true;
         enableContribAndExtras = true;
@@ -68,118 +139,61 @@
     };
   };
 
+  fonts.fonts = with pkgs; [
+    (nerdfonts.override { fonts = ["FiraCode"]; })
+    raleway
+    source-code-pro
+    source-sans-pro
+    source-serif-pro
+  ];
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.noon = {
     isNormalUser = true;
     description = "noon";
     extraGroups = [ "networkmanager" "wheel" "dialout" ];
-    packages = with pkgs; [];
-    shell = pkgs.zsh;
-    openssh = {
-      authorizedKeys.keys = [];
-    }
-    # openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGpcsiEomaNhn2TWqq30hnjLcNCXfbNmoVCGygkiFWXR noon@tweaglt" ];
   };
 
   # Enable automatic login for the user.
   services.getty.autologinUser = "noon";
 
+  # Firmware updating ...
+  # See: https://nixos.wiki/wiki/Fwupd
+  #
+  #   fwupmgr refresh
+  #   fwupmgr get-updates
+  #   fwupmgr update
+  #
+  services.fwupd.enable = true;
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
   environment.systemPackages = with pkgs; [
-    # net
-    dnsutils
-    httpie
-    inetutils
-    jnettop
-    ngrep
-    nmap
-    rsync
-    socat
-    websocat
-    wget
-    # files
-    bat
-    delta
-    diskonaut
-    dos2unix
-    duf
-    exa
-    fd
-    file
-    lsd
-    ranger
-    ripgrep
-    sd
-    tree
-    unzip
-    watchexec
-    zip
-    # shell
-    bc
-    bpytop
-    choose
-    fx
-    gnupg
-    htop
-    iotop
-    jc
-    jq
-    lsof
-    pass
-    zsh
-    # dev
-    customNvim
-    difftastic
-    docker
-    docker-compose
-    gdb
-    git
-    konsole
-    lazygit
-    tmate
-    universal-ctags
-    vscode-with-extensions
-    # os
-    cachix
-    efibootmgr
-    feh
-    firefox
-    flameshot
-    google-chrome
-    nix-diff
-    nix-du
-    nix-index
-    nix-output-monitor
-    nox
-    pciutils
-    usbutils
-    # build
+    arandr
     autoconf
     automake
     binutils
+    customNvim
+    dmenu
+    firefox
     gcc
+    git
     gmp
     gnumake
-    libffi
-    libffi.dev
+    google-chrome
+    jc
+    jq
+    konsole
     libtool
     pkg-config
+    ripgrep
     stack
-    zlib
-    zlib.dev
-    # misc
-    alsa-utils
-    blender
-    dmenu
-    home-manager
-    inkscape
-    obsidian
-    pandoc
-    xsel
+    vim
+    wget
+    zsh
+    zip
+    unzip
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
