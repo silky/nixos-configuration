@@ -13,6 +13,8 @@ Starting from nothing:
   nixos-rebuild switch --flake '.' --impure
   ```
 1. Happiness!
+1. You can now delete all `.nix` files in `/etc/nixos` if you wish.
+1. And otherwise hopefully enjoy your life.
 
 
 ### Annoyances
