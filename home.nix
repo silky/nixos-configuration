@@ -6,6 +6,11 @@ let
 in {
   programs.zsh = {
     enable = true;
+
+    # Todo:
+    #
+    #   - Home/End keys
+    #
     initExtra = ''
       bindkey "^[[1;5C" forward-word
       bindkey "^[[1;5D" backward-word
@@ -103,9 +108,11 @@ in {
     enableZshIntegration = true;
   };
 
-
   home.file = {
-    ".config/konsolerc".source = mkSym "${config.home.homeDirectory}/dev/nixos-configuration/home/konsolerc";
+    ".gitconfig".source = mkSym "./home/gitconfig";
+    ".config/konsolerc".source = mkSym "./home/konsolerc";
+    ".config/stack.yaml".source = mkSym "./home/stack-config.yaml";
+
     ".local/share/konsole/Noons.colorscheme".source = mkSym "${config.home.homeDirectory}/dev/dotfiles/konsole/Noons.colorscheme";
     ".local/share/konsole/Profile 1.profile".source = mkSym "${config.home.homeDirectory}/dev/dotfiles/konsole/Profile 1.profile";
   };

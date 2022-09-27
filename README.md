@@ -29,11 +29,11 @@ Starting from nothing:
 - <https://github.com/kalbasit/shabka/blob/master/modules/home/software/zsh/>
 - <https://github.com/Yumasi/nixos-home/blob/master/zsh.nix>
 - <https://github.com/haskie-lambda/nixconfig/blob/a8fe974c6c151169c1d686cbb04fc2cdf2a2c05d/nixos/v2/pkgConfigs/zsh.nix>
+- <https://github.com/toonn/nix-config>
 
 
 ### Todo
 
-- [ ] `~/.stack/config.yaml`
 - [ ] git config
 - [ ] fix up colours in zsh theme
 - [ ] other random stuff
@@ -41,6 +41,7 @@ Starting from nothing:
   - [ ] i.e. ensure there's a home-manager command
   - [ ] ensure it can be re-run without being root
   - [ ] etc
+- [x] `~/.stack/config.yaml`
 - [x] noon-light zsh theme
 - [x] konsole configuration
   - [x] symlink to editable files instead of readonly ones.

@@ -1,0 +1,46 @@
+[color]
+  branch      = always
+  diff        = always
+  interactive = always
+  status      = always
+  ui          = auto
+
+[user]
+  email = noonsilk+-noonsilk@gmail.com
+  name  = silky
+
+[alias]
+  d    = difftool
+  hist = log --oneline --graph --decorate
+  pwl  = push --force-with-lease
+
+[push]
+  default = matching
+
+[diff]
+  submodule = log
+  tool      = vimdiff
+
+[difftool]
+  prompt = false
+
+[status]
+  submodulesummary = 1
+
+[credential]
+  helper = gnome-keyring
+
+[core]
+  editor = nvim
+
+[filter "lfs"]
+  clean    = git-lfs clean -- %f
+  process  = git-lfs filter-process
+  required = true
+  smudge   = git-lfs smudge -- %f
+
+[init]
+  defaultBranch = main
+
+[includeIf "gitdir:~/dev/generative/"]
+  path = ~/dev/generative/generative.gitconfig
