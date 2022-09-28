@@ -5,9 +5,16 @@ DefaultProfile=Profile 1.profile
 Favorites=
 
 [KonsoleWindow]
+RememberWindowSize=false
 ShowMenuBarByDefault=false
 
 [MainWindow]
+DP-3 DP-1 Height 1440x2560=1278
+DP-3 DP-1 Height 2560x1440=478
+DP-3 DP-1 Width 1440x2560=549
+DP-3 DP-1 Width 2560x1440=1181
+DP-3 DP-1 XPosition 2560x1440=1378
+DP-3 DP-1 YPosition 2560x1440=613
 Height 1080=1078
 Height 1200=598
 Height 1440=1440
@@ -18,7 +25,8 @@ Height 720=358
 Height 800=798
 Height 900=898
 MenuBar=Disabled
-State=AAAA/wAAAAD9AAAAAAAACgAAAAWgAAAABAAAAAQAAAAIAAAACPwAAAAA
+RestorePositionForNextInstance=false
+State=AAAA/wAAAAD9AAAAAQAAAAAAAAAAAAAAAPwCAAAAAvsAAAAiAFEAdQBpAGMAawBDAG8AbQBtAGEAbgBkAHMARABvAGMAawAAAAAA/////wAAAIgA////+wAAABwAUwBTAEgATQBhAG4AYQBnAGUAcgBEAG8AYwBrAAAAAAD/////AAAApgD///8AAASdAAAB3gAAAAQAAAAEAAAACAAAAAj8AAAAAQAAAAIAAAACAAAAFgBtAGEAaQBuAFQAbwBvAGwAQgBhAHIAAAAAAP////8AAAAAAAAAAAAAABwAcwBlAHMAcwBpAG8AbgBUAG8AbwBsAGIAYQByAAAAAJf/////AAAAAAAAAAA=
 ToolBarsMovable=Disabled
 Width 1280=590
 Width 1440=1438
@@ -30,6 +38,24 @@ Width 320=208
 Width 3840=1235
 Window-Maximized 720x1280=true
 Window-Maximized 768x1024=true
+eDP-1 DP-1 DP-3 Height 1440x2560=2558
+eDP-1 DP-1 DP-3 Height 2560x1440=1438
+eDP-1 DP-1 DP-3 Height 3840x2400=1198
+eDP-1 DP-1 DP-3 Width 1440x2560=1438
+eDP-1 DP-1 DP-3 Width 2560x1440=2558
+eDP-1 DP-1 DP-3 Width 3840x2400=1465
+eDP-1 DP-1 DP-3 XPosition 3840x2400=1
+eDP-1 DP-1 DP-3 YPosition 3840x2400=1
+eDP-1 Height 3840x2400=1198
+eDP-1 Width 3840x2400=3078
+eDP-1 XPosition 3840x2400=761
+eDP-1 YPosition 3840x2400=1201
 
 [TabBar]
 TabBarVisibility=AlwaysHideTabBar
+
+[ThumbnailsSettings]
+EnableThumbnails=false
+
+[UiSettings]
+ColorScheme=Default

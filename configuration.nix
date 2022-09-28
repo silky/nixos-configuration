@@ -43,6 +43,7 @@
 
     customNvim = pkgs.neovim.override {
       configure = {
+        # Note: Hack.
         customRC = "source " + /home/noon/dev/dotfiles/init.vim;
         plug.plugins = with pkgs.vimPlugins; [
           cabal-project-vim
@@ -89,10 +90,10 @@
 
   hardware.video.hidpi.enable = lib.mkDefault true;
 
-  environment.variables = {
-    GDK_SCALE = "2";
-    GDK_DPI_SCALE = "0.5";
-  };
+# environment.variables = {
+# GDK_SCALE = "2";
+# GDK_DPI_SCALE = "0.5";
+# };
 
   boot.kernelPackages = pkgs.linuxKernel.packages.linux_5_19;
 
@@ -198,6 +199,8 @@
     gmp
     gnumake
     google-chrome
+    feh
+    gnome.gnome-keyring
     jc
     jq
     konsole
