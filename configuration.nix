@@ -197,37 +197,37 @@
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
+    alsa-utils
     arandr
     autoconf
     automake
     binutils
     customNvim
     dmenu
+    exa
+    feh
     firefox
+    flameshot
+    fzf
     gcc
     git
     gmp
-    gnumake
-    exa
-    google-chrome
-    feh
-    fzf
-    flameshot
     gnome.gnome-keyring
+    gnumake
+    google-chrome
     jc
     jq
     konsole
     libtool
+    pavucontrol
     pkg-config
     ripgrep
     stack
-    alsa-utils
-    pavucontrol
+    unzip
     vim
     wget
-    zsh
     zip
-    unzip
+    zsh
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

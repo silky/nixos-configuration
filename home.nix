@@ -40,10 +40,10 @@ in {
         # Build up prompt
         executionTime = "%(9V.%F{\${AGKOZAK_COLORS_CMD_EXEC_TIME}}%b%9v%b%f .)";
         exitStatus    = "%(?..%B%F{\${AGKOZAK_COLORS_EXIT_STATUS}}(%?%)%f%b )";
-        userAndHost   = "%(!.%S.%F{\${red}})%n%1v%(!.%s.%f)";
-        envHint       = "%(10V.%F{\${AGKOZAK_COLORS_VIRTUALENV}}[%10v]%f .)";
-        path          = "%F{\${AGKOZAK_COLORS_PATH}}%c%f";
-        time          = "%D{%I:%M %P}";
+        userAndHost   = "%(!.%S.%F{cyan})%n%1v%(!.%s.%f)";
+        envHint       = "%(10V.%F{blue}[%10v]%f .)";
+        path          = "%F{green}%c%f";
+        time          = "%F{blue}%D{%I:%M %P}%f";
         jobStatus     = "%(1j. %F{\${AGKOZAK_COLORS_BG_STRING}}%jj%f.)";
         gitStatus     = "%(3V.%F{\${AGKOZAK_COLORS_BRANCH_STATUS}}%3v%f.)";
         prompt = executionTime
@@ -64,7 +64,7 @@ in {
       AGKOZAK_CUSTOM_SYMBOLS   = "⇣⇡ ⇣ ⇡ + x ! > ? S";
 
       # Day in the right, e.g.: "Tue Sep 27"
-      AGKOZAK_CUSTOM_RPROMPT  = "%D{%a %b %d}";
+      AGKOZAK_CUSTOM_RPROMPT  = "%F{blue}%D{%a %b %d}%f";
       AGKOZAK_CUSTOM_PROMPT   = prompt;
     };
 
