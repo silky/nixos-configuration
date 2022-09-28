@@ -44,7 +44,6 @@ in {
         envHint       = "%(10V.%F{blue}[%10v]%f .)";
         path          = "%F{green}%c%f";
         time          = "%F{blue}%D{%I:%M %P}%f";
-        jobStatus     = "%(1j. %F{\${AGKOZAK_COLORS_BG_STRING}}%jj%f.)";
         gitStatus     = "%(3V.%F{\${AGKOZAK_COLORS_BRANCH_STATUS}}%3v%f.)";
         prompt = executionTime
                 + exitStatus
@@ -52,7 +51,6 @@ in {
                 + userAndHost + " φ "
                 + envHint
                 + path
-                + jobStatus
                 + gitStatus
                 + " "
                 ;
@@ -66,6 +64,9 @@ in {
       # Day in the right, e.g.: "Tue Sep 27"
       AGKOZAK_CUSTOM_RPROMPT  = "%F{blue}%D{%a %b %d}%f";
       AGKOZAK_CUSTOM_PROMPT   = prompt;
+
+      LSCOLORS = "di=36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43";
+      LS_COLORS = "di=36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43";
     };
 
     shellAliases = {
@@ -90,9 +91,9 @@ in {
 
       # Shell
       ".." = "cd ..";
-      l    = "exa -lah";
-      ll   = "exa -lh";
-      ls   = "exa";
+      l    = "ls -lah";
+      ll   = "ls -lh";
+      # ls   = "ls";
 
       # Misc
       dc  = "docker-compose";
