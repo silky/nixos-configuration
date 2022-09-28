@@ -109,9 +109,9 @@ in {
   };
 
   home.file = {
-    ".gitconfig".source = mkSym "./home/gitconfig";
-    ".config/konsolerc".source = mkSym "./home/konsolerc";
-    ".config/stack.yaml".source = mkSym "./home/stack-config.yaml";
+    ".gitconfig".source = mkSym "${config.home.homeDirectory}/dev/nixos-configuration/home/gitconfig";
+    ".config/konsolerc".source = mkSym "${config.home.homeDirectory}/dev/nixos-configuration/home/konsolerc";
+    ".config/stack.yaml".source = mkSym "${config.home.homeDirectory}/dev/nixos-configuration/home/stack-config.yaml";
 
     ".local/share/konsole/Noons.colorscheme".source = mkSym "${config.home.homeDirectory}/dev/dotfiles/konsole/Noons.colorscheme";
     ".local/share/konsole/Profile 1.profile".source = mkSym "${config.home.homeDirectory}/dev/dotfiles/konsole/Profile 1.profile";
