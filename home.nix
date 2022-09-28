@@ -9,11 +9,16 @@ in {
 
     # Todo:
     #
-    #   - Home/End keys
+    # - [ ] Delete key actually deletes.
+    # - [x] Home/End keys.
     #
     initExtra = ''
       bindkey "^[[1;5C" forward-word
       bindkey "^[[1;5D" backward-word
+      bindkey '\e[OH' beginning-of-line
+      bindkey '\e[OF' end-of-line
+      bindkey '^[[H' beginning-of-line
+      bindkey '^[[F' end-of-line
     '';
 
     plugins = with pkgs; [
