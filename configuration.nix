@@ -89,6 +89,9 @@
     "/crypto_keyfile.bin" = null;
   };
 
+  hardware.pulseaudio.package = pkgs.pulseaudioFull;
+  hardware.pulseaudio.enable = true;
+
   hardware.video.hidpi.enable = lib.mkDefault true;
 
 # environment.variables = {
@@ -159,7 +162,7 @@
   users.users.noon = {
     isNormalUser = true;
     description = "noon";
-    extraGroups = [ "networkmanager" "wheel" "dialout" ];
+    extraGroups = [ "networkmanager" "wheel" "dialout" "audio" ];
   };
 
   # Enable automatic login for the user.
@@ -189,8 +192,11 @@
     git
     gmp
     gnumake
+    exa
     google-chrome
     feh
+    fzf
+    flameshot
     gnome.gnome-keyring
     jc
     jq
@@ -199,6 +205,8 @@
     pkg-config
     ripgrep
     stack
+    alsa-utils
+    pavucontrol
     vim
     wget
     zsh
