@@ -140,6 +140,13 @@
     xkbVariant = "";
     xkbOptions = "caps:escape";
     displayManager = {
+      sessionCommands = ''
+        # Set a background.
+        /home/noon/.fehbg
+
+        # Default to the office layout.
+        /home/noon/.screenlayout/work.sh
+      '';
       autoLogin = {
         user = "noon";
         enable = true;
