@@ -40,9 +40,9 @@ in {
         # Build up prompt
         executionTime = "%(9V.%F{\${AGKOZAK_COLORS_CMD_EXEC_TIME}}%b%9v%b%f .)";
         exitStatus    = "%(?..%B%F{\${AGKOZAK_COLORS_EXIT_STATUS}}(%?%)%f%b )";
-        userAndHost   = "%(!.%S.%F{\${AGKOZAK_COLORS_USER_HOST}})%n%1v%(!.%s.%f) ";
+        userAndHost   = "%(!.%S.%F{\${red}})%n%1v%(!.%s.%f)";
         envHint       = "%(10V.%F{\${AGKOZAK_COLORS_VIRTUALENV}}[%10v]%f .)";
-        path          = "%F{\${AGKOZAK_COLORS_PATH}}%2v%f";
+        path          = "%F{\${AGKOZAK_COLORS_PATH}}%c%f";
         time          = "%D{%I:%M %P}";
         jobStatus     = "%(1j. %F{\${AGKOZAK_COLORS_BG_STRING}}%jj%f.)";
         gitStatus     = "%(3V.%F{\${AGKOZAK_COLORS_BRANCH_STATUS}}%3v%f.)";
@@ -56,8 +56,6 @@ in {
                 + gitStatus
                 + " "
                 ;
-
-        # prompt = path;
       in
     {
       AGKOZAK_PROMPT_CHAR      = "φ φ# :";
@@ -92,8 +90,9 @@ in {
 
       # Shell
       ".." = "cd ..";
-      l    = "ls -lah";
-      ll   = "ls -lh";
+      l    = "exa -lah";
+      ll   = "exa -lh";
+      ls   = "exa";
 
       # Misc
       dc  = "docker-compose";

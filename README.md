@@ -34,13 +34,15 @@ Starting from nothing:
 
 ### Todo
 
-- [ ] git config
 - [ ] fix up colours in zsh theme
 - [ ] other random stuff
 - [ ] make home-manager "actually" work;
   - [ ] i.e. ensure there's a home-manager command
   - [ ] ensure it can be re-run without being root
   - [ ] etc
+- [ ] copy and paste from vim
+- [ ] fzf in vim
+- [x] git config
 - [x] `~/.stack/config.yaml`
 - [x] noon-light zsh theme
 - [x] konsole configuration
