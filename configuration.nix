@@ -196,12 +196,16 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+  nix.trustedUsers = [ "root" "noon" ];
+
   environment.systemPackages = with pkgs; [
     alsa-utils
     arandr
     autoconf
     automake
+    bat
     binutils
+    cachix
     customNvim
     dmenu
     exa
