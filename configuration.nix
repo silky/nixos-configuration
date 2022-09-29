@@ -224,6 +224,7 @@
     konsole
     libtool
     pavucontrol
+    pass
     pkg-config
     ripgrep
     stack
