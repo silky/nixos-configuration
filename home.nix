@@ -13,12 +13,16 @@ in {
     # - [x] Home/End keys.
     #
     initExtra = ''
+      # Control-arrows
       bindkey "^[[1;5C" forward-word
       bindkey "^[[1;5D" backward-word
-      bindkey '\e[OH' beginning-of-line
-      bindkey '\e[OF' end-of-line
-      bindkey '^[[H' beginning-of-line
-      bindkey '^[[F' end-of-line
+
+      # Home/end
+      bindkey "^[[H" beginning-of-line
+      bindkey "^[[F" end-of-line
+
+      bindkey "^?" backward-delete-char
+      bindkey "^[[3~" delete-char
     '';
 
     plugins = with pkgs; [
@@ -64,9 +68,6 @@ in {
       # Day in the right, e.g.: "Tue Sep 27"
       AGKOZAK_CUSTOM_RPROMPT  = "%F{blue}%D{%a %b %d}%f";
       AGKOZAK_CUSTOM_PROMPT   = prompt;
-
-      LSCOLORS = "di=36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43";
-      LS_COLORS = "di=36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43";
     };
 
     shellAliases = {
