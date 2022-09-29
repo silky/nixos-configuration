@@ -182,14 +182,23 @@
 
   nix.trustedUsers = [ "root" "noon" ];
 
+  services.gnome.gnome-keyring.enable = true;
+  security.pam.services.login = {
+    enableGnomeKeyring = true;
+  };
+
   environment.systemPackages = with pkgs; [
+    python310Packages.keyring
     alsa-utils
     arandr
+    htop
     autoconf
     automake
     bat
     binutils
+    tree
     cachix
+    gnome.seahorse
     customNvim
     dmenu
     exa
@@ -200,7 +209,7 @@
     gcc
     git
     gmp
-    gnome.gnome-keyring
+    # gnome.gnome-keyring
     gnumake
     google-chrome
     jc
