@@ -198,6 +198,10 @@
 
   nix.trustedUsers = [ "root" "noon" ];
 
+  # Let's see if we can get bluetooth working.
+  # Note: I tried; not much luck. Will try again another time.
+  # hardware.bluetooth.enable = true;
+
   services.gnome.gnome-keyring.enable = true;
   security.pam.services.login = {
     enableGnomeKeyring = true;
@@ -215,6 +219,7 @@
     tree
     cachix
     gnome.seahorse
+    xorg.xkill
     customNvim
     dmenu
     exa
@@ -224,6 +229,7 @@
     fzf
     gcc
     git
+    git-lfs
     gmp
     # gnome.gnome-keyring
     gnumake
