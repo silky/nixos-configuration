@@ -147,6 +147,9 @@
         # Set a background.
         /home/noon/.fehbg
 
+        # No screen saving.
+        xset s off -dpms
+
         # Default to the office layout.
         /home/noon/.screenlayout/work.sh
       '';

@@ -23,6 +23,8 @@ in {
 
       bindkey "^?" backward-delete-char
       bindkey "^[[3~" delete-char
+
+      source ~/.profile
     '';
 
     plugins = with pkgs; [
@@ -42,8 +44,8 @@ in {
     sessionVariables =
       let
         # Build up prompt
-        executionTime = "%(9V.%F{\${AGKOZAK_COLORS_CMD_EXEC_TIME}}%b%9v%b%f .)";
-        exitStatus    = "%(?..%B%F{\${AGKOZAK_COLORS_EXIT_STATUS}}(%?%)%f%b )";
+        executionTime = "%(9V.%F{247}%9v%f .)";
+        exitStatus    = "%(?..%F{\${AGKOZAK_COLORS_EXIT_STATUS}}(%?%)%f )";
         userAndHost   = "%(!.%S.%F{cyan})%n%1v%(!.%s.%f)";
         envHint       = "%(10V.%F{blue}[%10v]%f .)";
         path          = "%F{green}%c%f";
@@ -68,6 +70,8 @@ in {
       # Day in the right, e.g.: "Tue Sep 27"
       AGKOZAK_CUSTOM_RPROMPT  = "%F{blue}%D{%a %b %d}%f";
       AGKOZAK_CUSTOM_PROMPT   = prompt;
+
+      LS_COLORS = "di=36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43";
     };
 
     shellAliases = {
@@ -92,9 +96,9 @@ in {
 
       # Shell
       ".." = "cd ..";
-      l    = "ls -lah";
-      ll   = "ls -lh";
-      # ls   = "ls";
+      l    = "ls -lah --color=auto";
+      ll   = "ls -lh --color=auto";
+      ls   = "ls --color=auto";
 
       # Misc
       dc  = "docker-compose";

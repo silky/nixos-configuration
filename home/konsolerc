@@ -9,14 +9,14 @@ RememberWindowSize=false
 ShowMenuBarByDefault=false
 
 [MainWindow]
-DP-3 DP-1 Height 1440x2560=1232
+DP-3 DP-1 Height 1440x2560=1181
 DP-3 DP-1 Height 2560x1440=718
 DP-3 DP-1 Width 1440x2560=718
 DP-3 DP-1 Width 2560x1440=1386
 DP-3 DP-1 XPosition 1440x2560=2561
 DP-3 DP-1 XPosition 2560x1440=1173
-DP-3 DP-1 YPosition 1440x2560=1327
-DP-3 DP-1 YPosition 2560x1440=1333
+DP-3 DP-1 YPosition 1440x2560=1378
+DP-3 DP-1 YPosition 2560x1440=613
 Height 1080=1078
 Height 1200=598
 Height 1440=1440
