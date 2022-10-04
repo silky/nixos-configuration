@@ -121,20 +121,7 @@
   # Select internationalisation properties.
   i18n.defaultLocale = "en_GB.utf8";
 
-  # Configure console keymap
-  console.keyMap = "us";
-
-  # Define a user account.
-  users.users.noon = {
-    isNormalUser = true;
-    description = "noon";
-    extraGroups = [ "networkmanager" "wheel" "dialout" ];
-    packages = with pkgs; [];
-    shell = pkgs.zsh;
-    openssh = {
-      authorizedKeys.keys = [];
-    };
-  };
+  services.helic.enable = true;
 
   services.xserver = {
     enable = true;
@@ -181,7 +168,7 @@
   users.users.noon = {
     isNormalUser = true;
     description = "noon";
-    extraGroups = [ "networkmanager" "wheel" "dialout" "audio" ];
+    extraGroups = [ "networkmanager" "wheel" "dialout" "audio" "docker" ];
   };
 
   # Enable automatic login for the user.
@@ -211,20 +198,18 @@
   };
 
   environment.systemPackages = with pkgs; [
-    python310Packages.keyring
+    # gnome.gnome-keyring
     alsa-utils
     arandr
-    htop
     autoconf
     automake
     bat
     binutils
-    tree
     cachix
-    gnome.seahorse
-    xorg.xkill
     customNvim
     dmenu
+    docker
+    docker-compose
     exa
     feh
     firefox
@@ -234,25 +219,32 @@
     git
     git-lfs
     gmp
-    # gnome.gnome-keyring
+    gnome.seahorse
     gnumake
     google-chrome
+    htop
     jc
     jq
     konsole
     libtool
-    pavucontrol
+    nixpkgs-fmt
     pass
+    pavucontrol
     pkg-config
+    python310Packages.keyring
     ripgrep
     stack
+    tree
     unzip
     vim
     wget
+    xorg.xkill
+    xsel
     zip
     zsh
-    nixpkgs-fmt
   ];
+
+  virtualisation.docker.enable = true;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
