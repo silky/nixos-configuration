@@ -41,6 +41,10 @@
         };
       };
 
+      customKonsole = pkgs.konsole.overrideAttrs (old: {
+        patches = [ ./home/konsole.diff ];
+      });
+
     customNvim = pkgs.neovim.override {
       configure = {
         # Note: Hack.
@@ -224,7 +228,7 @@
     htop
     jc
     jq
-    konsole
+    customKonsole
     libtool
     nixpkgs-fmt
     pass

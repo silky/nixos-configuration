@@ -1,0 +1,13 @@
+diff --git a/src/MainWindow.cpp b/src/MainWindow.cpp
+index 479d1611..2f7523fd 100644
+--- a/src/MainWindow.cpp
++++ b/src/MainWindow.cpp
+@@ -928,7 +928,7 @@ void MainWindow::showEvent(QShowEvent *event)
+     }
+ 
+     // Call parent method
+-    KXmlGuiWindow::showEvent(event);
++    /* KXmlGuiWindow::showEvent(event); */
+ }
+ 
+ void MainWindow::triggerAction(const QString &name) const
