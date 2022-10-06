@@ -1,6 +1,6 @@
 [color]
   branch      = always
-  diff        = always
+  diff        = auto
   interactive = always
   status      = always
   ui          = auto
