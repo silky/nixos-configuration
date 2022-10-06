@@ -198,7 +198,6 @@
   };
 
   environment.systemPackages = with pkgs; [
-    # gnome.gnome-keyring
     alsa-utils
     arandr
     autoconf
@@ -231,6 +230,7 @@
     pass
     pavucontrol
     pkg-config
+    python310
     python310Packages.keyring
     ripgrep
     stack
@@ -238,6 +238,7 @@
     unzip
     vim
     wget
+    xclip
     xorg.xkill
     xsel
     zip
@@ -257,7 +258,7 @@
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
+  services.openssh.enable = false;
 
   environment.variables = {
     GDK_SCALE = "2";
