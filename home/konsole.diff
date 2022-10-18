@@ -1,13 +1,22 @@
 diff --git a/src/MainWindow.cpp b/src/MainWindow.cpp
-index 479d1611..2f7523fd 100644
+index ab746d4e..09f81e83 100644
 --- a/src/MainWindow.cpp
 +++ b/src/MainWindow.cpp
-@@ -928,7 +928,7 @@ void MainWindow::showEvent(QShowEvent *event)
-     }
+@@ -675,7 +675,7 @@ bool MainWindow::queryClose()
  
-     // Call parent method
--    KXmlGuiWindow::showEvent(event);
-+    /* KXmlGuiWindow::showEvent(event); */
+ void MainWindow::saveProperties(KConfigGroup &group)
+ {
+-    _viewManager->saveSessions(group);
++    /* _viewManager->saveSessions(group); */
  }
  
- void MainWindow::triggerAction(const QString &name) const
+ void MainWindow::readProperties(const KConfigGroup &group)
+@@ -685,7 +685,7 @@ void MainWindow::readProperties(const KConfigGroup &group)
+ 
+ void MainWindow::saveGlobalProperties(KConfig *config)
+ {
+-    SessionManager::instance()->saveSessions(config);
++    /* SessionManager::instance()->saveSessions(config); */
+ }
+ 
+ void MainWindow::readGlobalProperties(KConfig *config)

@@ -10,4 +10,5 @@ nix:
   packages: [ zlib.dev
             , zlib.out
             , pkgconfig
+            , postgresql
             ]

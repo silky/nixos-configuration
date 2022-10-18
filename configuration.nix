@@ -259,10 +259,8 @@
   #   enableSSHSupport = true;
   # };
 
-  # List services that you want to enable:
+  services.openssh.enable = true;
 
-  # Enable the OpenSSH daemon.
-  services.openssh.enable = false;
 
   environment.variables = {
     GDK_SCALE = "2";
