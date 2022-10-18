@@ -77,6 +77,7 @@ in {
     shellAliases = {
       # Nix
       n = "nix-shell";
+      rr = "direnv reload";
 
       # Haskell
       b = "stack build";
@@ -106,6 +107,8 @@ in {
       rg  = "rg -M 1000";
       v   = "nvim";
       vim = "nvim";
+      df  = "df -h";
+      m   = "make";
     };
   };
 
@@ -121,7 +124,7 @@ in {
   home.file = {
     ".gitconfig".source = mkSym "${config.home.homeDirectory}/dev/nixos-configuration/home/gitconfig";
     ".config/konsolerc".source = mkSym "${config.home.homeDirectory}/dev/nixos-configuration/home/konsolerc";
-    ".config/stack.yaml".source = mkSym "${config.home.homeDirectory}/dev/nixos-configuration/home/stack-config.yaml";
+    ".stack/config.yaml".source = mkSym "${config.home.homeDirectory}/dev/nixos-configuration/home/stack-config.yaml";
 
     ".local/share/konsole/Noons.colorscheme".source = mkSym "${config.home.homeDirectory}/dev/dotfiles/konsole/Noons.colorscheme";
     ".local/share/konsole/Profile 1.profile".source = mkSym "${config.home.homeDirectory}/dev/dotfiles/konsole/Profile 1.profile";

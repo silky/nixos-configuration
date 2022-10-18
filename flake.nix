@@ -14,7 +14,11 @@
     };
 
     helic.url = github:/tek/helic;
+
+    # nix-alien.url = "github:thiagokokada/nix-alien";
+    # nix-ld.url = "github:Mic92/nix-ld/main";
   };
+
 
   outputs = { self, nixpkgs, unstable, home-manager, nixos-hardware, helic }:
   {
