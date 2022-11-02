@@ -232,6 +232,7 @@
     jc
     jq
     libtool
+    nethogs
     nixpkgs-fmt
     pass
     pavucontrol
