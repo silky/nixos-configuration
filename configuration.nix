@@ -113,7 +113,7 @@
 
   nix.extraOptions = ''
     experimental-features = nix-command flakes recursive-nix ca-derivations
-    log-lines = 30
+    log-lines = 300
     warn-dirty = false
   '';
 
@@ -127,6 +127,7 @@
   i18n.defaultLocale = "en_GB.utf8";
 
   services.helic.enable = true;
+  services.vnstat.enable = true;
 
   services.xserver = {
     enable = true;
@@ -208,6 +209,7 @@
     bat
     binutils
     cachix
+    customKonsole
     customNvim
     dmenu
     docker
@@ -225,14 +227,15 @@
     gnumake
     google-chrome
     htop
+    inkscape
     jc
     jq
-    customKonsole
     libtool
     nixpkgs-fmt
     pass
     pavucontrol
     pkg-config
+    psmisc
     python310
     python310Packages.keyring
     ripgrep
