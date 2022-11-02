@@ -7,11 +7,6 @@ in {
   programs.zsh = {
     enable = true;
 
-    # Todo:
-    #
-    # - [ ] Delete key actually deletes.
-    # - [x] Home/End keys.
-    #
     initExtra = ''
       # Control-arrows
       bindkey "^[[1;5C" forward-word
