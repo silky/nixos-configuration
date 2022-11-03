@@ -233,6 +233,7 @@
     libtool
     nethogs
     nixpkgs-fmt
+    okular
     pass
     pavucontrol
     pkg-config
