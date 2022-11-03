@@ -251,6 +251,7 @@
     xorg.xkill
     xsel
     zip
+    texlive.combined.scheme-full
     zsh
   ];
 
