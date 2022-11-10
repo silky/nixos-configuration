@@ -223,6 +223,7 @@
     git
     git-lfs
     gmp
+    gnome.gedit
     gnome.seahorse
     gnumake
     google-chrome
@@ -242,6 +243,7 @@
     python310Packages.keyring
     ripgrep
     stack
+    texlive.combined.scheme-full
     tree
     unzip
     vim
@@ -250,7 +252,6 @@
     xorg.xkill
     xsel
     zip
-    texlive.combined.scheme-full
     zsh
   ];
 
@@ -264,7 +265,7 @@
   #   enableSSHSupport = true;
   # };
 
-  services.openssh.enable = true;
+  services.openssh.enable = false;
 
 
   # Open ports in the firewall.
