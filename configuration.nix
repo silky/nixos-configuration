@@ -93,8 +93,8 @@
     "/crypto_keyfile.bin" = null;
   };
 
-  hardware.pulseaudio.package = pkgs.pulseaudioFull;
-  hardware.pulseaudio.enable = true;
+  # hardware.pulseaudio.package = pkgs.pulseaudioFull;
+  # hardware.pulseaudio.enable = true;
 
   hardware.video.hidpi.enable = lib.mkDefault true;
 
@@ -200,6 +200,19 @@
   security.pam.services.login = {
     enableGnomeKeyring = true;
   };
+
+  # rtkit is optional but recommended
+  sound.enable = false;
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    # If you want to use JACK applications, uncomment this
+    #jack.enable = true;
+  };
+
 
   environment.systemPackages = with pkgs; [
     alsa-utils
