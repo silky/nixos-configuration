@@ -241,6 +241,7 @@
     gnumake
     google-chrome
     htop
+    httpie
     inkscape
     jc
     jq
