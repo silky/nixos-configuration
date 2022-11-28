@@ -76,7 +76,7 @@ in {
 
       # Haskell
       b = "stack build";
-      bf = "stack build --fast";
+      bf = "stack build --fast --file-watch";
       g = "stack ghci";
 
       # Git-releated
