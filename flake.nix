@@ -24,7 +24,7 @@
   {
     nixosConfigurations.otherwise = nixpkgs.lib.nixosSystem {
       system      = "x86_64-linux";
-      specialArgs = { inherit nixpkgs;  };
+      specialArgs = { inherit nixpkgs; };
 
       modules     = [
         nixos-hardware.nixosModules.lenovo-thinkpad-x1-9th-gen

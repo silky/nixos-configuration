@@ -6,9 +6,9 @@ templates:
 
 recommend-stack-upgrade: false
 
-nix:
-  packages: [ zlib.dev
-            , zlib.out
-            , pkgconfig
-            , postgresql
-            ]
+# nix:
+#   packages: [ zlib.dev
+#             , zlib.out
+#             , pkgconfig
+#             , postgresql
+#             ]

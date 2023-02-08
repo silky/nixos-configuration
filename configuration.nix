@@ -193,8 +193,11 @@
   nix.trustedUsers = [ "root" "noon" ];
 
   # Let's see if we can get bluetooth working.
-  # Note: I tried; not much luck. Will try again another time.
-  # hardware.bluetooth.enable = true;
+  hardware.bluetooth.enable = true;
+  hardware.bluetooth.package = pkgs.bluezFull;
+  hardware.bluetooth.hsphfpd.enable = true;
+
+  services.blueman.enable = true;
 
   services.gnome.gnome-keyring.enable = true;
   security.pam.services.login = {
@@ -209,8 +212,33 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+    # Guess
+    # bluetooth.enable = true;
     # If you want to use JACK applications, uncomment this
     #jack.enable = true;
+        # High quality BT calls
+    media-session.config.bluez-monitor.rules = [
+      {
+        # Matches all cards
+        matches = [{ "device.name" = "~bluez_card.*"; }];
+        actions = {
+          "update-props" = {
+            "bluez5.auto-connect" = [ "hfp_hf" "hsp_hs" "a2dp_sink" ];
+          };
+        };
+      }
+      {
+        matches = [
+          # Matches all sources
+          { "node.name" = "~bluez_input.*"; }
+          # Matches all outputs
+          { "node.name" = "~bluez_output.*"; }
+        ];
+        actions = {
+          "node.pause-on-idle" = false;
+        };
+      }
+    ];
   };
 
 
