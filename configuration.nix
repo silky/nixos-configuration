@@ -265,6 +265,7 @@
     git-lfs
     gmp
     gnome.gedit
+    gnome.nautilus
     gnome.seahorse
     gnumake
     google-chrome
