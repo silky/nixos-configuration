@@ -194,26 +194,27 @@
 
   nix.settings.trusted-users = [ "root" "noon" ];
 
-  hardware.bluetooth.enable = true;
-  hardware.bluetooth.package = pkgs.bluezFull;
-  hardware.bluetooth.hsphfpd.enable = true;
-
-  services.blueman.enable = true;
 
   services.gnome.gnome-keyring.enable = true;
   security.pam.services.login = {
     enableGnomeKeyring = true;
   };
 
-  environment.etc = { "wireplumber/bluetooth.lua.d/51-bluez-config.lua".text = ''
-      bluez_monitor.properties = {
-        ["bluez5.enable-sbc-xq"] = true,
-        ["bluez5.enable-msbc"] = true,
-        ["bluez5.enable-hw-volume"] = true,
-        ["bluez5.headset-roles"] = "[ hsp_hs hsp_ag hfp_hf hfp_ag ]"
-      }
-    '';
-  };
+  # Bluetooth. Off for now :(
+  #   <https://nixos.wiki/wiki/PipeWire>
+  hardware.bluetooth.enable = false;
+  # hardware.bluetooth.package = pkgs.bluezFull;
+  # hardware.bluetooth.hsphfpd.enable = true;
+  services.blueman.enable = false;
+  # environment.etc = { "wireplumber/bluetooth.lua.d/51-bluez-config.lua".text = ''
+  #     bluez_monitor.properties = {
+  #       ["bluez5.enable-sbc-xq"] = true,
+  #       ["bluez5.enable-msbc"] = true,
+  #       ["bluez5.enable-hw-volume"] = true,
+  #       ["bluez5.headset-roles"] = "[ hsp_hs hsp_ag hfp_hf hfp_ag ]"
+  #     }
+  #   '';
+  # };
 
   # rtkit is optional but recommended
   security.rtkit.enable = true;
