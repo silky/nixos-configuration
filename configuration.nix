@@ -49,7 +49,8 @@
       configure = {
         # Note: Hack.
         customRC = "source " + /home/noon/dev/dotfiles/init.vim;
-        plug.plugins = with pkgs.vimPlugins; [
+        packages.neovimPlugins = with pkgs.vimPlugins; {
+          start = [
           cabal-project-vim
           dhall-vim
           editorconfig-vim
@@ -72,7 +73,7 @@
           vim-toml
           vim-vue
           xterm-color-table
-        ];
+        ];};
       };
     };
   in
@@ -102,7 +103,7 @@
 # GDK_DPI_SCALE = "0.5";
 # };
 
-  boot.kernelPackages = pkgs.linuxKernel.packages.linux_5_19;
+  # boot.kernelPackages = pkgs.linuxKernel.packages.linux_5_19;
 
   # Enable swap on luks
   boot.initrd.luks.devices."luks-cfcef1a8-76eb-4434-9e88-277e42b11d87".device = "/dev/disk/by-uuid/cfcef1a8-76eb-4434-9e88-277e42b11d87";
@@ -191,7 +192,7 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  nix.trustedUsers = [ "root" "noon" ];
+  nix.settings.trusted-users = [ "root" "noon" ];
 
   # Let's see if we can get bluetooth working.
   hardware.bluetooth.enable = true;
