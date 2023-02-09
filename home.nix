@@ -116,6 +116,8 @@ in {
     enableZshIntegration = true;
   };
 
+  home.stateVersion = "22.11";
+
   home.file = {
     ".gitconfig".source = mkSym "${config.home.homeDirectory}/dev/nixos-configuration/home/gitconfig";
     ".config/konsolerc".source = mkSym "${config.home.homeDirectory}/dev/nixos-configuration/home/konsolerc";

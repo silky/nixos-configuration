@@ -4,6 +4,9 @@ DefaultProfile=Profile 1.profile
 [Favorite Profiles]
 Favorites=
 
+[General]
+ConfigVersion=1
+
 [KonsoleWindow]
 RememberWindowSize=false
 ShowMenuBarByDefault=false
@@ -11,14 +14,19 @@ ShowMenuBarByDefault=false
 [MainWindow]
 DP-1 Height 1440x2560=976
 DP-1 Width 1440x2560=478
-DP-3 DP-1 Height 1440x2560=1580
-DP-3 DP-1 Height 2560x1440=718
-DP-3 DP-1 Width 1440x2560=1438
-DP-3 DP-1 Width 2560x1440=976
-DP-3 DP-1 XPosition 1440x2560=2561
-DP-3 DP-1 XPosition 2560x1440=1583
-DP-3 DP-1 YPosition 1440x2560=1
+DP-3 DP-1=DP-3
+DP-3 DP-1 Height 1440x2560=976
+DP-3 DP-1 Height 2560x1440=1438
+DP-3 DP-1 Height 2560x1440 DP-3=1438
+DP-3 DP-1 Width 1440x2560=718
+DP-3 DP-1 Width 2560x1440=1580
+DP-3 DP-1 Width 2560x1440 DP-3=1580
+DP-3 DP-1 XPosition 1440x2560=3281
+DP-3 DP-1 XPosition 2560x1440=1
+DP-3 DP-1 XPosition 2560x1440 DP-3=1
+DP-3 DP-1 YPosition 1440x2560=1583
 DP-3 DP-1 YPosition 2560x1440=613
+DP-3 DP-1 YPosition 2560x1440 DP-3=613
 DP-3 Height 2560x1440=1438
 DP-3 Width 2560x1440=1477
 DP-3 XPosition 2560x1440=1
