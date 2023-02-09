@@ -104,7 +104,7 @@
 # GDK_DPI_SCALE = "0.5";
 # };
 
-  # boot.kernelPackages = pkgs.linuxKernel.packages.linux_5_19;
+  boot.kernelPackages = pkgs.linuxKernel.packages.linux_6_1;
 
   # Enable swap on luks
   boot.initrd.luks.devices."luks-cfcef1a8-76eb-4434-9e88-277e42b11d87".device = "/dev/disk/by-uuid/cfcef1a8-76eb-4434-9e88-277e42b11d87";
@@ -127,7 +127,7 @@
   # Select internationalisation properties.
   i18n.defaultLocale = "en_GB.utf8";
 
-  services.helic.enable = true;
+  # services.helic.enable = true;
   services.vnstat.enable = true;
 
   services.xserver = {
@@ -195,7 +195,7 @@
 
   # Let's see if we can get bluetooth working.
   hardware.bluetooth.enable = true;
-  hardware.bluetooth.package = pkgs.bluezFull;
+  hardware.bluetooth.package = pkgs.bluez;
   hardware.bluetooth.hsphfpd.enable = true;
 
   services.blueman.enable = true;
@@ -213,11 +213,7 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    # Guess
-    # bluetooth.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-        # High quality BT calls
+    # High quality BT calls
     media-session.config.bluez-monitor.rules = [
       {
         # Matches all cards
