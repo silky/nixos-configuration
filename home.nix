@@ -71,39 +71,41 @@ in {
 
     shellAliases = {
       # Nix
-      n = "nix-shell";
+      n  = "nix-shell";
       rr = "direnv reload";
 
       # Haskell
-      b = "stack build";
+      b  = "stack build";
       bf = "stack build --fast --file-watch";
-      g = "stack ghci";
+      g  = "stack ghci";
 
       # Git-releated
-      ci = "git commit -m";
-      co = "git checkout";
-      gc = "git clone --recursive";
+      ci  = "git commit -m";
+      co  = "git checkout";
+      gc  = "git clone --recursive";
       gpr = "git pull --rebase";
-      pp = "git push";
-      st = "git status";
+      pp  = "git push";
+      st  = "git status";
 
       # Fun
       shh = "ssh -q";
 
       # Shell
-      ".." = "cd ..";
-      l    = "ls -lah --color=auto";
-      ll   = "ls -lh --color=auto";
-      ls   = "ls --color=auto";
+      ".."   = "cd ..";
+      "cd.." = "cd ..";
+      "..."  = "cd ../..";
+      l      = "ls -lah --color=auto";
+      ll     = "ls -lh --color=auto";
+      ls     = "ls --color=auto";
 
       # Misc
       dc  = "docker-compose";
+      df  = "df -h";
+      m   = "make";
       p   = "python";
       rg  = "rg -M 1000";
       v   = "nvim";
       vim = "nvim";
-      df  = "df -h";
-      m   = "make";
     };
   };
 
