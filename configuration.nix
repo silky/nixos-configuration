@@ -259,6 +259,7 @@
     google-chrome
     htop
     httpie
+    kdiff3
     inkscape
     jc
     jq
