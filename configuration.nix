@@ -143,8 +143,8 @@
         # No screen saving.
         xset s off -dpms
 
-        # Default to the office layout.
-        /home/noon/.screenlayout/work.sh
+        # Default to the office layout; fallback to laptop.
+        /home/noon/.screenlayout/work.sh || /home/noon/.screenlayout/laptop-only.sh
       '';
       autoLogin = {
         user = "noon";
@@ -255,6 +255,7 @@
     gnome.nautilus
     gnome.seahorse
     gnumake
+    gnupg
     google-chrome
     htop
     httpie
