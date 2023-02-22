@@ -1,8 +1,8 @@
 # Home-Manager configuration
-{ config, pkgs, ... }:
+{ config, pkgs, unstable, ... }:
 let
   mkSym = config.lib.file.mkOutOfStoreSymlink;
-
+  bleh = import unstable {};
 in {
   programs.zsh = {
     enable = true;
@@ -20,6 +20,11 @@ in {
       bindkey "^[[3~" delete-char
 
       source ~/.profile
+
+      export GPG_TTY="$(tty)"
+      export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+      gpgconf --launch gpg-agent
+
     '';
 
     plugins = with pkgs; [
@@ -109,6 +114,26 @@ in {
     };
   };
 
+
+  # programs.gnupg.agent.pinentryFlavor = "curses";
+  # programs.gnupg.agent = {
+  #    enable = true;
+  #    enableSSHSupport = true;
+  # };
+
+  programs.gpg = {
+    enable = true;
+  };
+  services.gpg-agent = {
+    enable = true;
+    # enableZshIntegration = true;
+    # enableSshSupport = true;
+    # pinentryFlavor = "curses";
+    extraConfig = ''
+      pinentry-program ${pkgs.pinentry.qt}/bin/pinentry
+    '';
+  };
+
   programs.direnv = {
     enable = true;
   };
@@ -117,6 +142,8 @@ in {
     enable = true;
     enableZshIntegration = true;
   };
+
+  programs.gpg.package = bleh.gnupg;
 
   home.stateVersion = "22.11";
 
@@ -127,5 +154,10 @@ in {
 
     ".local/share/konsole/Noons.colorscheme".source = mkSym "${config.home.homeDirectory}/dev/dotfiles/konsole/Noons.colorscheme";
     ".local/share/konsole/Profile 1.profile".source = mkSym "${config.home.homeDirectory}/dev/dotfiles/konsole/Profile 1.profile";
+
+    # ".gnupg/gpg-agent.conf".text = ''
+    #   enable-ssh-support
+    #   pinentry-program ${pkgs.pinentry.curses}/bin/pinentry
+    # '';
   };
 }

@@ -256,7 +256,6 @@
     gnome.nautilus
     gnome.seahorse
     gnumake
-    gnupg
     google-chrome
     htop
     httpie
@@ -296,8 +295,8 @@
   # programs.gnupg.agent = {
   #   enable = true;
   #   enableSSHSupport = true;
+  #   pinentryFlavor = "curses";
   # };
-
   services.openssh.enable = false;
 
 
