@@ -143,8 +143,8 @@
         # No screen saving.
         xset s off -dpms
 
-        # Default to the office layout; fallback to laptop.
-        /home/noon/.screenlayout/work.sh || /home/noon/.screenlayout/laptop-only.sh
+        # Default to the office layouts; fallback to laptop.
+        /home/noon/.screenlayout/work.sh || || /home/noon/.screenlayout/silver-desk.sh || /home/noon/.screenlayout/laptop-only.sh
       '';
       autoLogin = {
         user = "noon";
