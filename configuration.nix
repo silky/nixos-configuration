@@ -261,11 +261,11 @@
     inkscape
     jc
     jq
-    kdiff3
     libtool
     nethogs
     nixpkgs-fmt
     okular
+    pandoc
     pass
     pavucontrol
     pkg-config
