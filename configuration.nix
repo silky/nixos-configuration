@@ -259,10 +259,10 @@
     google-chrome
     htop
     httpie
-    kdiff3
     inkscape
     jc
     jq
+    kdiff3
     libtool
     nethogs
     nixpkgs-fmt
