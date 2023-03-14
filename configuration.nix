@@ -263,6 +263,7 @@
     jc
     jq
     libtool
+    moreutils
     nethogs
     nixpkgs-fmt
     okular
