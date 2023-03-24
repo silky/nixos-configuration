@@ -162,7 +162,8 @@
   };
 
   fonts.fonts = with pkgs; [
-    (nerdfonts.override { fonts = ["FiraCode"]; })
+    nerdfonts
+    # (nerdfonts.override { fonts = ["FiraCode"]; })
     raleway
     source-code-pro
     source-sans-pro
@@ -201,19 +202,19 @@
 
   # Bluetooth. Off for now :(
   #   <https://nixos.wiki/wiki/PipeWire>
-  hardware.bluetooth.enable = false;
-  # hardware.bluetooth.package = pkgs.bluezFull;
-  # hardware.bluetooth.hsphfpd.enable = true;
+  hardware.bluetooth.enable = true;
+  hardware.bluetooth.package = pkgs.bluezFull;
+  hardware.bluetooth.hsphfpd.enable = false;
   services.blueman.enable = false;
-  # environment.etc = { "wireplumber/bluetooth.lua.d/51-bluez-config.lua".text = ''
-  #     bluez_monitor.properties = {
-  #       ["bluez5.enable-sbc-xq"] = true,
-  #       ["bluez5.enable-msbc"] = true,
-  #       ["bluez5.enable-hw-volume"] = true,
-  #       ["bluez5.headset-roles"] = "[ hsp_hs hsp_ag hfp_hf hfp_ag ]"
-  #     }
-  #   '';
-  # };
+  environment.etc = { "wireplumber/bluetooth.lua.d/51-bluez-config.lua".text = ''
+      bluez_monitor.properties = {
+        ["bluez5.enable-sbc-xq"] = true,
+        ["bluez5.enable-msbc"] = true,
+        ["bluez5.enable-hw-volume"] = true,
+        ["bluez5.headset-roles"] = "[ hsp_hs hsp_ag hfp_hf hfp_ag ]"
+      }
+    '';
+  };
 
   # rtkit is optional but recommended
   security.rtkit.enable = true;
@@ -264,6 +265,7 @@
     libtool
     moreutils
     nethogs
+    nix-output-monitor
     nixpkgs-fmt
     okular
     pandoc
@@ -277,6 +279,7 @@
     stack
     texlive.combined.scheme-full
     tree
+    ungoogled-chromium
     unzip
     vim
     wget
