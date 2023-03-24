@@ -260,6 +260,7 @@
     htop
     httpie
     inkscape
+    imagemagick
     jc
     jq
     libtool
