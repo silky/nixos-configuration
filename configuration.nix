@@ -83,6 +83,10 @@
     [ ./hardware-configuration.nix
     ];
 
+  # Enable swap on luks
+  boot.initrd.luks.devices."luks-6a40db75-3164-4b54-bef0-308fec1e5e6d".device = "/dev/disk/by-uuid/6a40db75-3164-4b54-bef0-308fec1e5e6d";
+  boot.initrd.luks.devices."luks-6a40db75-3164-4b54-bef0-308fec1e5e6d".keyFile = "/crypto_keyfile.bin";
+
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -93,23 +97,11 @@
     "/crypto_keyfile.bin" = null;
   };
 
-  # hardware.pulseaudio.package = pkgs.pulseaudioFull;
-  # hardware.pulseaudio.enable = true;
-
   hardware.video.hidpi.enable = lib.mkDefault true;
-
-# environment.variables = {
-# GDK_SCALE = "2";
-# GDK_DPI_SCALE = "0.5";
-# };
 
   boot.kernelPackages = pkgs.linuxKernel.packages.linux_6_1;
 
-  # Enable swap on luks
-  boot.initrd.luks.devices."luks-cfcef1a8-76eb-4434-9e88-277e42b11d87".device = "/dev/disk/by-uuid/cfcef1a8-76eb-4434-9e88-277e42b11d87";
-  boot.initrd.luks.devices."luks-cfcef1a8-76eb-4434-9e88-277e42b11d87".keyFile = "/crypto_keyfile.bin";
-
-  networking.hostName = "otherwise"; # Define your hostname.
+  networking.hostName = "nqpac"; # Define your hostname.
 
   nix.extraOptions = ''
     experimental-features = nix-command flakes recursive-nix ca-derivations
