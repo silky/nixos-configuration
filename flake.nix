@@ -15,11 +15,11 @@
 
   outputs = { self, nixpkgs, unstable, home-manager, nixos-hardware }@attrs:
   {
-    nixosConfigurations.otherwise = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.nqpac = nixpkgs.lib.nixosSystem {
       system      = "x86_64-linux";
       specialArgs = attrs;
       modules     = [
-        nixos-hardware.nixosModules.lenovo-thinkpad-x1-10th-gen
+        nixos-hardware.nixosModules.lenovo-thinkpad-x1-6th-gen
 
         ./configuration.nix
 
