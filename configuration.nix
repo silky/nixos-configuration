@@ -229,6 +229,7 @@
     autoconf
     automake
     bat
+    bashmount
     binutils
     cachix
     customKonsole
@@ -261,7 +262,12 @@
     nix-output-monitor
     nixpkgs-fmt
     okular
+    ntfs3g
     pandoc
+    fuse
+    vlc
+    nix-direnv
+    nomacs
     pass
     pavucontrol
     pkg-config
