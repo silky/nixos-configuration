@@ -223,12 +223,13 @@
 
 
   environment.systemPackages = with pkgs; [
+    acpi
     alsa-utils
     arandr
     autoconf
     automake
-    bat
     bashmount
+    bat
     binutils
     cachix
     customKonsole
@@ -240,6 +241,7 @@
     feh
     firefox
     flameshot
+    fuse
     fzf
     gcc
     git
@@ -258,15 +260,13 @@
     libtool
     moreutils
     nethogs
+    nix-direnv
     nix-output-monitor
     nixpkgs-fmt
-    okular
-    ntfs3g
-    pandoc
-    fuse
-    vlc
-    nix-direnv
     nomacs
+    ntfs3g
+    okular
+    pandoc
     pass
     pavucontrol
     pkg-config
@@ -280,6 +280,7 @@
     ungoogled-chromium
     unzip
     vim
+    vlc
     wget
     xclip
     xorg.xkill
