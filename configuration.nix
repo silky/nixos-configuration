@@ -114,6 +114,7 @@
 
   nix.extraOptions = ''
     experimental-features = nix-command flakes recursive-nix ca-derivations
+    allow-import-from-derivation = true
     log-lines = 300
     warn-dirty = false
   '';
@@ -277,6 +278,7 @@
     python310
     python310Packages.keyring
     ripgrep
+    nix-direnv
     stack
     texlive.combined.scheme-full
     tree
