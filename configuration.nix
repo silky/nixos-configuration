@@ -225,6 +225,7 @@
 
   environment.systemPackages = with pkgs; [
     acpi
+    lsof
     alsa-utils
     arandr
     autoconf
