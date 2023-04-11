@@ -120,6 +120,7 @@ in
         gnome.gedit
         gnome.nautilus
         gnome.seahorse
+        libnotify
         nethogs
       ];
 
@@ -163,6 +164,13 @@ in
       export GPG_TTY="$(tty)"
       export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
       gpgconf --launch gpg-agent
+
+      # TODO: Use this notify-send
+      __bat () {
+        mins=$(acpi | jc --acpi | jq '.[].charge_remaining_minutes')
+        hrs=$(acpi | jc --acpi | jq '.[].charge_remaining_hours')
+        echo "$hrs hr $mins m"
+      }
     '';
 
     plugins = with pkgs; [
@@ -270,6 +278,9 @@ in
     enable  = true;
     package = unstablePkgs.gnupg;
   };
+
+  # TODO: Configure this properly.
+  services.dunst.enable = true;
 
   services.gpg-agent = {
     enable = true;
