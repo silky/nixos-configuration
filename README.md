@@ -1,6 +1,9 @@
 # noonos: nixos-configuration
 
-### Usage
+### (Approximate) Usage
+
+(Something like the below works; You'll of course need to do some busywork
+ with your auto-generated hardware nix file.)
 
 Starting from nothing:
 
