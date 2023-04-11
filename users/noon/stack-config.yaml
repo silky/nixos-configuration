@@ -1,0 +1,14 @@
+templates:
+  params:
+   author-name: Noon van der Silk
+   author-email: noonsilk@gmail.com
+   github-username: silky
+
+recommend-stack-upgrade: false
+
+# nix:
+#   packages: [ zlib.dev
+#             , zlib.out
+#             , pkgconfig
+#             , postgresql
+#             ]
