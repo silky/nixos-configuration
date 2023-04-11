@@ -8,9 +8,9 @@ Favorites=
 ConfigVersion=1
 
 [KonsoleWindow]
-SaveGeometryOnExit=false
 RememberWindowSize=false
 RemoveWindowTitleBarAndFrame=true
+SaveGeometryOnExit=false
 ShowMenuBarByDefault=false
 
 [MainWindow]
