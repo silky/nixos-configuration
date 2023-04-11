@@ -30,7 +30,6 @@
   # ~ System/Kernel
   #
   # ---------------------------------------------------------------------------
-  hardware.video.hidpi.enable = lib.mkDefault true;
   boot.kernelPackages = pkgs.linuxKernel.packages.linux_6_1;
 
   # See: https://nixos.wiki/wiki/Fwupd
