@@ -156,6 +156,8 @@ in
       bindkey "^?" backward-delete-char
       bindkey "^[[3~" delete-char
 
+      bindkey -e
+
       source ~/.profile
 
       export GPG_TTY="$(tty)"
@@ -212,7 +214,9 @@ in
       LANG     = "en_US.UTF-8";
       LC_CTYPE = "en_US.UTF-8";
       LC_ALL   = "en_US.UTF-8";
-      EDITOR   = "nvim";
+      # TODO: Work out how to reinstate so that it doesn't kill off emacs
+      # bindings in the shell.
+      # EDITOR   = "nvim";
     };
 
     shellAliases = {

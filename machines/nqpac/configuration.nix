@@ -1,7 +1,8 @@
-{ user, name, config, pkgs, lib, ... }:
+{ user, name, config, pkgs, lib, nixos-hardware, ... }:
 {
   imports =
     [ ./hardware.nix
+      nixos-hardware.nixosModules.lenovo-thinkpad-x1-6th-gen
     ];
 
 
