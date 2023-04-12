@@ -77,6 +77,13 @@ let
       ];};
     };
   };
+
+  showBatteryState = pkgs.writeShellScriptBin "show-battery-state" ''
+    mins=$(acpi | jc --acpi | jq '.[].charge_remaining_minutes')
+    hrs=$(acpi | jc --acpi | jq '.[].charge_remaining_hours')
+    pct=$(acpi | jc --acpi | jq '.[].charge_percent')
+    ${pkgs.libnotify}/bin/notify-send "Battery" "Remaining: $hrs hr $mins m ($pct%)."
+  '';
 in
 {
   home.stateVersion = "22.11";
@@ -134,8 +141,12 @@ in
         vlc
         xclip
       ];
+
+      scripts = [
+        showBatteryState
+      ];
     in
-      web ++ dev ++ sys ++ apps;
+      web ++ dev ++ sys ++ apps ++ scripts;
 
 
   # ---------------------------------------------------------------------------
@@ -165,13 +176,6 @@ in
       export GPG_TTY="$(tty)"
       export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
       gpgconf --launch gpg-agent
-
-      __bat () {
-        mins=$(acpi | jc --acpi | jq '.[].charge_remaining_minutes')
-        hrs=$(acpi | jc --acpi | jq '.[].charge_remaining_hours')
-        pct=$(acpi | jc --acpi | jq '.[].charge_percent')
-        notify-send "Battery" "Remaining: $hrs hr $mins m ($pct%)."
-      }
     '';
 
     plugins = with pkgs; [

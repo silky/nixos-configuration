@@ -108,8 +108,8 @@ myKeys conf =
    --
    , ((layoutChangeModMask, xK_s), swapScreen)
    --
-   -- Show battery status via our special zsh script.
-   , ((mod1Mask, xK_b), spawn "zsh -ic __bat")
+   -- Show battery status via our script (defined in nix.)
+   , ((mod1Mask, xK_b), spawn "show-battery-state")
    , ((mod1Mask, xK_g), bringMenu) -- "Grab"
   ]
   ++
