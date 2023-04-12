@@ -100,6 +100,7 @@ in
         docker-compose
         httpie
         jc
+        jd-diff-patch
         jq
         nix-output-monitor
         pkg-config
