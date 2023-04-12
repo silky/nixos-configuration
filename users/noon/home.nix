@@ -165,11 +165,11 @@ in
       export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
       gpgconf --launch gpg-agent
 
-      # TODO: Use this notify-send
       __bat () {
         mins=$(acpi | jc --acpi | jq '.[].charge_remaining_minutes')
         hrs=$(acpi | jc --acpi | jq '.[].charge_remaining_hours')
-        echo "$hrs hr $mins m"
+        pct=$(acpi | jc --acpi | jq '.[].charge_percent')
+        notify-send "Battery" "Remaining: $hrs hr $mins m ($pct%)."
       }
     '';
 
@@ -279,8 +279,39 @@ in
     package = unstablePkgs.gnupg;
   };
 
-  # TODO: Configure this properly.
-  services.dunst.enable = true;
+  services.dunst = {
+    enable = true;
+
+    iconTheme = {
+      name    = "BeautyLine";
+      package = pkgs.beauty-line-icon-theme;
+      size    = "32x32";
+    };
+
+    settings = {
+      global = {
+        font        = "Fira Code 12";
+        format      = "%s: %b";
+        frame_width = "0";
+        width       = "(0, 500)";
+      };
+      urgency_low = {
+        background = "#e6e6fa";
+        foreground = "#111111";
+        timeout    = 3;
+      };
+      urgency_normal = {
+        background = "#e6e6fa";
+        foreground = "#111111";
+        timeout    = 3;
+      };
+      urgency_critical = {
+        background = "#ffe4e1";
+        foreground = "#111111";
+        timeout    = 4;
+      };
+    };
+  };
 
   services.gpg-agent = {
     enable = true;
