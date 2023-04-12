@@ -291,7 +291,8 @@ in
 
     settings = {
       global = {
-        format      = "%s: %b";
+        font        = "Fira Code 12";
+        format      = "%s — %b";
         frame_width = "0";
         width       = "(0, 500)";
       };
