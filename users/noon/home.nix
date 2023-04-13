@@ -126,6 +126,7 @@ in
         dmenu
         feh
         flameshot
+        gnome.eog
         gnome.gedit
         gnome.nautilus
         gnome.seahorse
