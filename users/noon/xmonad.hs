@@ -11,6 +11,7 @@
 --  http://xmonad.org/xmonad-docs/xmonad/src/XMonad-Config.html
 --  https://bitbucket.org/tobyodavies/shared/src
 --  https://betweentwocommits.com/blog/xmonad-layouts-guide
+--  https://github.com/Axarva/dotfiles-2.0/blob/main/xmonad/xmonad.hs
 
 -- https://github.com/kmarzic/dotfiles/blob/master/.xmonad/xmonad.ansi.hs
 
