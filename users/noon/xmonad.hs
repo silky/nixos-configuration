@@ -84,6 +84,10 @@ myKeys conf =
    --
    , ((layoutChangeModMask, xK_q), return () )
    --
+   -- Brightness: Alt-Shift +/-
+   , ((layoutChangeModMask, xK_equal), spawn "brightnessctl s '1%+'")
+   , ((layoutChangeModMask, xK_minus), spawn "brightnessctl s '1%-'")
+   --
    , ((mod1Mask, xK_o), spawn "nautilus --no-desktop")
    , ((mod1Mask, xK_m), spawn "konsole -e alsamixer")
    , ((mod1Mask, xK_e), spawn "konsole -e nvim")

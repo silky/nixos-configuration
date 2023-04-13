@@ -72,6 +72,7 @@
     tree
     unzip
     wget
+    xorg.xev
     xorg.xkill
     xsel
     zip

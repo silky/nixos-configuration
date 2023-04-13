@@ -122,6 +122,7 @@ in
         acpi
         alsa-utils
         arandr
+        brightnessctl
         dmenu
         feh
         flameshot
@@ -134,7 +135,6 @@ in
 
       apps = [
         inkscape
-        nomacs
         okular
         pandoc
         pass
