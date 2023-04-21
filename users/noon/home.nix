@@ -109,6 +109,7 @@ in
         jc
         jd-diff-patch
         jq
+        moreutils
         nix-output-monitor
         pkg-config
         python310

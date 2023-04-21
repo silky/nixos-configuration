@@ -87,7 +87,7 @@
   nix = {
     settings.trusted-users = [ "root" "${user}" ];
     extraOptions = ''
-      experimental-features = nix-command flakes recursive-nix ca-derivations
+      experimental-features = nix-command flakes recursive-nix ca-derivations repl-flake
       log-lines = 300
       warn-dirty = false
     '';
