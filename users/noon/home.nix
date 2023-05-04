@@ -142,6 +142,7 @@ in
         pass
         vlc
         xclip
+        xournalpp
       ];
 
       scripts = [
