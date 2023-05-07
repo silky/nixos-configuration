@@ -105,6 +105,7 @@ in
         customNvim
         docker
         docker-compose
+        etcher
         httpie
         jc
         jd-diff-patch

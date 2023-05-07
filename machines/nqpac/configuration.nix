@@ -93,7 +93,12 @@
     '';
   };
 
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config = {
+    allowUnfree = true;
+    permittedInsecurePackages = [
+      "electron-12.2.3" # For etcher; See https://github.com/NixOS/nixpkgs/issues/153537
+    ];
+  };
 
 
   # ---------------------------------------------------------------------------
