@@ -238,8 +238,10 @@ in
 
     shellAliases = {
       # Nix
-      n  = "nix-shell";
       rr = "direnv reload";
+      n                  = "nix-shell";
+      nix-shell-unstable = "nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
+      nu                 = "nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
 
       # Haskell
       b  = "stack build --nix";
