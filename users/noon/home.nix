@@ -112,6 +112,7 @@ in
         jq
         moreutils
         nix-output-monitor
+        nix-tree
         pkg-config
         python310
         python310Packages.keyring
