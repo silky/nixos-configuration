@@ -172,6 +172,8 @@ in
   # ---------------------------------------------------------------------------
   programs.zsh = {
     enable = true;
+    autocd = true;
+    enableCompletion = true;
 
     initExtra = ''
       # Control-arrows
