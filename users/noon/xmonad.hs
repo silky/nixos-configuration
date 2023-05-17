@@ -102,11 +102,11 @@ myKeys conf =
    -- -- Show a random image full-screen
    -- , ((mod1Mask, xK_i), spawn "feh -Z -. --randomize --image-bg black /home/noon/images"
    --                      >> sendMessage (JumpToLayout "Full")
-     )
+     -- )
    --
    -- , ((layoutChangeModMask, xK_i), spawn "feh -. -x -q -D 600 -B black -F -Z -z -r /home/noon/slideshow-images"
    --                      >> sendMessage (JumpToLayout "Full")
-     )
+     -- )
    --
    -- Move mouse focus to the other screen; useful for more a setup with more
    -- than one screen
