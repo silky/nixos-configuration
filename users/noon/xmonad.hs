@@ -88,19 +88,24 @@ myKeys conf =
    -- Brightness: Alt-Shift +/-
    , ((layoutChangeModMask, xK_equal), spawn "brightnessctl s '2%+'")
    , ((layoutChangeModMask, xK_minus), spawn "brightnessctl s '2%-'")
+   -- Screens:
+   --   Alt-Shift M = Mobile
+   -- , ((layoutChangeModMask, xK_minus), spawn "TODO")
+   --   Alt-Shift W = Work
+   -- , ((layoutChangeModMask, xK_minus), spawn "TODO")
    --
    , ((mod1Mask, xK_o), spawn "nautilus --no-desktop")
    , ((mod1Mask, xK_m), spawn "konsole -e alsamixer")
    , ((mod1Mask, xK_e), spawn "konsole -e nvim")
    , ((mod1Mask, xK_p), spawn "dmenu_run -nb '#d1f0ff' -sf '#b141e5' -nf '#333333' -sb '#d1f0ff'")
    --
-   -- Show a random image full-screen
-   , ((mod1Mask, xK_i), spawn "feh -Z -. --randomize --image-bg black /home/noon/images"
-                        >> sendMessage (JumpToLayout "Full")
+   -- -- Show a random image full-screen
+   -- , ((mod1Mask, xK_i), spawn "feh -Z -. --randomize --image-bg black /home/noon/images"
+   --                      >> sendMessage (JumpToLayout "Full")
      )
    --
-   , ((layoutChangeModMask, xK_i), spawn "feh -. -x -q -D 600 -B black -F -Z -z -r /home/noon/slideshow-images"
-                        >> sendMessage (JumpToLayout "Full")
+   -- , ((layoutChangeModMask, xK_i), spawn "feh -. -x -q -D 600 -B black -F -Z -z -r /home/noon/slideshow-images"
+   --                      >> sendMessage (JumpToLayout "Full")
      )
    --
    -- Move mouse focus to the other screen; useful for more a setup with more
