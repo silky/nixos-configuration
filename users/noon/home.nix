@@ -150,6 +150,7 @@ in
 
       apps = [
         inkscape
+        obsidian
         okular
         pandoc
         pass
