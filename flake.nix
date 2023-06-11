@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url        = "nixpkgs/nixos-22.11";
+    nixpkgs.url        = "nixpkgs/nixos-23.05";
     unstable.url       = "nixpkgs/nixos-unstable";
     home-manager.url   = "github:nix-community/home-manager/release-22.11";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
@@ -30,7 +30,11 @@
   {
     nixosConfigurations.nqpac = mkSystem "nqpac" {
       user     = "noon";
-      overlays = [];
+      overlays = [
+        (self: super: {
+          fcitx-engines = self.fcitx5;
+        })
+      ];
     };
   };
 }
