@@ -119,6 +119,7 @@ in
         etcher
         httpie
         jc
+        fx
         jd-diff-patch
         jq
         moreutils
@@ -139,6 +140,7 @@ in
         brightnessctl
         dmenu
         feh
+        ffmpeg
         flameshot
         gnome.eog
         gnome.gedit
@@ -149,12 +151,14 @@ in
       ];
 
       apps = [
+        imagemagick
         inkscape
         obsidian
         okular
         pandoc
         pass
         vlc
+        vokoscreen-ng
         xclip
         xournalpp
       ];
