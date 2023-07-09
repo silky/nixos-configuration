@@ -95,6 +95,32 @@ let
     pct=$(acpi | jc --acpi | jq '.[].charge_percent')
     ${pkgs.libnotify}/bin/notify-send "Battery" "Remaining: $hrs hr $mins m ($pct%)."
   '';
+
+  # Hacky monitor things
+  work = pkgs.writeShellScriptBin "work" ''
+   xrandr \
+      --output DP-1   --off \
+      --output DP-2   --primary --mode 2560x1440 --pos 0x619 --rotate normal \
+      --output HDMI-1 --mode 2560x1440 --pos 2560x0 --rotate left \
+      --output eDP-1  --off
+    ~/.fehbg
+  '';
+  silver-desk = pkgs.writeShellScriptBin "silver-desk" ''
+   xrandr \
+      --output DP-1   --mode 2560x1440 --pos 2560x0 --rotate right \
+      --output DP-2   --primary --mode 2560x1440 --pos 0x560 --rotate normal \
+      --output HDMI-1 --off \
+      --output eDP-1  --off
+    ~/.fehbg
+  '';
+  mobile = pkgs.writeShellScriptBin "mobile" ''
+    xrandr \
+      --output DP-1   --off \
+      --output DP-2   --off \
+      --output HDMI-1 --off \
+      --output eDP-1  --primary --mode 2560x1400 --pos 0x0 --rotate normal
+    ~/.fehbg
+  '';
 in
 {
   home.stateVersion = "22.11";
@@ -164,7 +190,10 @@ in
       ];
 
       scripts = [
+        mobile
         showBatteryState
+        silver-desk
+        work
       ];
     in
       web ++ dev ++ sys ++ apps ++ scripts;

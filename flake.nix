@@ -16,6 +16,10 @@
         modules = [
           { nixpkgs.overlays = overlays; }
 
+          # Common system configuration
+          ./users/${user}/common-configuration.nix
+
+          # Specific machine configuration
           ./machines/${name}/configuration.nix
 
           home-manager.nixosModules.home-manager {
