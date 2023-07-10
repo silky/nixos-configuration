@@ -317,7 +317,7 @@ in
       md     = "mkdir -p";
 
       # Misc
-      dc  = "docker-compose";
+      dc  = "docker compose";
       df  = "df -h";
       m   = "make";
       p   = "python";
