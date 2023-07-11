@@ -295,6 +295,7 @@ in
       b  = "stack build --nix";
       bf = "stack build --nix --fast --file-watch";
       g  = "stack ghci --nix";
+      c  = "cabal build";
 
       # Git-releated
       ci  = "git commit -m";
