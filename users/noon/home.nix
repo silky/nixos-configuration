@@ -78,6 +78,7 @@ let
         vim-commentary
         vim-easy-align
         vim-easymotion
+        vim-ledger
         vim-nix
         vim-ormolu
         vim-rescript
@@ -177,6 +178,9 @@ in
       ];
 
       apps = [
+        hledger
+        hledger-ui
+        hledger-web
         imagemagick
         inkscape
         obsidian
@@ -279,6 +283,10 @@ in
       LANG     = "en_US.UTF-8";
       LC_CTYPE = "en_US.UTF-8";
       LC_ALL   = "en_US.UTF-8";
+
+      # hledger
+      LEDGER_FILE = "$HOME/dev/life/accounts/hledger.journal";
+
       # TODO: Work out how to reinstate so that it doesn't kill off emacs
       # bindings in the shell.
       # EDITOR   = "nvim";
