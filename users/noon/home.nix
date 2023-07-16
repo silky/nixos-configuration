@@ -144,9 +144,10 @@ in
         docker
         docker-compose
         etcher
+        fx
+        git-crypt
         httpie
         jc
-        fx
         jd-diff-patch
         jq
         moreutils

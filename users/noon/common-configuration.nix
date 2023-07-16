@@ -160,6 +160,14 @@
     source-serif-pro
   ];
 
+  services.grafana = {
+    enable = true;
+    settings = {
+      server.domain    = "localhost";
+      server.http_addr = "0.0.0.0";
+    };
+  };
+
 
   # ---------------------------------------------------------------------------
   #
