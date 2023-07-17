@@ -160,28 +160,28 @@
     source-serif-pro
   ];
 
-  services.grafana = {
-    enable = true;
-    settings = {
-      server.domain    = "localhost";
-      server.http_addr = "0.0.0.0";
-    };
-    provision = {
-      datasources.settings.datasources = [
-        {
-          name = "Prometheus";
-          url = "http://localhost:9001";
-          type = "prometheus";
-        }
-      ];
-    };
-  };
 
-  services.prometheus = {
-    enable = true;
-    port   = 9001;
-  };
+  # services.prometheus = {
+  #   enable = true;
+  #   port   = 9001;
+  # };
 
+  # services.grafana = {
+  #   enable = true;
+  #   settings = {
+  #     server.domain    = "localhost";
+  #     server.http_addr = "0.0.0.0";
+  #   };
+  #   provision = {
+  #     datasources.settings.datasources = [
+  #       {
+  #         name = "Prometheus";
+  #         url = "http://localhost:${toString config.services.prometheus.port}";
+  #         type = "prometheus";
+  #       }
+  #     ];
+  #   };
+  # };
 
   # ---------------------------------------------------------------------------
   #

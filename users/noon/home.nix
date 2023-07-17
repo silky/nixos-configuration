@@ -179,9 +179,11 @@ in
       ];
 
       apps = [
-        hledger
-        hledger-ui
-        hledger-web
+        # Latest hledger
+        unstablePkgs.haskellPackages.hledger_1_30_1
+        # Broken.
+        # unstablePkgs.haskellPackages.hledger-ui_1_30
+        unstablePkgs.haskellPackages.hledger-web_1_30
         imagemagick
         inkscape
         obsidian
@@ -305,6 +307,9 @@ in
       bf = "stack build --nix --fast --file-watch";
       g  = "stack ghci --nix";
       c  = "cabal build";
+
+      # hledger
+      h = "hledger";
 
       # Git-releated
       ci  = "git commit -m";
