@@ -152,13 +152,26 @@
 
   virtualisation.docker.enable = true;
 
-  fonts.fonts = with pkgs; [
-    nerdfonts
-    raleway
-    source-code-pro
-    source-sans-pro
-    source-serif-pro
-  ];
+  fonts = {
+    fonts = with pkgs; [
+      nerdfonts
+      noto-fonts-emoji
+      raleway
+      source-code-pro
+      source-sans-pro
+      source-serif-pro
+      symbola
+      twitter-color-emoji
+    ];
+    enableDefaultFonts = true;
+    fontconfig = {
+      defaultFonts = {
+        monospace = [ "Fira Code" ];
+        emoji = [ "Twemoji" "Noto Color Emoji" "Symbola" ];
+      };
+    };
+  };
+
 
 
   # services.prometheus = {
