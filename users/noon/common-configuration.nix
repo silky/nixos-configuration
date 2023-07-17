@@ -166,6 +166,20 @@
       server.domain    = "localhost";
       server.http_addr = "0.0.0.0";
     };
+    provision = {
+      datasources.settings.datasources = [
+        {
+          name = "Prometheus";
+          url = "http://localhost:9001";
+          type = "prometheus";
+        }
+      ];
+    };
+  };
+
+  services.prometheus = {
+    enable = true;
+    port   = 9001;
   };
 
 
