@@ -164,6 +164,7 @@
       twitter-color-emoji
     ];
     enableDefaultFonts = true;
+    # Note: Unfortunately, this isn't exactly working.
     fontconfig = {
       defaultFonts = {
         monospace = [ "Fira Code" ];
@@ -172,29 +173,6 @@
     };
   };
 
-
-
-  # services.prometheus = {
-  #   enable = true;
-  #   port   = 9001;
-  # };
-
-  # services.grafana = {
-  #   enable = true;
-  #   settings = {
-  #     server.domain    = "localhost";
-  #     server.http_addr = "0.0.0.0";
-  #   };
-  #   provision = {
-  #     datasources.settings.datasources = [
-  #       {
-  #         name = "Prometheus";
-  #         url = "http://localhost:${toString config.services.prometheus.port}";
-  #         type = "prometheus";
-  #       }
-  #     ];
-  #   };
-  # };
 
   # ---------------------------------------------------------------------------
   #
