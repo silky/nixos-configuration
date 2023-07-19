@@ -168,7 +168,7 @@ in
         brightnessctl
         dmenu
         feh
-        ffmpeg
+        ffmpeg_6-full
         flameshot
         gnome.eog
         gnome.gedit
