@@ -4,6 +4,7 @@ let
     = file: config.lib.file.mkOutOfStoreSymlink
         "${config.home.homeDirectory}/dev/nixos-configuration/users/${config.home.username}/${file}";
 
+  hledgerFile  = "/home/noon//dev/life/accounts/hledger.journal";
   unstablePkgs = import unstable {};
 
 
@@ -208,6 +209,27 @@ in
 
   # ---------------------------------------------------------------------------
   #
+  # ~ Custom services
+  #
+  # ---------------------------------------------------------------------------
+  systemd.user.services.hledger = {
+    Unit = {
+      Description = "hledger-web";
+      After = [ "graphical-session-pre.target" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+    Install = { WantedBy = [ "graphical-session.target" ]; };
+    Service = {
+        Restart = "on-failure";
+        ExecStart =
+          "${unstablePkgs.haskellPackages.hledger-web_1_30}/bin/hledger-web --serve -f ${hledgerFile}";
+        };
+  };
+
+
+
+  # ---------------------------------------------------------------------------
+  #
   # ~ Zsh
   #
   # ---------------------------------------------------------------------------
@@ -288,7 +310,7 @@ in
       LC_ALL   = "en_US.UTF-8";
 
       # hledger
-      LEDGER_FILE = "$HOME/dev/life/accounts/hledger.journal";
+      LEDGER_FILE = hledgerFile;
 
       # TODO: Work out how to reinstate so that it doesn't kill off emacs
       # bindings in the shell.
