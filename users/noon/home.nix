@@ -331,7 +331,7 @@ in
       c  = "cabal build";
 
       # hledger
-      h = "hledger";
+      h = "hledger -s";
 
       # Git-releated
       ci  = "git commit -m";
