@@ -147,6 +147,7 @@ in
         etcher
         fx
         git-crypt
+        html-tidy
         httpie
         jc
         jd-diff-patch
