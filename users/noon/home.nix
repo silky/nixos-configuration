@@ -181,17 +181,18 @@ in
       ];
 
       apps = [
-        # Latest hledger
-        unstablePkgs.haskellPackages.hledger_1_30_1
-        # Broken.
-        # unstablePkgs.haskellPackages.hledger-ui_1_30
-        unstablePkgs.haskellPackages.hledger-web_1_30
+        gimp-with-plugins
         imagemagick
         inkscape
         obsidian
         okular
         pandoc
         pass
+        # Latest hledger
+        unstablePkgs.haskellPackages.hledger-web_1_30
+        unstablePkgs.haskellPackages.hledger_1_30_1
+        # Broken.
+        # unstablePkgs.haskellPackages.hledger-ui_1_30
         vlc
         vokoscreen-ng
         xclip

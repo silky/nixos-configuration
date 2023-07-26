@@ -1,5 +1,5 @@
 [Background]
-Color=255,239,209
+Color=245,240,227
 
 [BackgroundFaint]
 Color=255,239,209
@@ -96,4 +96,5 @@ Description=Noons
 FillStyle=Tile
 Opacity=1
 Wallpaper=
+WallpaperFlipType=NoFlip
 WallpaperOpacity=1
