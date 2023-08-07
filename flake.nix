@@ -4,10 +4,11 @@
     unstable.url       = "nixpkgs/nixos-unstable";
     home-manager.url   = "github:nix-community/home-manager/release-23.05";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    cooklang-chef.url = "github:silky/cooklang-chef/nix-hacking";
   };
 
 
-  outputs = { self, nixpkgs, unstable, home-manager, nixos-hardware }@attrs:
+  outputs = { self, nixpkgs, unstable, home-manager, nixos-hardware, cooklang-chef }@attrs:
   let
     mkSystem = name: { user, overlays }:
       nixpkgs.lib.nixosSystem {
@@ -26,7 +27,7 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.${user} = import ./users/${user}/home.nix;
-            home-manager.extraSpecialArgs = { inherit unstable; };
+            home-manager.extraSpecialArgs = { inherit unstable cooklang-chef; };
           }
         ];
       };

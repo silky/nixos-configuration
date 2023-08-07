@@ -1,8 +1,27 @@
 {
   "nodes": {
-    "home-manager": {
+    "cooklang-chef": {
       "inputs": {
         "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1691423393,
+        "narHash": "sha256-oJ6iMYBYPsLJA314iQSm8XJhcK+oY3BB9L+11VLjcZM=",
+        "owner": "silky",
+        "repo": "cooklang-chef",
+        "rev": "65bbf863fabde58c09fddb67725fbe35bf685cd7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "silky",
+        "ref": "nix-hacking",
+        "repo": "cooklang-chef",
+        "type": "github"
+      }
+    },
+    "home-manager": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_2"
       },
       "locked": {
         "lastModified": 1687871164,
@@ -37,6 +56,22 @@
     },
     "nixpkgs": {
       "locked": {
+        "lastModified": 1691276849,
+        "narHash": "sha256-RNnrzxhW38SOFIF6TY/WaX7VB3PCkYFEeRE5YZU+wHw=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "5faab29808a2d72f4ee0c44c8e850e4e6ada972f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_2": {
+      "locked": {
         "lastModified": 1687466461,
         "narHash": "sha256-oupXI7g7RPzlpGUfAu1xG4KBK53GrZH8/xeKgKDB4+Q=",
         "owner": "nixos",
@@ -51,7 +86,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_2": {
+    "nixpkgs_3": {
       "locked": {
         "lastModified": 1689503327,
         "narHash": "sha256-qVwzYLA8oT2oWNDXO0A3bZHOhoPOihIB9T677+Hor1E=",
@@ -68,9 +103,10 @@
     },
     "root": {
       "inputs": {
+        "cooklang-chef": "cooklang-chef",
         "home-manager": "home-manager",
         "nixos-hardware": "nixos-hardware",
-        "nixpkgs": "nixpkgs_2",
+        "nixpkgs": "nixpkgs_3",
         "unstable": "unstable"
       }
     },

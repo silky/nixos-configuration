@@ -1,18 +1,27 @@
-{ config, pkgs, unstable, ... }:
+{ config, pkgs, unstable, cooklang-chef, ... }:
 let
   mkSym
     = file: config.lib.file.mkOutOfStoreSymlink
         "${config.home.homeDirectory}/dev/nixos-configuration/users/${config.home.username}/${file}";
 
-  hledgerFile  = "/home/noon//dev/life/accounts/hledger.journal";
+  hledgerFile  = "${config.home.homeDirectory}/dev/life/accounts/hledger.journal";
+  recipesDir   = "${config.home.homeDirectory}/dev/life/recipes";
   unstablePkgs = import unstable {};
-
 
   # ---------------------------------------------------------------------------
   #
   # ~ Vim plugins
   #
   # ---------------------------------------------------------------------------
+  vim-cooklang = pkgs.vimUtils.buildVimPlugin {
+    name = "vim-cooklang";
+    src = pkgs.fetchFromGitHub {
+      owner  = "silky";
+      repo   = "vim-cooklang";
+      rev    = "7f8c2190b5675ad4465e9719cd4b773c1db2ce6e";
+      sha256 = "sha256-vWlk7G1V4DLC0G0f3GLEG3JsvAwJ637CPocmMmFxQek=";
+    };
+  };
   vim-autoread = pkgs.vimUtils.buildVimPlugin {
     name = "vim-autoread";
     src = pkgs.fetchFromGitHub {
@@ -77,6 +86,7 @@ let
         unicode-vim
         vim-autoread
         vim-commentary
+        vim-cooklang
         vim-easy-align
         vim-easymotion
         vim-ledger
@@ -197,6 +207,8 @@ in
         vokoscreen-ng
         xclip
         xournalpp
+        # TODO: Use an argument instead of hard-coding the system.
+        cooklang-chef.packages.x86_64-linux.default
       ];
 
       scripts = [
@@ -228,6 +240,19 @@ in
         };
   };
 
+  systemd.user.services.cooklang-chef = {
+    Unit = {
+      Description = "cooklang-chef";
+      After = [ "graphical-session-pre.target" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+    Install = { WantedBy = [ "graphical-session.target" ]; };
+    Service = {
+        Restart = "on-failure";
+        ExecStart =
+          "${cooklang-chef.packages.x86_64-linux.default}/bin/chef --path ${recipesDir} serve --port 5001";
+        };
+  };
 
 
   # ---------------------------------------------------------------------------
