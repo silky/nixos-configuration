@@ -59,6 +59,9 @@
   #
   # ---------------------------------------------------------------------------
   nix = {
+    # Wild guess.
+    # See: <https://github.com/NixOS/nix/issues/1281>
+    # settings.auto-optimise-store = false;
     settings.trusted-users = [ "root" "${user}" ];
     extraOptions = ''
       experimental-features = nix-command flakes recursive-nix ca-derivations repl-flake
@@ -147,7 +150,6 @@
   services = {
     openssh.enable = false;
     vnstat.enable  = true;
-    deluge.enable  = true;
   };
 
   virtualisation.docker.enable = true;
