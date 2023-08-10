@@ -17,7 +17,7 @@
     mkSystem = name: { user, overlays }:
       nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = attrs // { inherit user name; };
+        specialArgs = attrs // { inherit user name unstable; };
         modules = [
           { nixpkgs.overlays = overlays; }
 

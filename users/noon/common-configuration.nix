@@ -1,4 +1,7 @@
-{ user, name, config, pkgs, lib, nixos-hardware, ... }:
+{ user, name, config, pkgs, lib, nixos-hardware, unstable, ... }:
+let
+  unstablePkgs = import unstable {};
+in
 {
   # ---------------------------------------------------------------------------
   #
@@ -152,7 +155,10 @@
     vnstat.enable  = true;
   };
 
-  virtualisation.docker.enable = true;
+  virtualisation.docker = {
+    package = unstablePkgs.docker;
+    enable = true;
+  };
 
   fonts = {
     fonts = with pkgs; [
