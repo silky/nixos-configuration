@@ -6,9 +6,10 @@ templates:
 
 recommend-stack-upgrade: false
 
-nix:
-  packages: [ zlib.dev
-            , zlib.out
-            , pkgconfig
-            , postgresql
-            ]
+# Note: Can't have this _and_ stacklock2nix.
+# nix:
+#   packages: [ zlib.dev
+#             , zlib.out
+#             , pkgconfig
+#             , postgresql
+#             ]
