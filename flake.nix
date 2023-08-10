@@ -10,6 +10,10 @@
 
   outputs = { self, nixpkgs, unstable, home-manager, nixos-hardware, cooklang-chef }@attrs:
   let
+    commonOverlays = self: super: {
+      fcitx-engines = self.fcitx5;
+    };
+
     mkSystem = name: { user, overlays }:
       nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -33,12 +37,16 @@
       };
   in
   {
+    nixosConfigurations.eqpac = mkSystem "eqpac" {
+      user     = "noon";
+      overlays = [
+        commonOverlays
+      ];
+    };
     nixosConfigurations.nqpac = mkSystem "nqpac" {
       user     = "noon";
       overlays = [
-        (self: super: {
-          fcitx-engines = self.fcitx5;
-        })
+        commonOverlays
       ];
     };
   };

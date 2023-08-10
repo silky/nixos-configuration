@@ -6,6 +6,7 @@ templates:
 
 recommend-stack-upgrade: false
 
+# Note: Can't have this _and_ stacklock2nix.
 # nix:
 #   packages: [ zlib.dev
 #             , zlib.out
