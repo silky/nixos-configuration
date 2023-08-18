@@ -387,6 +387,7 @@ in
       p   = "python";
       rg  = "rg -M 1000";
       v   = "nvim";
+      vv  = "nvim -R";
       vim = "nvim";
     };
   };
