@@ -199,10 +199,10 @@ in
         pandoc
         pass
         # Latest hledger
-        unstablePkgs.haskellPackages.hledger-web_1_30
-        unstablePkgs.haskellPackages.hledger_1_30_1
+        unstablePkgs.haskellPackages.hledger-web
+        unstablePkgs.haskellPackages.hledger
         # Broken.
-        # unstablePkgs.haskellPackages.hledger-ui_1_30
+        unstablePkgs.haskellPackages.hledger-ui
         vlc
         vokoscreen-ng
         xclip
@@ -236,7 +236,7 @@ in
     Service = {
         Restart = "on-failure";
         ExecStart =
-          "${unstablePkgs.haskellPackages.hledger-web_1_30}/bin/hledger-web --serve -f ${hledgerFile}";
+          "${unstablePkgs.haskellPackages.hledger-web}/bin/hledger-web --serve -f ${hledgerFile}";
         };
   };
 
