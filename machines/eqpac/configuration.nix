@@ -4,6 +4,13 @@
     [ ./hardware.nix
       nixos-hardware.nixosModules.lenovo-thinkpad-x1-7th-gen
     ];
+  # ---------------------------------------------------------------------------
+  #
+  # ~ System/Kernel
+  #
+  # ---------------------------------------------------------------------------
+  boot.kernelPackages = pkgs.linuxKernel.packages.linux_6_4;
+  services.logind.lidSwitch = "suspend";
 
   # ---------------------------------------------------------------------------
   #

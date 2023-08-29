@@ -3,12 +3,6 @@ let
   unstablePkgs = import unstable {};
 in
 {
-  # ---------------------------------------------------------------------------
-  #
-  # ~ System/Kernel
-  #
-  # ---------------------------------------------------------------------------
-  boot.kernelPackages = pkgs.linuxKernel.packages.linux_6_1;
 
   # See: https://nixos.wiki/wiki/Fwupd
   #
