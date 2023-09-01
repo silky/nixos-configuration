@@ -147,6 +147,7 @@ in
   services = {
     openssh.enable = false;
     vnstat.enable  = true;
+    udev.packages = [ pkgs.qmk-udev-rules ];
   };
 
   virtualisation.docker = {

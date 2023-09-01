@@ -188,6 +188,7 @@ in
         gnome.seahorse
         libnotify
         nethogs
+        qmk
       ];
 
       apps = [
