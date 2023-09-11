@@ -189,6 +189,7 @@ in
         libnotify
         nethogs
         qmk
+        xorg.xmodmap
       ];
 
       apps = [
@@ -208,6 +209,7 @@ in
         vokoscreen-ng
         xclip
         xournalpp
+        texlive.combined.scheme-full
         # TODO: Use an argument instead of hard-coding the system.
         cooklang-chef.packages.x86_64-linux.default
       ];
