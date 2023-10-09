@@ -154,6 +154,7 @@ in
         customNvim
         docker
         docker-compose
+        difftastic
         etcher
         fx
         git-crypt
@@ -469,6 +470,8 @@ in
     ".config/konsolerc".source = ./konsolerc;
     ".gitconfig".source = ./gitconfig;
     ".stack/config.yaml".source = ./stack-config.yaml;
+
+    ".config/contour/contour.yml".source = mkSym "contour.yml";
 
     # These ones it's okay; it's easier to modify with Konsole then manually.
     ".local/share/konsole/Noons.colorscheme".source = mkSym "Noons.colorscheme";
