@@ -161,6 +161,7 @@ in
         httpie
         jc
         jd-diff-patch
+        jo
         jq
         moreutils
         nix-output-monitor
