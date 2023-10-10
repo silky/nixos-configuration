@@ -228,7 +228,7 @@ profiles:
         # Font related configuration (font face, styles, size, rendering mode).
         font:
             # Initial font size in pixels.
-            size: 12
+            size: 16
 
             # DPI scaling factor applied on top of the system configured on (default: 1.0).
             dpi_scale: 1.0
@@ -279,12 +279,12 @@ profiles:
             regular:
                 # Font family defines the font family name, such as:
                 # Fira Code", "Courier New", or "monospace" (default).
-                family: "monospace"
+                family: "FiraCode Nerd Font"
 
                 # Font weight can be one of:
                 #   thin, extra_light, light, demilight, book, normal,
                 #   medium, demibold, bold, extra_bold, black, extra_black.
-                weight: regular
+                weight: light
 
                 # Font slant can be one of: normal, italic, oblique.
                 slant: normal
@@ -319,7 +319,7 @@ profiles:
             # - rectangle     just the outline of a block
             # - underscore    a line under the text
             # - bar:          the well known i-Beam
-            shape: "bar"
+            shape: "block"
             # Determins whether or not the cursor will be blinking over time.
             blinking: false
             # Blinking interval (in milliseconds) to use when cursor is blinking.
@@ -374,9 +374,9 @@ color_schemes:
         # Default colors
         default:
             # Default background color (this can be made transparent, see above).
-            background: '#1d1f21'
+            background: '#fffaf0'
             # Default foreground text color.
-            foreground: '#d5d8d6'
+            foreground: '#000000'
 
         # Background image support.
         background_image:
@@ -546,9 +546,9 @@ input_mapping:
     - { mods: [Alt],            mouse: WheelDown,   action: DecreaseOpacity }
     - { mods: [Alt],            mouse: WheelUp,     action: IncreaseOpacity }
     - { mods: [Control, Alt],   key: S,             action: ScreenshotVT }
-    - { mods: [Control, Shift], key: Plus,          action: IncreaseFontSize }
+    - { mods: [Control],        key: Equal,         action: IncreaseFontSize }
     - { mods: [Control],        key: '0',           action: ResetFontSize }
-    - { mods: [Control, Shift], key: Minus,         action: DecreaseFontSize }
+    - { mods: [Control],        key: Minus,         action: DecreaseFontSize }
     - { mods: [Control, Shift], key: '_',           action: DecreaseFontSize }
     - { mods: [Control, Shift], key: N,             action: NewTerminal }
     - { mods: [Control, Shift], key: C,             action: CopySelection }

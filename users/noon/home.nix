@@ -172,6 +172,7 @@ in
         python310Packages.keyring
         stack
         unstablePkgs.konsole
+        unstablePkgs.contour
         zsh
       ];
 
