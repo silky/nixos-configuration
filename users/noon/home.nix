@@ -174,6 +174,7 @@ in
         unstablePkgs.konsole
         unstablePkgs.contour
         zsh
+        lychee
       ];
 
       sys = [
