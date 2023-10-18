@@ -152,9 +152,9 @@ in
 
       dev = [
         customNvim
+        difftastic
         docker
         docker-compose
-        difftastic
         etcher
         fx
         git-crypt
@@ -164,17 +164,18 @@ in
         jd-diff-patch
         jo
         jq
+        lychee
         moreutils
         nix-output-monitor
         nix-tree
+        openssl
         pkg-config
         python310
         python310Packages.keyring
         stack
-        unstablePkgs.konsole
         unstablePkgs.contour
+        unstablePkgs.konsole
         zsh
-        lychee
       ];
 
       sys = [
