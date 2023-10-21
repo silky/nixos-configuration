@@ -175,6 +175,7 @@ in
         stack
         unstablePkgs.contour
         unstablePkgs.konsole
+        vscode
         zsh
       ];
 
