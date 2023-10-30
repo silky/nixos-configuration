@@ -155,7 +155,6 @@ in
         difftastic
         docker
         docker-compose
-        etcher
         fx
         git-crypt
         html-tidy
