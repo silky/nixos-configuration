@@ -163,6 +163,7 @@ in
         jd-diff-patch
         jo
         jq
+        kdiff3
         lychee
         moreutils
         nix-output-monitor
