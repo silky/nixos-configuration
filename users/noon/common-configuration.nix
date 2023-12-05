@@ -156,7 +156,7 @@ in
   };
 
   fonts = {
-    fonts = with pkgs; [
+    packages = with pkgs; [
       nerdfonts
       noto-fonts-emoji
       raleway
@@ -166,7 +166,7 @@ in
       symbola
       twitter-color-emoji
     ];
-    enableDefaultFonts = true;
+    enableDefaultPackages = true;
     # Note: Unfortunately, this isn't exactly working.
     fontconfig = {
       defaultFonts = {
