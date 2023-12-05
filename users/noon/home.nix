@@ -31,16 +31,6 @@ let
       sha256 = "sha256-IGgJ/D2AGDtbO+RZk2zd+zO9ZtANsle4QSjsh+VOXpg=";
     };
   };
-  vim-rescript = pkgs.vimUtils.buildVimPluginFrom2Nix {
-    name = "vim-rescript";
-    version = "2022-12-23";
-    src = pkgs.fetchFromGitHub {
-      owner = "rescript-lang";
-      repo = "vim-rescript";
-      rev = "8128c04ad69487b449936a6fa73ea6b45338391e";
-      sha256 = "0x5lhzlvfyz8aqbi5abn6fj0mr80yvwlwj43n7qc2yha8h3w17kr";
-    };
-  };
   noon-light-theme = pkgs.vimUtils.buildVimPlugin {
     name = "noon-light-theme";
     src = pkgs.fetchFromGitHub {
@@ -92,7 +82,6 @@ let
         vim-ledger
         vim-nix
         vim-ormolu
-        vim-rescript
         vim-syntax-shakespeare
         vim-toml
         vim-vue
