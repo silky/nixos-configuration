@@ -387,6 +387,7 @@ in
       v   = "nvim";
       vv  = "nvim -R";
       vim = "nvim";
+      j   = "jupyter notebook --no-browser --ip=localhost -y";
     };
   };
 
