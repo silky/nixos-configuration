@@ -182,7 +182,8 @@ in
   # ~ Internationalisation / i18n
   #
   # ---------------------------------------------------------------------------
-  time.timeZone      = "Europe/London";
+  # time.timeZone      = "Europe/London";
+  time.timeZone      = "America/Mexico_City";
   i18n.defaultLocale = "en_GB.utf8";
 
 
