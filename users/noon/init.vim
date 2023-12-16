@@ -2,12 +2,16 @@ let g:ormolu_disable=1
 let g:ormolu_command="fourmolu"
 let g:ormolu_suppress_stderr=1
 
-# TODO: This doesn't work, annoyingly. Need some way to determine the right path.
+" TODO: This doesn't work, annoyingly. Need some way to determine the right path.
 let g:ormolu_options=["--stdin-input-file ."]
 
 " nnoremap ff :call RunOrmolu()<CR>
 " xnoremap ff :<c-u>call OrmoluBlock()<CR>
 
+" Hack: Just simply run the general formatter (specified via Nix) on
+" everything. It's what I do in the terminal; until the above can be fixed
+" properly.
+nnoremap <silent> fa :call sytem("format")<cr>
 
 let $FZF_DEFAULT_COMMAND = 'rg --files -M 1000'
 let g:fzf_preview_window = ''
