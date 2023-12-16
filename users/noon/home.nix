@@ -381,13 +381,14 @@ in
       # Misc
       dc  = "docker compose";
       df  = "df -h";
+      f   = "format";
+      j   = "jupyter notebook --no-browser --ip=localhost -y";
       m   = "make";
       p   = "python";
       rg  = "rg -M 1000";
       v   = "nvim";
-      vv  = "nvim -R";
       vim = "nvim";
-      j   = "jupyter notebook --no-browser --ip=localhost -y";
+      vv  = "nvim -R";
     };
   };
 
