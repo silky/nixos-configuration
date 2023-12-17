@@ -1,14 +1,22 @@
 {
   inputs = {
-    nixpkgs.url        = "nixpkgs/nixos-23.11";
-    unstable.url       = "nixpkgs/nixos-unstable";
-    home-manager.url   = "github:nix-community/home-manager/release-23.11";
-    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-    cooklang-chef.url  = "github:silky/cooklang-chef/nix-hacking";
+    nixpkgs.url                  = "nixpkgs/nixos-23.11";
+    unstable.url                 = "nixpkgs/nixos-unstable";
+    home-manager.url             = "github:nix-community/home-manager/release-23.11";
+    nixos-hardware.url           = "github:NixOS/nixos-hardware/master";
+    cooklang-chef.url            = "github:silky/cooklang-chef/nix-hacking";
+    haskell-hacking-notebook.url = "github:silky/haskell-hacking-notebook/main";
   };
 
 
-  outputs = { self, nixpkgs, unstable, home-manager, nixos-hardware, cooklang-chef }@attrs:
+  outputs =
+    { self
+    , nixpkgs
+    , unstable
+    , home-manager
+    , nixos-hardware
+    , cooklang-chef
+    , haskell-hacking-notebook }@attrs:
   let
     commonOverlays = self: super: {
       fcitx-engines = self.fcitx5;
@@ -31,7 +39,7 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.${user} = import ./users/${user}/home.nix;
-            home-manager.extraSpecialArgs = { inherit unstable cooklang-chef; };
+            home-manager.extraSpecialArgs = { inherit unstable cooklang-chef haskell-hacking-notebook; };
           }
         ];
       };
