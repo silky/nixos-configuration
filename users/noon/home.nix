@@ -158,7 +158,6 @@ in
         nix-output-monitor
         nix-tree
         openssl
-        pkg-config
         python310
         python310Packages.keyring
         stack
@@ -205,8 +204,6 @@ in
         xclip
         xournalpp
         texlive.combined.scheme-full
-        # TODO: ???
-        # haskell-hacking-notebook.packages.x86_64-linux.default
         # TODO: Use an argument instead of hard-coding the system.
         cooklang-chef.packages.x86_64-linux.default
       ];
@@ -226,20 +223,18 @@ in
   # ~ Custom services
   #
   # ---------------------------------------------------------------------------
-  # TODO: I don't know why this doesn't work;
-  # systemd.user.services.haskell-hacking-notebook = {
-  #   Unit = {
-  #     Description = "haskell-hacking-notebook";
-  #     After = [ "graphical-session-pre.target" ];
-  #     PartOf = [ "graphical-session.target" ];
-  #   };
-  #   Install = { WantedBy = [ "graphical-session.target" ]; };
-  #   Service = {
-  #       Restart = "on-failure";
-  #       ExecStart =
-  #         "${haskell-hacking-notebook.apps.x86_64-linux.default.program}";
-  #       };
-  # };
+  systemd.user.services.haskell-hacking-notebook = {
+    Unit = {
+      Description = "haskell-hacking-notebook";
+      After = [ "graphical-session-pre.target" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+    Install = { WantedBy = [ "graphical-session.target" ]; };
+    Service = {
+      Restart = "on-failure";
+      ExecStart = "${haskell-hacking-notebook.apps.x86_64-linux.default.program} --no-browser --port 5005 --IdentityProvider.token=abcd --notebook-dir /home/noon/tmp/haskell-hacking-notebooks";
+      };
+  };
 
   systemd.user.services.hledger = {
     Unit = {
@@ -249,10 +244,10 @@ in
     };
     Install = { WantedBy = [ "graphical-session.target" ]; };
     Service = {
-        Restart = "on-failure";
-        ExecStart =
-          "${unstablePkgs.haskellPackages.hledger-web}/bin/hledger-web --serve -f ${hledgerFile}";
-        };
+      Restart = "on-failure";
+      ExecStart =
+        "${unstablePkgs.haskellPackages.hledger-web}/bin/hledger-web --serve -f ${hledgerFile}";
+      };
   };
 
   systemd.user.services.cooklang-chef = {
@@ -263,10 +258,10 @@ in
     };
     Install = { WantedBy = [ "graphical-session.target" ]; };
     Service = {
-        Restart = "on-failure";
-        ExecStart =
-          "${cooklang-chef.packages.x86_64-linux.default}/bin/chef --path ${recipesDir} serve --port 5001";
-        };
+      Restart = "on-failure";
+      ExecStart =
+        "${cooklang-chef.packages.x86_64-linux.default}/bin/chef --path ${recipesDir} serve --port 5001";
+      };
   };
 
 
