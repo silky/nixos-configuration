@@ -141,6 +141,7 @@ in
 
       dev = [
         customNvim
+        delta
         difftastic
         docker
         docker-compose

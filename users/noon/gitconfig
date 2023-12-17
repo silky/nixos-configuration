@@ -9,6 +9,16 @@
   email = noonsilk+-noonsilk@gmail.com
   name  = silky
 
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    navigate = true    # use n and N to move between diff sections
+    light    = true
+
+[merge]
+    conflictstyle = diff3
+
 [alias]
   d    = difftool
   hist = log --oneline --graph --decorate
@@ -18,8 +28,8 @@
   default = matching
 
 [diff]
-  submodule = log
-  tool      = vimdiff
+  submodule  = log
+  colorMoved = default
 
 [difftool]
   prompt = false
@@ -32,6 +42,7 @@
 
 [core]
   editor = nvim
+  pager = delta
 
 [filter "lfs"]
   clean    = git-lfs clean -- %f
@@ -41,6 +52,3 @@
 
 [init]
   defaultBranch = main
-
-[includeIf "gitdir:~/dev/generative/"]
-  path = ~/dev/generative/generative.gitconfig
