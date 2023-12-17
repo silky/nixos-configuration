@@ -178,11 +178,11 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1701946832,
-        "narHash": "sha256-M13YUuvuVnpfUHphFqFBM9xRjpQo068Pbc30nuf/i50=",
+        "lastModified": 1702819208,
+        "narHash": "sha256-NDW283adtF24eFzWHqDhEWuQ6TEQYF76Wgr4bZnKe58=",
         "owner": "silky",
         "repo": "haskell-hacking-notebook",
-        "rev": "1c10dd0dba4b35f639c88b3588876dce8b8796c7",
+        "rev": "b5760fb69f544081a35cc90c0068848212f58535",
         "type": "github"
       },
       "original": {
