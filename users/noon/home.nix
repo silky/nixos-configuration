@@ -140,6 +140,7 @@ in
       ];
 
       dev = [
+        csview
         customNvim
         delta
         difftastic
