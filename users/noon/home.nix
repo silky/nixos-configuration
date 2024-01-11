@@ -173,6 +173,7 @@ in
         acpi
         alsa-utils
         arandr
+        atuin
         brightnessctl
         dmenu
         feh
