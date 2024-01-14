@@ -203,7 +203,7 @@ in
         # Broken.
         unstablePkgs.haskellPackages.hledger-ui
         vlc
-        vokoscreen-ng
+        unstablePkgs.vokoscreen-ng
         xclip
         xournalpp
         texlive.combined.scheme-full
