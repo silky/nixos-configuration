@@ -173,7 +173,6 @@ in
         acpi
         alsa-utils
         arandr
-        atuin
         brightnessctl
         dmenu
         feh
@@ -299,8 +298,6 @@ in
       gpgconf --launch gpg-agent
 
       export PATH=~/.local/bin:$PATH
-
-      eval "$(atuin init zsh)"
     '';
 
     plugins = with pkgs; [
