@@ -298,6 +298,8 @@ in
       export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
       gpgconf --launch gpg-agent
 
+      export PATH=~/.local/bin:$PATH
+
       eval "$(atuin init zsh)"
     '';
 
