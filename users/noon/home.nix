@@ -225,18 +225,18 @@ in
   # ~ Custom services
   #
   # ---------------------------------------------------------------------------
-  systemd.user.services.haskell-hacking-notebook = {
-    Unit = {
-      Description = "haskell-hacking-notebook";
-      After = [ "graphical-session-pre.target" ];
-      PartOf = [ "graphical-session.target" ];
-    };
-    Install = { WantedBy = [ "graphical-session.target" ]; };
-    Service = {
-      Restart = "on-failure";
-      ExecStart = "${haskell-hacking-notebook.apps.x86_64-linux.default.program} --no-browser --port 5005 --IdentityProvider.token=abcd --notebook-dir /home/noon/tmp/haskell-hacking-notebooks";
-      };
-  };
+  # systemd.user.services.haskell-hacking-notebook = {
+  #   Unit = {
+  #     Description = "haskell-hacking-notebook";
+  #     After = [ "graphical-session-pre.target" ];
+  #     PartOf = [ "graphical-session.target" ];
+  #   };
+  #   Install = { WantedBy = [ "graphical-session.target" ]; };
+  #   Service = {
+  #     Restart = "on-failure";
+  #     ExecStart = "${haskell-hacking-notebook.apps.x86_64-linux.default.program} --no-browser --port 5005 --IdentityProvider.token=abcd --notebook-dir /home/noon/tmp/haskell-hacking-notebooks";
+  #     };
+  # };
 
   systemd.user.services.hledger = {
     Unit = {
