@@ -141,9 +141,11 @@ in
 
       dev = [
         csview
+        unstablePkgs.csvlens
         customNvim
         delta
         difftastic
+        dnsutils
         docker
         docker-compose
         fx
@@ -288,6 +290,10 @@ in
 
       bindkey "^?" backward-delete-char
       bindkey "^[[3~" delete-char
+
+      autoload -z edit-command-line
+      zle -N edit-command-line
+      bindkey "^X^E" edit-command-line
 
       bindkey -e
 
