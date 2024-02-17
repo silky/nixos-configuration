@@ -3,7 +3,6 @@
 , unstable
 , cooklang-chef
 , haskell-hacking-notebook
-, nix-doom-emacs
 , ...
 }:
 let
@@ -132,7 +131,6 @@ let
 in
 {
   home.stateVersion = "22.11";
-  imports = [ nix-doom-emacs.hmModule ];
 
 
   # ---------------------------------------------------------------------------
@@ -278,13 +276,23 @@ in
       };
   };
 
-  programs.doom-emacs = {
+  programs.emacs = {
+    # TODO: Maybe include agda-special files
+    # -  https://github.com/SeungheonOh/conf/blob/b153fc521d45383efc78d2a68777942c3f60363c/home/agdaDev.nix
+    # - Use this: <https://github.com/nix-community/emacs-overlay>
     enable = true;
-    doomPrivateDir = ./doom.d;
-    extraPackages = with pkgs; [
-      gnuplot
-      emacs-all-the-icons-fonts
-    ];
+    package =
+      let
+        epkgs = epkgs: with epkgs;
+          [
+            agda2-mode
+            all-the-icons
+            atom-one-dark-theme
+            company
+            dashboard
+            doom-modeline
+          ];
+      in ((pkgs.emacsPackagesFor pkgs.emacsNativeComp).emacsWithPackages epkgs);
   };
 
   # ---------------------------------------------------------------------------

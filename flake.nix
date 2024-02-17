@@ -6,7 +6,7 @@
     nixos-hardware.url           = "github:NixOS/nixos-hardware/master";
     cooklang-chef.url            = "github:silky/cooklang-chef/nix-hacking";
     haskell-hacking-notebook.url = "github:silky/haskell-hacking-notebook/main";
-    nix-doom-emacs.url           = "github:nix-community/nix-doom-emacs";
+    # nix-doom-emacs.url           = "github:nix-community/nix-doom-emacs";
   };
 
 
@@ -18,7 +18,7 @@
     , nixos-hardware
     , cooklang-chef
     , haskell-hacking-notebook
-    , nix-doom-emacs
+    # , nix-doom-emacs
     }@attrs:
   let
     commonOverlays = self: super: {
@@ -47,7 +47,8 @@
               unstable
               cooklang-chef
               haskell-hacking-notebook
-              nix-doom-emacs;
+              # nix-doom-emacs
+              ;
             };
           }
         ];
