@@ -6,6 +6,7 @@
     nixos-hardware.url           = "github:NixOS/nixos-hardware/master";
     cooklang-chef.url            = "github:silky/cooklang-chef/nix-hacking";
     haskell-hacking-notebook.url = "github:silky/haskell-hacking-notebook/main";
+    nix-doom-emacs.url           = "github:nix-community/nix-doom-emacs";
   };
 
 
@@ -16,7 +17,9 @@
     , home-manager
     , nixos-hardware
     , cooklang-chef
-    , haskell-hacking-notebook }@attrs:
+    , haskell-hacking-notebook
+    , nix-doom-emacs
+    }@attrs:
   let
     commonOverlays = self: super: {
       fcitx-engines = self.fcitx5;
@@ -39,7 +42,13 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.${user} = import ./users/${user}/home.nix;
-            home-manager.extraSpecialArgs = { inherit unstable cooklang-chef haskell-hacking-notebook; };
+            home-manager.extraSpecialArgs = {
+              inherit
+              unstable
+              cooklang-chef
+              haskell-hacking-notebook
+              nix-doom-emacs;
+            };
           }
         ];
       };

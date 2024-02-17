@@ -1,4 +1,11 @@
-{ config, pkgs, unstable, cooklang-chef, haskell-hacking-notebook, ... }:
+{ config
+, pkgs
+, unstable
+, cooklang-chef
+, haskell-hacking-notebook
+, nix-doom-emacs
+, ...
+}:
 let
   mkSym
     = file: config.lib.file.mkOutOfStoreSymlink
@@ -125,6 +132,8 @@ let
 in
 {
   home.stateVersion = "22.11";
+  imports = [ nix-doom-emacs.hmModule ];
+
 
   # ---------------------------------------------------------------------------
   #
@@ -148,6 +157,7 @@ in
         dnsutils
         docker
         docker-compose
+        fd
         fx
         git-crypt
         html-tidy
@@ -268,6 +278,14 @@ in
       };
   };
 
+  programs.doom-emacs = {
+    enable = true;
+    doomPrivateDir = ./doom.d;
+    extraPackages = with pkgs; [
+      gnuplot
+      emacs-all-the-icons-fonts
+    ];
+  };
 
   # ---------------------------------------------------------------------------
   #
@@ -408,9 +426,12 @@ in
       m   = "make";
       p   = "python";
       rg  = "rg -M 1000";
+
+      # Text-editing
       v   = "nvim";
       vim = "nvim";
       vv  = "nvim -R";
+      e   = "emacs";
     };
   };
 
