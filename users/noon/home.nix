@@ -292,7 +292,13 @@ in
             dashboard
             doom-modeline
           ];
-      in ((pkgs.emacsPackagesFor pkgs.emacsNativeComp).emacsWithPackages epkgs);
+      in (pkgs.emacsWithPackagesFromUsePackage
+      {
+        config = ./emacs/init.el;
+        alwaysEnsure = true;
+        package = pkgs.emacs-git;
+      }
+      );
   };
 
   # ---------------------------------------------------------------------------
@@ -516,6 +522,7 @@ in
     ".config/konsolerc".source = ./konsolerc;
     ".gitconfig".source = ./gitconfig;
     ".stack/config.yaml".source = ./stack-config.yaml;
+    ".emacs.d/init.el".source = ./emacs/init.el;
 
     ".config/contour/contour.yml".source = mkSym "contour.yml";
 
