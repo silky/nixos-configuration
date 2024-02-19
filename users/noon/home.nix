@@ -518,6 +518,7 @@ in
       vim-textobj-user
       xterm-color-table
       nvim-hs-vim
+      vim-which-key
 
       {
         # plugin packages in required Vim plugin dependencies
