@@ -7,6 +7,10 @@
     cooklang-chef.url            = "github:silky/cooklang-chef/nix-hacking";
     haskell-hacking-notebook.url = "github:silky/haskell-hacking-notebook/main";
     emacs-overlay.url            = "github:nix-community/emacs-overlay";
+    cornelis = {
+      url = "github:isovector/cornelis";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
 
@@ -19,13 +23,16 @@
     , cooklang-chef
     , haskell-hacking-notebook
     , emacs-overlay
+    , cornelis
     }@attrs:
   let
-    commonOverlays = self: super: {
-      fcitx-engines = self.fcitx5;
-    };
+    overlays = [
+      (self: super: { fcitx-engines = self.fcitx5; } )
+      emacs-overlay.overlay
+      cornelis.overlays.cornelis
+    ];
 
-    mkSystem = name: { user, overlays }:
+    mkSystem = name: { user }:
       nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = attrs // { inherit user name unstable; };
@@ -55,18 +62,10 @@
   in
   {
     nixosConfigurations.eqpac = mkSystem "eqpac" {
-      user     = "noon";
-      overlays = [
-        commonOverlays
-        emacs-overlay.overlay
-      ];
+      user = "noon";
     };
     nixosConfigurations.nqpac = mkSystem "nqpac" {
-      user     = "noon";
-      overlays = [
-        commonOverlays
-        emacs-overlay.overlay
-      ];
+      user = "noon";
     };
   };
 }

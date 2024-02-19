@@ -37,6 +37,15 @@ let
       sha256 = "sha256-IGgJ/D2AGDtbO+RZk2zd+zO9ZtANsle4QSjsh+VOXpg=";
     };
   };
+  nvim-hs-vim = pkgs.vimUtils.buildVimPlugin {
+    name = "nvim-hs.vim";
+    src = pkgs.fetchFromGitHub {
+      owner  = "neovimhaskell";
+      repo   = "nvim-hs.vim";
+      rev    = "d4a6b7278ae6a1fdc64e300c3ebc1e24719af342";
+      sha256 = "sha256-umsuGGP5tOf92bzWEhqD2y6dN0FDBsmLx60f45xgmig=";
+    };
+  };
   noon-light-theme = pkgs.vimUtils.buildVimPlugin {
     name = "noon-light-theme";
     src = pkgs.fetchFromGitHub {
@@ -62,37 +71,6 @@ let
       repo   = "cabal-project-vim";
       rev    = "0d41e7e41b1948de84847d9731023407bf2aea04";
       sha256 = "sha256-j1igpjk1+j/1/y99ZaI3W5+VYNmQqsFp2qX4qzkpNpc=";
-    };
-  };
-  customNvim = pkgs.neovim.override {
-    configure = {
-      customRC = "source " + ./init.vim; # Note: Hack.
-      packages.neovimPlugins = with pkgs.vimPlugins; { start = [
-        cabal-project-vim
-        dhall-vim
-        editorconfig-vim
-        elm-vim
-        fzf-vim
-        fzfWrapper
-        haskell-vim
-        noon-light-theme
-        purescript-vim
-        supertab
-        typescript-vim
-        unicode-vim
-        vim-autoread
-        vim-commentary
-        vim-cooklang
-        vim-easy-align
-        vim-easymotion
-        vim-ledger
-        vim-nix
-        vim-ormolu
-        vim-syntax-shakespeare
-        vim-toml
-        vim-vue
-        xterm-color-table
-      ];};
     };
   };
 
@@ -147,9 +125,9 @@ in
       ];
 
       dev = [
+        agda
         csview
-        unstablePkgs.csvlens
-        customNvim
+        # customNvim
         delta
         difftastic
         dnsutils
@@ -174,6 +152,7 @@ in
         python310Packages.keyring
         stack
         unstablePkgs.contour
+        unstablePkgs.csvlens
         unstablePkgs.konsole
         vscode
         zsh
@@ -199,25 +178,24 @@ in
       ];
 
       apps = [
+        cooklang-chef.packages.x86_64-linux.default
         gimp-with-plugins
         imagemagick
         inkscape
+        lyx
+        docbook5
         obsidian
         okular
         pandoc
         pass
-        # Latest hledger
-        unstablePkgs.haskellPackages.hledger-web
+        texlive.combined.scheme-full
         unstablePkgs.haskellPackages.hledger
-        # Broken.
         unstablePkgs.haskellPackages.hledger-ui
-        vlc
+        unstablePkgs.haskellPackages.hledger-web
         unstablePkgs.vokoscreen-ng
+        vlc
         xclip
         xournalpp
-        texlive.combined.scheme-full
-        # TODO: Use an argument instead of hard-coding the system.
-        cooklang-chef.packages.x86_64-linux.default
       ];
 
       scripts = [
@@ -509,6 +487,45 @@ in
   programs.fzf = {
     enable = true;
     enableZshIntegration = true;
+  };
+
+  programs.neovim = {
+    enable = true;
+    extraConfig = builtins.readFile ./init.vim;
+    plugins = with pkgs.vimPlugins; [
+      cabal-project-vim
+      dhall-vim
+      editorconfig-vim
+      elm-vim
+      fzf-vim
+      fzfWrapper
+      haskell-vim
+      noon-light-theme
+      purescript-vim
+      supertab
+      typescript-vim
+      unicode-vim
+      vim-autoread
+      vim-commentary
+      vim-cooklang
+      vim-easy-align
+      vim-easymotion
+      vim-ledger
+      vim-nix
+      vim-ormolu
+      vim-syntax-shakespeare
+      vim-toml
+      vim-textobj-user
+      xterm-color-table
+      nvim-hs-vim
+
+      {
+        # plugin packages in required Vim plugin dependencies
+        plugin = pkgs.vimPlugins.cornelis;
+        config = "let g:cornelis_use_global_binary = 1";
+      }
+    ];
+    extraPackages = [ pkgs.cornelis ];
   };
 
 
