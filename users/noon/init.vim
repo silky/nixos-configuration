@@ -303,11 +303,13 @@ function! AgdaFiletype()
     nnoremap <buffer> <leader>d :CornelisMakeCase<CR>
     nnoremap <buffer> <leader>, :CornelisTypeContext<CR>
     nnoremap <buffer> <leader>. :CornelisTypeContextInfer<CR>
+    nnoremap <buffer> <leader>m :CornelisQuestionToMeta<CR>
     nnoremap <buffer> <leader>n :CornelisSolve<CR>
     nnoremap <buffer> <leader>a :CornelisAuto<CR>
+    nnoremap <buffer> <leader>g :CornelisGive<CR>
     nnoremap <buffer> gd        :CornelisGoToDefinition<CR>
-    nnoremap <buffer> [/        :CornelisPrevGoal<CR>
-    nnoremap <buffer> ]/        :CornelisNextGoal<CR>
+    nnoremap <buffer> Ng        :CornelisPrevGoal<CR>
+    nnoremap <buffer> ng        :CornelisNextGoal<CR>
     nnoremap <buffer> <C-A>     :CornelisInc<CR>
     nnoremap <buffer> <C-X>     :CornelisDec<CR>
     call cornelis#bind_input("st", "≡⟨⟩")
