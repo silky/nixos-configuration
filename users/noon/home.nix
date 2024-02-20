@@ -125,7 +125,7 @@ in
       ];
 
       dev = [
-        agda
+        ( agda.withPackages (p: [ p.standard-library ]) )
         csview
         # customNvim
         delta
@@ -540,10 +540,6 @@ in
     ".emacs.d/init.el".source     = ./emacs/init.el;
 
     # Agda
-    ".agda/standard-library.agda-lib".text = ''
-      name: standard-library
-      include: src
-    '';
     ".agda/defaults".text = ''
       standard-library
     '';
