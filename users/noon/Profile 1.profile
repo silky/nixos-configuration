@@ -2,7 +2,7 @@
 AntiAliasFonts=true
 BoldIntense=true
 ColorScheme=Noons
-Font=FiraCode Nerd Font,11,-1,5,50,0,0,0,0,0
+Font=iMWritingMono Nerd Font,11,-1,5,50,0,0,0,0,0
 LineSpacing=1
 UseFontLineChararacters=true
 
