@@ -1,17 +1,4 @@
 let g:ormolu_disable=1
-let g:ormolu_command="fourmolu"
-let g:ormolu_suppress_stderr=1
-
-" TODO: This doesn't work, annoyingly. Need some way to determine the right path.
-let g:ormolu_options=["--stdin-input-file ."]
-
-" nnoremap ff :call RunOrmolu()<CR>
-" xnoremap ff :<c-u>call OrmoluBlock()<CR>
-
-" Hack: Just simply run the general formatter (specified via Nix) on
-" everything. It's what I do in the terminal; until the above can be fixed
-" properly.
-nnoremap <silent> fa :call sytem("format")<cr>
 
 let $FZF_DEFAULT_COMMAND = 'rg --files -M 1000'
 let g:fzf_preview_window = ''
@@ -303,10 +290,37 @@ vmap \\  <Plug>Commentary
 let g:EasyMotion_leader_key = '.'
 
 
-augroup readonly
-  au!
-  au BufEnter * if(!&modifiable || &ro) | :highlight Normal ctermbg=255 | endif
-augroup end
+" augroup readonly
+"   au!
+"   au BufEnter * if(!&modifiable || &ro) | :highlight Normal ctermbg=255 | endif
+" augroup end
+
+
+au BufRead,BufNewFile *.agda call AgdaFiletype()
+function! AgdaFiletype()
+    nnoremap <buffer> <leader>l :CornelisLoad<CR>
+    nnoremap <buffer> <leader>r :CornelisRefine<CR>
+    nnoremap <buffer> <leader>d :CornelisMakeCase<CR>
+    nnoremap <buffer> <leader>, :CornelisTypeContext<CR>
+    nnoremap <buffer> <leader>. :CornelisTypeContextInfer<CR>
+    nnoremap <buffer> <leader>n :CornelisSolve<CR>
+    nnoremap <buffer> <leader>a :CornelisAuto<CR>
+    nnoremap <buffer> gd        :CornelisGoToDefinition<CR>
+    nnoremap <buffer> [/        :CornelisPrevGoal<CR>
+    nnoremap <buffer> ]/        :CornelisNextGoal<CR>
+    nnoremap <buffer> <C-A>     :CornelisInc<CR>
+    nnoremap <buffer> <C-X>     :CornelisDec<CR>
+    inoremap <localleader> <C-O>:call cornelis#prompt_input()<CR>
+endfunction
+let g:cornelis_agda_prefix = "<Tab>" " Replace with your desired prefix
+
+
+vmap <leader><space> <Plug>(EasyAlign)
+
+let g:easy_align_delimiters = {
+\ 'r': { 'pattern': '[≤≡≈∎]', 'left_margin': 2, 'right_margin': 0 },
+\ }
+
 
 
 " Pandoc
