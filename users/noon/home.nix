@@ -127,7 +127,6 @@ in
       dev = [
         ( agda.withPackages (p: [ p.standard-library ]) )
         csview
-        # customNvim
         delta
         difftastic
         dnsutils
@@ -179,11 +178,13 @@ in
 
       apps = [
         cooklang-chef.packages.x86_64-linux.default
+        docbook5
         gimp-with-plugins
+        hunspell
+        hunspellDicts.en-gb-ise
         imagemagick
         inkscape
         lyx
-        docbook5
         obsidian
         okular
         pandoc
@@ -366,6 +367,9 @@ in
       # hledger
       LEDGER_FILE = hledgerFile;
 
+      # hunspell
+      DICTIONARY = "en_GB";
+
       # TODO: Work out how to reinstate so that it doesn't kill off emacs
       # bindings in the shell.
       # EDITOR   = "nvim";
@@ -515,8 +519,6 @@ in
       vim-textobj-user
       xterm-color-table
       nvim-hs-vim
-      vim-which-key
-
       {
         # plugin packages in required Vim plugin dependencies
         plugin = pkgs.vimPlugins.cornelis;

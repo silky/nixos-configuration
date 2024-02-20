@@ -310,9 +310,8 @@ function! AgdaFiletype()
     nnoremap <buffer> ]/        :CornelisNextGoal<CR>
     nnoremap <buffer> <C-A>     :CornelisInc<CR>
     nnoremap <buffer> <C-X>     :CornelisDec<CR>
-    inoremap <localleader> <C-O>:call cornelis#prompt_input()<CR>
+    call cornelis#bind_input("st", "≡⟨⟩")
 endfunction
-let g:cornelis_agda_prefix = "<Tab>" " Replace with your desired prefix
 
 
 vmap <leader><space> <Plug>(EasyAlign)
