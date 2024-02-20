@@ -255,9 +255,6 @@ in
   };
 
   programs.emacs = {
-    # TODO: Maybe include agda-special files
-    # -  https://github.com/SeungheonOh/conf/blob/b153fc521d45383efc78d2a68777942c3f60363c/home/agdaDev.nix
-    # - Use this: <https://github.com/nix-community/emacs-overlay>
     enable = true;
     package =
       let
@@ -541,6 +538,15 @@ in
     ".gitconfig".source           = ./gitconfig;
     ".stack/config.yaml".source   = ./stack-config.yaml;
     ".emacs.d/init.el".source     = ./emacs/init.el;
+
+    # Agda
+    ".agda/standard-library.agda-lib".text = ''
+      name: standard-library
+      include: src
+    '';
+    ".agda/defaults".text = ''
+      standard-library
+    '';
 
     ".config/contour/contour.yml".source = mkSym "contour.yml";
 
