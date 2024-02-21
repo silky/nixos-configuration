@@ -125,7 +125,7 @@ in
       ];
 
       dev = [
-        ( agda.withPackages (p: [ p.standard-library ]) )
+        ( agda.withPackages (p: [ p.standard-library p.cubical ]) )
         csview
         delta
         difftastic
