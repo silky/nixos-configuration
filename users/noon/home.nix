@@ -150,6 +150,7 @@ in
         python310
         python310Packages.keyring
         stack
+        unixtools.xxd
         unstablePkgs.contour
         unstablePkgs.csvlens
         unstablePkgs.konsole
