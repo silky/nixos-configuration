@@ -313,7 +313,6 @@ function! AgdaFiletype()
     nnoremap <buffer> <C-A>     :CornelisInc<CR>
     nnoremap <buffer> <C-X>     :CornelisDec<CR>
     call cornelis#bind_input("st", "≡⟨⟩")
-    call cornelis#bind_input(",,", ",")
 endfunction
 
 
