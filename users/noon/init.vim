@@ -290,12 +290,6 @@ vmap \\  <Plug>Commentary
 let g:EasyMotion_leader_key = '.'
 
 
-" augroup readonly
-"   au!
-"   au BufEnter * if(!&modifiable || &ro) | :highlight Normal ctermbg=255 | endif
-" augroup end
-
-
 au BufRead,BufNewFile *.agda call AgdaFiletype()
 function! AgdaFiletype()
     nnoremap <buffer> <leader>l :CornelisLoad<CR>
@@ -313,10 +307,12 @@ function! AgdaFiletype()
     nnoremap <buffer> <C-A>     :CornelisInc<CR>
     nnoremap <buffer> <C-X>     :CornelisDec<CR>
     call cornelis#bind_input("st", "≡⟨⟩")
+    " My local-leader is ","; and I still want to be able to type it.
+    call cornelis#bind_input(",",  ",")
 endfunction
 
-
 vmap <leader><space> <Plug>(EasyAlign)
+
 
 let g:easy_align_delimiters = {
 \ 'r': { 'pattern': '[≤≡≈∎]', 'left_margin': 2, 'right_margin': 0 },
