@@ -291,6 +291,7 @@ let g:EasyMotion_leader_key = '.'
 
 
 au BufRead,BufNewFile *.agda call AgdaFiletype()
+au QuitPre *.agda :CornelisCloseInfoWindows
 function! AgdaFiletype()
     nnoremap <buffer> <leader>l :CornelisLoad<CR>
     nnoremap <buffer> <leader>r :CornelisRefine<CR>

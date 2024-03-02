@@ -9,6 +9,7 @@
     emacs-overlay.url            = "github:nix-community/emacs-overlay";
     cornelis = {
       url = "github:isovector/cornelis";
+      # url = "git+file:///home/noon/dev/cornelis/";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
