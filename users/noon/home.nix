@@ -257,7 +257,8 @@ in
   };
 
   programs.emacs = {
-    enable = true;
+    # No need for emacs at the moment.
+    enable = false;
     package =
       let
         epkgs = epkgs: with epkgs;
