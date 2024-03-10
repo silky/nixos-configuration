@@ -1,6 +1,6 @@
 { user, name, config, pkgs, lib, nixos-hardware, unstable, ... }:
 let
-  unstablePkgs = import unstable {};
+  unstablePkgs = import unstable { };
 in
 {
 
@@ -81,8 +81,8 @@ in
   #
   # ---------------------------------------------------------------------------
   services.xserver = {
-    enable     = true;
-    layout     = "us";
+    enable = true;
+    layout = "us";
     xkbVariant = "";
     xkbOptions = "caps:escape";
     displayManager = {
@@ -94,7 +94,7 @@ in
         xset s off -dpms
       '';
       autoLogin = {
-        user   = "${user}";
+        user = "${user}";
         enable = true;
       };
     };
@@ -117,7 +117,7 @@ in
   networking = {
     hostName = "${name}";
     networkmanager.enable = true;
-    firewall.allowedTCPPorts = [];
+    firewall.allowedTCPPorts = [ ];
     firewall.enable = true;
   };
 
@@ -129,11 +129,11 @@ in
   # ---------------------------------------------------------------------------
   sound.enable = false;
   services.pipewire = {
-    enable             = true;
-    pulse.enable       = true;
+    enable = true;
+    pulse.enable = true;
     wireplumber.enable = true;
     alsa = {
-      enable       = true;
+      enable = true;
       support32Bit = true;
     };
   };
@@ -146,7 +146,7 @@ in
   # ---------------------------------------------------------------------------
   services = {
     openssh.enable = false;
-    vnstat.enable  = true;
+    vnstat.enable = true;
     udev.packages = [ pkgs.qmk-udev-rules ];
   };
 
@@ -182,7 +182,7 @@ in
   # ~ Internationalisation / i18n
   #
   # ---------------------------------------------------------------------------
-  time.timeZone      = "Europe/London";
+  time.timeZone = "Europe/London";
   # time.timeZone      = "America/Mexico_City";
   i18n.defaultLocale = "en_GB.utf8";
 
@@ -203,8 +203,8 @@ in
 
   users.users.${user} = {
     isNormalUser = true;
-    description  = "${user}";
-    extraGroups  = [ "networkmanager" "wheel" "dialout" "audio" "docker" ];
+    description = "${user}";
+    extraGroups = [ "networkmanager" "wheel" "dialout" "audio" "docker" ];
   };
 
   # ---------------------------------------------------------------------------

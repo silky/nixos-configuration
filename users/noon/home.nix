@@ -6,13 +6,12 @@
 , ...
 }:
 let
-  mkSym
-    = file: config.lib.file.mkOutOfStoreSymlink
-        "${config.home.homeDirectory}/dev/nixos-configuration/users/${config.home.username}/${file}";
+  mkSym = file: config.lib.file.mkOutOfStoreSymlink
+    "${config.home.homeDirectory}/dev/nixos-configuration/users/${config.home.username}/${file}";
 
-  hledgerFile  = "${config.home.homeDirectory}/dev/life/accounts/hledger.journal";
-  recipesDir   = "${config.home.homeDirectory}/dev/life/recipes";
-  unstablePkgs = import unstable {};
+  hledgerFile = "${config.home.homeDirectory}/dev/life/accounts/hledger.journal";
+  recipesDir = "${config.home.homeDirectory}/dev/life/recipes";
+  unstablePkgs = import unstable { };
 
   # ---------------------------------------------------------------------------
   #
@@ -22,54 +21,54 @@ let
   vim-cooklang = pkgs.vimUtils.buildVimPlugin {
     name = "vim-cooklang";
     src = pkgs.fetchFromGitHub {
-      owner  = "silky";
-      repo   = "vim-cooklang";
-      rev    = "7f8c2190b5675ad4465e9719cd4b773c1db2ce6e";
+      owner = "silky";
+      repo = "vim-cooklang";
+      rev = "7f8c2190b5675ad4465e9719cd4b773c1db2ce6e";
       sha256 = "sha256-vWlk7G1V4DLC0G0f3GLEG3JsvAwJ637CPocmMmFxQek=";
     };
   };
   vim-autoread = pkgs.vimUtils.buildVimPlugin {
     name = "vim-autoread";
     src = pkgs.fetchFromGitHub {
-      owner  = "djoshea";
-      repo   = "vim-autoread";
-      rev    = "7e83d47a71fdafc271005fc39c89863204278c77";
+      owner = "djoshea";
+      repo = "vim-autoread";
+      rev = "7e83d47a71fdafc271005fc39c89863204278c77";
       sha256 = "sha256-IGgJ/D2AGDtbO+RZk2zd+zO9ZtANsle4QSjsh+VOXpg=";
     };
   };
   nvim-hs-vim = pkgs.vimUtils.buildVimPlugin {
     name = "nvim-hs.vim";
     src = pkgs.fetchFromGitHub {
-      owner  = "neovimhaskell";
-      repo   = "nvim-hs.vim";
-      rev    = "d4a6b7278ae6a1fdc64e300c3ebc1e24719af342";
+      owner = "neovimhaskell";
+      repo = "nvim-hs.vim";
+      rev = "d4a6b7278ae6a1fdc64e300c3ebc1e24719af342";
       sha256 = "sha256-umsuGGP5tOf92bzWEhqD2y6dN0FDBsmLx60f45xgmig=";
     };
   };
   noon-light-theme = pkgs.vimUtils.buildVimPlugin {
     name = "noon-light-theme";
     src = pkgs.fetchFromGitHub {
-      owner  = "silky";
-      repo   = "noon-light-vim";
-      rev    = "edbd5fc9477e5697747acc286f9af5bbbbec3d39";
+      owner = "silky";
+      repo = "noon-light-vim";
+      rev = "edbd5fc9477e5697747acc286f9af5bbbbec3d39";
       sha256 = "sha256-WtB9gcRVRL2isy18UIqZDvyxINHvRPp0FqYj3roXM9E=";
     };
   };
   vim-syntax-shakespeare = pkgs.vimUtils.buildVimPlugin {
     name = "vim-syntax-shakespeare";
     src = pkgs.fetchFromGitHub {
-      owner  = "pbrisbin";
-      repo   = "vim-syntax-shakespeare";
-      rev    = "2f4f61eae55b8f1319ce3a086baf9b5ab57743f3";
+      owner = "pbrisbin";
+      repo = "vim-syntax-shakespeare";
+      rev = "2f4f61eae55b8f1319ce3a086baf9b5ab57743f3";
       sha256 = "sha256-sdCXJOvB+vJE0ir+qsT/u1cHNxrksMnqeQi4D/Vg6UA=";
     };
   };
   cabal-project-vim = pkgs.vimUtils.buildVimPlugin {
     name = "cabal-project-vim";
     src = pkgs.fetchFromGitHub {
-      owner  = "vmchale";
-      repo   = "cabal-project-vim";
-      rev    = "0d41e7e41b1948de84847d9731023407bf2aea04";
+      owner = "vmchale";
+      repo = "cabal-project-vim";
+      rev = "0d41e7e41b1948de84847d9731023407bf2aea04";
       sha256 = "sha256-j1igpjk1+j/1/y99ZaI3W5+VYNmQqsFp2qX4qzkpNpc=";
     };
   };
@@ -83,20 +82,20 @@ let
 
   # Hacky monitor things
   work = pkgs.writeShellScriptBin "work" ''
-   xrandr \
-      --output DP-1   --off \
-      --output DP-2   --primary --mode 2560x1440 --pos 0x619 --rotate normal \
-      --output HDMI-1 --mode 2560x1440 --pos 2560x0 --rotate left \
-      --output eDP-1  --off
-    ~/.fehbg
+    xrandr \
+       --output DP-1   --off \
+       --output DP-2   --primary --mode 2560x1440 --pos 0x619 --rotate normal \
+       --output HDMI-1 --mode 2560x1440 --pos 2560x0 --rotate left \
+       --output eDP-1  --off
+     ~/.fehbg
   '';
   silver-desk = pkgs.writeShellScriptBin "silver-desk" ''
-   xrandr \
-      --output DP-1   --mode 2560x1440 --pos 2560x0 --rotate right \
-      --output DP-2   --primary --mode 2560x1440 --pos 0x560 --rotate normal \
-      --output HDMI-1 --off \
-      --output eDP-1  --off
-    ~/.fehbg
+    xrandr \
+       --output DP-1   --mode 2560x1440 --pos 2560x0 --rotate right \
+       --output DP-2   --primary --mode 2560x1440 --pos 0x560 --rotate normal \
+       --output HDMI-1 --off \
+       --output eDP-1  --off
+     ~/.fehbg
   '';
   mobile = pkgs.writeShellScriptBin "mobile" ''
     xrandr \
@@ -125,7 +124,7 @@ in
       ];
 
       dev = [
-        ( agda.withPackages (p: [ p.standard-library p.cubical ]) )
+        (agda.withPackages (p: [ p.standard-library p.cubical ]))
         csview
         delta
         difftastic
@@ -173,6 +172,7 @@ in
         gnome.seahorse
         libnotify
         nethogs
+        p7zip
         qmk
         xorg.xmodmap
       ];
@@ -207,7 +207,7 @@ in
         work
       ];
     in
-      web ++ dev ++ sys ++ apps ++ scripts;
+    web ++ dev ++ sys ++ apps ++ scripts;
 
 
   # ---------------------------------------------------------------------------
@@ -239,7 +239,7 @@ in
       Restart = "on-failure";
       ExecStart =
         "${unstablePkgs.haskellPackages.hledger-web}/bin/hledger-web --serve -f ${hledgerFile}";
-      };
+    };
   };
 
   systemd.user.services.cooklang-chef = {
@@ -253,7 +253,7 @@ in
       Restart = "on-failure";
       ExecStart =
         "${cooklang-chef.packages.x86_64-linux.default}/bin/chef --path ${recipesDir} serve --port 5001";
-      };
+    };
   };
 
   programs.emacs = {
@@ -270,12 +270,13 @@ in
             dashboard
             doom-modeline
           ];
-      in (pkgs.emacsWithPackagesFromUsePackage
-      {
-        config = ./emacs/init.el;
-        alwaysEnsure = true;
-        package = pkgs.emacs-git;
-      }
+      in
+      (pkgs.emacsWithPackagesFromUsePackage
+        {
+          config = ./emacs/init.el;
+          alwaysEnsure = true;
+          package = pkgs.emacs-git;
+        }
       );
   };
 
@@ -321,9 +322,9 @@ in
         # https://github.com/agkozak/agkozak-zsh-prompt
         name = "agkozak-zsh-prompt";
         src = fetchFromGitHub {
-          owner  = "agkozak";
-          repo   = "agkozak-zsh-prompt";
-          rev    = "v3.11.1";
+          owner = "agkozak";
+          repo = "agkozak-zsh-prompt";
+          rev = "v3.11.1";
           sha256 = "sha256-TOfAWxw1uIV0hKV9o4EJjOlp+jmGWCONDex86ipegOY=";
         };
         file = "agkozak-zsh-prompt.plugin.zsh";
@@ -334,99 +335,99 @@ in
       let
         # Build up prompt
         executionTime = "%(9V.%F{247}%9v%f .)";
-        exitStatus    = "%(?..%F{\${AGKOZAK_COLORS_EXIT_STATUS}}(%?%)%f )";
-        userAndHost   = "%(!.%S.%F{cyan})%n%1v%(!.%s.%f)";
-        envHint       = "%(10V.%F{blue}[%10v]%f .)";
-        path          = "%F{green}%c%f";
-        time          = "%F{blue}%D{%I:%M %P}%f";
-        gitStatus     = "%(3V.%F{\${AGKOZAK_COLORS_BRANCH_STATUS}}%3v%f.)";
+        exitStatus = "%(?..%F{\${AGKOZAK_COLORS_EXIT_STATUS}}(%?%)%f )";
+        userAndHost = "%(!.%S.%F{cyan})%n%1v%(!.%s.%f)";
+        envHint = "%(10V.%F{blue}[%10v]%f .)";
+        path = "%F{green}%c%f";
+        time = "%F{blue}%D{%I:%M %P}%f";
+        gitStatus = "%(3V.%F{\${AGKOZAK_COLORS_BRANCH_STATUS}}%3v%f.)";
         prompt = executionTime
-                + exitStatus
-                + time + " "
-                + userAndHost + " φ "
-                + envHint
-                + path
-                + gitStatus
-                + " "
-                ;
+          + exitStatus
+          + time + " "
+          + userAndHost + " φ "
+          + envHint
+          + path
+          + gitStatus
+          + " "
+        ;
       in
-    {
-      AGKOZAK_PROMPT_CHAR      = "φ φ# :";
-      AGKOZAK_LEFT_PROMPT_ONLY = 1;
-      AGKOZAK_MULTILINE        = 0;
-      AGKOZAK_CUSTOM_SYMBOLS   = "⇣⇡ ⇣ ⇡ + x ! > ? S";
+      {
+        AGKOZAK_PROMPT_CHAR = "φ φ# :";
+        AGKOZAK_LEFT_PROMPT_ONLY = 1;
+        AGKOZAK_MULTILINE = 0;
+        AGKOZAK_CUSTOM_SYMBOLS = "⇣⇡ ⇣ ⇡ + x ! > ? S";
 
-      # Day in the right, e.g.: "Tue Sep 27"
-      AGKOZAK_CUSTOM_RPROMPT  = "%F{blue}%D{%a %b %d}%f";
-      AGKOZAK_CUSTOM_PROMPT   = prompt;
+        # Day in the right, e.g.: "Tue Sep 27"
+        AGKOZAK_CUSTOM_RPROMPT = "%F{blue}%D{%a %b %d}%f";
+        AGKOZAK_CUSTOM_PROMPT = prompt;
 
-      LS_COLORS = "di=36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43";
+        LS_COLORS = "di=36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43";
 
-      LANG     = "en_US.UTF-8";
-      LC_CTYPE = "en_US.UTF-8";
-      LC_ALL   = "en_US.UTF-8";
+        LANG = "en_US.UTF-8";
+        LC_CTYPE = "en_US.UTF-8";
+        LC_ALL = "en_US.UTF-8";
 
-      # hledger
-      LEDGER_FILE = hledgerFile;
+        # hledger
+        LEDGER_FILE = hledgerFile;
 
-      # hunspell
-      DICTIONARY = "en_GB";
+        # hunspell
+        DICTIONARY = "en_GB";
 
-      # TODO: Work out how to reinstate so that it doesn't kill off emacs
-      # bindings in the shell.
-      # EDITOR   = "nvim";
-    };
+        # TODO: Work out how to reinstate so that it doesn't kill off emacs
+        # bindings in the shell.
+        # EDITOR   = "nvim";
+      };
 
     shellAliases = {
       # Nix
       rr = "direnv reload";
-      n                  = "nix-shell";
+      n = "nix-shell";
       nix-shell-unstable = "nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
-      nu                 = "nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
+      nu = "nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
 
       # Haskell
-      b  = "stack build --nix";
+      b = "stack build --nix";
       bf = "stack build --nix --fast --file-watch";
-      g  = "stack ghci --nix";
-      c  = "cabal build";
+      g = "stack ghci --nix";
+      c = "cabal build";
 
       # hledger
       h = "hledger -s";
 
       # Git-releated
-      ci  = "git commit -m";
-      co  = "git checkout";
-      gc  = "git clone --recursive";
+      ci = "git commit -m";
+      co = "git checkout";
+      gc = "git clone --recursive";
       gpr = "git pull --rebase";
-      pp  = "git push";
-      st  = "git status";
+      pp = "git push";
+      st = "git status";
 
       # Fun
       shh = "ssh -q";
 
       # Shell
-      ".."   = "cd ..";
-      "..."  = "cd ../..";
+      ".." = "cd ..";
+      "..." = "cd ../..";
       "cd.." = "cd ..";
-      l      = "ls -lah --color=auto";
-      ll     = "ls -lh --color=auto";
-      ls     = "ls --color=auto";
-      md     = "mkdir -p";
+      l = "ls -lah --color=auto";
+      ll = "ls -lh --color=auto";
+      ls = "ls --color=auto";
+      md = "mkdir -p";
 
       # Misc
-      dc  = "docker compose";
-      df  = "df -h";
-      f   = "format";
-      j   = "jupyter notebook --no-browser --ip=localhost -y";
-      m   = "make";
-      p   = "python";
-      rg  = "rg -M 1000";
+      dc = "docker compose";
+      df = "df -h";
+      f = "format";
+      j = "jupyter notebook --no-browser --ip=localhost -y";
+      m = "make";
+      p = "python";
+      rg = "rg -M 1000";
 
       # Text-editing
-      v   = "nvim";
+      v = "nvim";
       vim = "nvim";
-      vv  = "nvim -R";
-      e   = "emacs";
+      vv = "nvim -R";
+      e = "emacs";
     };
   };
 
@@ -437,7 +438,7 @@ in
   #
   # ---------------------------------------------------------------------------
   programs.gpg = {
-    enable  = true;
+    enable = true;
     package = unstablePkgs.gnupg;
   };
 
@@ -445,32 +446,32 @@ in
     enable = true;
 
     iconTheme = {
-      name    = "BeautyLine";
+      name = "BeautyLine";
       package = pkgs.beauty-line-icon-theme;
-      size    = "32x32";
+      size = "32x32";
     };
 
     settings = {
       global = {
-        font        = "Fira Code 12";
-        format      = "%s — %b";
+        font = "Fira Code 12";
+        format = "%s — %b";
         frame_width = "0";
-        width       = "(0, 500)";
+        width = "(0, 500)";
       };
       urgency_low = {
         background = "#e6e6fa";
         foreground = "#111111";
-        timeout    = 3;
+        timeout = 3;
       };
       urgency_normal = {
         background = "#e6e6fa";
         foreground = "#111111";
-        timeout    = 3;
+        timeout = 3;
       };
       urgency_critical = {
         background = "#ffe4e1";
         foreground = "#111111";
-        timeout    = 4;
+        timeout = 4;
       };
     };
   };
@@ -538,10 +539,10 @@ in
   # ---------------------------------------------------------------------------
   home.file = {
     # Note: Let's not let any app modify these files.
-    ".config/konsolerc".source    = ./konsolerc;
-    ".gitconfig".source           = ./gitconfig;
-    ".stack/config.yaml".source   = ./stack-config.yaml;
-    ".emacs.d/init.el".source     = ./emacs/init.el;
+    ".config/konsolerc".source = ./konsolerc;
+    ".gitconfig".source = ./gitconfig;
+    ".stack/config.yaml".source = ./stack-config.yaml;
+    ".emacs.d/init.el".source = ./emacs/init.el;
 
     # Agda
     ".agda/defaults".text = ''
@@ -551,7 +552,7 @@ in
     ".config/contour/contour.yml".source = mkSym "contour.yml";
 
     # These ones it's okay; it's easier to modify with Konsole then manually.
-    ".config/okularpartrc".source                   = mkSym "okularpartrc";
+    ".config/okularpartrc".source = mkSym "okularpartrc";
     ".local/share/konsole/Noons.colorscheme".source = mkSym "Noons.colorscheme";
     ".local/share/konsole/Profile 1.profile".source = mkSym "Profile 1.profile";
   };
