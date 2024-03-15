@@ -489,7 +489,10 @@ in
 
   programs.direnv = {
     enable = true;
+    package = unstablePkgs.direnv;
+    config.global.hide_env_diff = true;
     nix-direnv.enable = true;
+    nix-direnv.package = unstablePkgs.nix-direnv;
   };
 
   programs.fzf = {
