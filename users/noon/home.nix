@@ -228,19 +228,19 @@ in
   #     };
   # };
 
-  systemd.user.services.hledger = {
-    Unit = {
-      Description = "hledger-web";
-      After = [ "graphical-session-pre.target" ];
-      PartOf = [ "graphical-session.target" ];
-    };
-    Install = { WantedBy = [ "graphical-session.target" ]; };
-    Service = {
-      Restart = "on-failure";
-      ExecStart =
-        "${unstablePkgs.haskellPackages.hledger-web}/bin/hledger-web --serve -f ${hledgerFile}";
-    };
-  };
+  # systemd.user.services.hledger = {
+  #   Unit = {
+  #     Description = "hledger-web";
+  #     After = [ "graphical-session-pre.target" ];
+  #     PartOf = [ "graphical-session.target" ];
+  #   };
+  #   Install = { WantedBy = [ "graphical-session.target" ]; };
+  #   Service = {
+  #     Restart = "on-failure";
+  #     ExecStart =
+  #       "${unstablePkgs.haskellPackages.hledger-web}/bin/hledger-web --serve -f ${hledgerFile}";
+  #   };
+  # };
 
   systemd.user.services.cooklang-chef = {
     Unit = {
@@ -368,7 +368,7 @@ in
         LC_ALL = "en_US.UTF-8";
 
         # hledger
-        LEDGER_FILE = hledgerFile;
+        # LEDGER_FILE = hledgerFile;
 
         # hunspell
         DICTIONARY = "en_GB";

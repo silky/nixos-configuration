@@ -6,7 +6,7 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     cooklang-chef.url = "github:silky/cooklang-chef/nix-hacking";
     haskell-hacking-notebook.url = "github:silky/haskell-hacking-notebook/main";
-    emacs-overlay.url = "github:nix-community/emacs-overlay";
+    # emacs-overlay.url = "github:nix-community/emacs-overlay";
     cornelis = {
       url = "github:isovector/cornelis";
       # url = "git+file:///home/noon/dev/cornelis/";
@@ -23,13 +23,13 @@
     , nixos-hardware
     , cooklang-chef
     , haskell-hacking-notebook
-    , emacs-overlay
+    # , emacs-overlay
     , cornelis
     }@attrs:
     let
       overlays = [
         (self: super: { fcitx-engines = self.fcitx5; })
-        emacs-overlay.overlay
+        # emacs-overlay.overlay
         cornelis.overlays.cornelis
       ];
       pkgs = import nixpkgs { system = "x86_64-linux"; };
