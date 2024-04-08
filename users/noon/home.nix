@@ -134,6 +134,7 @@ in
         fd
         fx
         git-crypt
+        google-cloud-sdk
         html-tidy
         httpie
         jc
@@ -401,6 +402,7 @@ in
       gpr = "git pull --rebase";
       pp = "git push";
       st = "git status";
+      gpo = "git push origin";
 
       # Fun
       shh = "ssh -q";
