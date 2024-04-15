@@ -188,7 +188,7 @@ in
         imagemagick
         inkscape
         lyx
-        obsidian
+        # obsidian
         okular
         pandoc
         pass
