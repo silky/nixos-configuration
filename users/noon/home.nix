@@ -167,7 +167,7 @@ in
         dmenu
         feh
         ffmpeg_6-full
-        flameshot
+        unstablePkgs.flameshot
         gnome.eog
         gnome.gedit
         gnome.nautilus
