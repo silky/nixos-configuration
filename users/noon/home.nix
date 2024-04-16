@@ -163,11 +163,11 @@ in
         acpi
         alsa-utils
         arandr
+        baobab
         brightnessctl
         dmenu
         feh
         ffmpeg_6-full
-        unstablePkgs.flameshot
         gnome.eog
         gnome.gedit
         gnome.nautilus
@@ -176,6 +176,7 @@ in
         nethogs
         p7zip
         qmk
+        unstablePkgs.flameshot
         xorg.xmodmap
       ];
 
