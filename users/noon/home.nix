@@ -151,11 +151,12 @@ in
         python310Packages.keyring
         stack
         unixtools.xxd
-        unstablePkgs.ijq
         unstablePkgs.contour
         unstablePkgs.csvlens
+        unstablePkgs.ijq
         unstablePkgs.konsole
         vscode
+        yq
         zsh
       ];
 
