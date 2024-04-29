@@ -337,3 +337,9 @@ let g:elm_format_autosave = 0
 set errorformat=%C%*\\s•\ %m,
                \%-C\ %.%#,
                \%A%f:%l:%c:\ %t%.%#
+
+
+" Vim quick-scope
+" https://github.com/unblevable/quick-scope
+" Trigger a highlight in the appropriate direction when pressing these keys:
+let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']

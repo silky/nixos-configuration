@@ -18,6 +18,16 @@ let
   # ~ Vim plugins
   #
   # ---------------------------------------------------------------------------
+  vim-quickscope = pkgs.vimUtils.buildVimPlugin {
+    name = "quick-scope";
+    src = pkgs.fetchFromGitHub {
+      owner = "unblevable";
+      repo = "quick-scope";
+      rev = "256d81e391a22eeb53791ff62ce65f870418fa71";
+      sha256 = "sha256-TcA4jZIdnQd06V+JrXGiCMr0Yhm9gB6OMiTSdzMt/Qw=";
+    };
+  };
+
   vim-cooklang = pkgs.vimUtils.buildVimPlugin {
     name = "vim-cooklang";
     src = pkgs.fetchFromGitHub {
@@ -546,6 +556,7 @@ in
       vim-cooklang
       vim-easy-align
       vim-easymotion
+      vim-quickscope
       vim-ledger
       vim-nix
       vim-ormolu
