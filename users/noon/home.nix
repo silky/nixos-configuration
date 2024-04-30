@@ -303,6 +303,7 @@ in
     enable = true;
     autocd = true;
     enableCompletion = true;
+    syntaxHighlighting.enable = true;
 
     initExtra = ''
       # History things
@@ -352,7 +353,7 @@ in
     '';
 
     plugins = with pkgs; [
-      {
+      ({
         # https://github.com/agkozak/agkozak-zsh-prompt
         name = "agkozak-zsh-prompt";
         src = fetchFromGitHub {
@@ -362,7 +363,7 @@ in
           sha256 = "sha256-TOfAWxw1uIV0hKV9o4EJjOlp+jmGWCONDex86ipegOY=";
         };
         file = "agkozak-zsh-prompt.plugin.zsh";
-      }
+      })
     ];
 
     sessionVariables =
