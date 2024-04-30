@@ -23,7 +23,7 @@
     , nixos-hardware
     , cooklang-chef
     , haskell-hacking-notebook
-    # , emacs-overlay
+      # , emacs-overlay
     , cornelis
     }@attrs:
     let
