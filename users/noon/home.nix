@@ -304,6 +304,7 @@ in
     autocd = true;
     enableCompletion = true;
     syntaxHighlighting.enable = true;
+    defaultKeymap = "emacs";
     history = {
       size = 10000000;
       ignoreAllDups = true;
@@ -311,16 +312,14 @@ in
       ignorePatterns = [ "rm *", "cd *", "pwd", "exit", "pkill *" ];
       ignoreSpace = true;
       share = true;
+      extended = true;
     };
-    defaultKeymap = "emacs";
 
     initExtra = ''
       # History things
-      export HIST_STAMPS="yyyy-mm-dd"
+      HIST_STAMPS="yyyy-mm-dd"
 
-      setopt EXTENDED_HISTORY      # Write the history file in the ':start:elapsed;command' format.
       setopt INC_APPEND_HISTORY    # Write to the history file immediately, not when the shell exits.
-      setopt HIST_IGNORE_SPACE     # Do not record an event starting with a space.
       setopt HIST_SAVE_NO_DUPS     # Do not write a duplicate event to the history file.
       setopt HIST_VERIFY           # Do not execute immediately upon history expansion.
       setopt APPEND_HISTORY        # append to history file (Default)
