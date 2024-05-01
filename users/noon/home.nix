@@ -303,13 +303,23 @@ in
     enable = true;
     autocd = true;
     enableCompletion = true;
-    syntaxHighlighting.enable = true;
+    syntaxHighlighting = {
+      enable = true;
+      styles = {
+        # See: <https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters/main.md>
+        builtin = "none";
+        command = "none";
+        default = "none";
+        # Don't highlight errors; it's okay.
+        unknown-token = "none";
+      };
+    };
     defaultKeymap = "emacs";
     history = {
       size = 10000000;
       ignoreAllDups = true;
       ignoreDups = true;
-      ignorePatterns = [ "rm *", "cd *", "pwd", "exit", "pkill *" ];
+      ignorePatterns = [ "rm *" "cd *" "pwd" "exit" "pkill *" ];
       ignoreSpace = true;
       share = true;
       extended = true;
