@@ -310,6 +310,9 @@ in
         builtin = "none";
         command = "none";
         default = "none";
+        alias = "none";
+        function = "none";
+        path = "none";
         # Don't highlight errors; it's okay.
         unknown-token = "none";
       };
