@@ -422,10 +422,7 @@ in
 
         # hunspell
         DICTIONARY = "en_GB";
-
-        # TODO: Work out how to reinstate so that it doesn't kill off emacs
-        # bindings in the shell.
-        # EDITOR   = "nvim";
+        EDITOR   = "nvim";
       };
 
     shellAliases = {
