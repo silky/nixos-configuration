@@ -555,6 +555,10 @@ in
     enable = true;
     extraConfig = builtins.readFile ./init.vim;
     plugins = with pkgs.vimPlugins; [
+      {
+        plugin = nvim-treesitter.withAllGrammars;
+      }
+
       cabal-project-vim
       dhall-vim
       editorconfig-vim
