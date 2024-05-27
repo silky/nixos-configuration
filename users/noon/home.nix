@@ -164,7 +164,7 @@ in
         unstablePkgs.contour
         unstablePkgs.csvlens
         unstablePkgs.gh      # For gh-dash auth; `gh auth login`
-        unstablePkgs.gh-dash
+        unstablePkgs.gh-dash # https://dlvhdr.github.io/gh-dash/
         unstablePkgs.ijq
         unstablePkgs.konsole
         vscode
