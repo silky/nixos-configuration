@@ -131,6 +131,11 @@ in
         firefox
         google-chrome
         ungoogled-chromium
+
+
+        (writers.writeDashBin "gh-browser" ''
+          ${ungoogled-chromium}/bin/chromium-browser "$@" 1>/dev/null
+        '')
       ];
 
       dev = [
@@ -424,7 +429,10 @@ in
 
         # hunspell
         DICTIONARY = "en_GB";
-        EDITOR   = "nvim";
+        EDITOR = "nvim";
+
+        # gh-dash
+        GH_BROWSER = "gh-browser";
       };
 
     shellAliases = {
