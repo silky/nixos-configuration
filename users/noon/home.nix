@@ -163,6 +163,8 @@ in
         unixtools.xxd
         unstablePkgs.contour
         unstablePkgs.csvlens
+        unstablePkgs.gh      # For gh-dash auth; `gh auth login`
+        unstablePkgs.gh-dash
         unstablePkgs.ijq
         unstablePkgs.konsole
         vscode
@@ -192,6 +194,7 @@ in
       ];
 
       apps = [
+        age
         cooklang-chef.packages.x86_64-linux.default
         docbook5
         gimp-with-plugins
@@ -200,7 +203,6 @@ in
         imagemagick
         inkscape
         lyx
-        # obsidian
         okular
         pandoc
         pass
