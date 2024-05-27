@@ -472,6 +472,7 @@ in
       m = "make";
       p = "python";
       rg = "rg -M 1000";
+      d = "gh-dash";
 
       # Text-editing
       v = "nvim";
@@ -479,7 +480,7 @@ in
       vv = "nvim -R";
       e = "emacs";
 
-      # Don't ask
+      # Don't ask (TZ)
       pc = "pre-commit";
       pca = "pre-commit run --all";
     };
