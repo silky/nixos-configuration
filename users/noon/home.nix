@@ -480,7 +480,8 @@ in
       m = "make";
       p = "python";
       rg = "rg -M 1000";
-      d = "gh-dash";
+      # Open my main config by default
+      d = "gh-dash --config ~/dev/life/gh-dash-configs/config.yml";
 
       # Text-editing
       v = "nvim";
