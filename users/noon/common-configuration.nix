@@ -13,6 +13,8 @@ in
   services.fwupd.enable = true;
 
 
+  programs.atop.enable = true;
+
   # ---------------------------------------------------------------------------
   #
   # ~ System Packages
