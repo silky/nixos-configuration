@@ -187,7 +187,7 @@ in
         feh
         ffmpeg_6-full
         gnome.eog
-        gnome.gedit
+        pkgs.gedit
         gnome.nautilus
         gnome.seahorse
         libnotify

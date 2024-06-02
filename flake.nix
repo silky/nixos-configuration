@@ -1,8 +1,8 @@
 {
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-23.11";
+    nixpkgs.url = "nixpkgs/nixos-24.05";
     unstable.url = "nixpkgs/nixos-unstable";
-    home-manager.url = "github:nix-community/home-manager/release-23.11";
+    home-manager.url = "github:nix-community/home-manager/release-24.05";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     cooklang-chef.url = "github:silky/cooklang-chef/nix-hacking";
     haskell-hacking-notebook.url = "github:silky/haskell-hacking-notebook/main";

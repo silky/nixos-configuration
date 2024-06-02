@@ -80,11 +80,22 @@ in
   # ~ Window Manager
   #
   # ---------------------------------------------------------------------------
+  services = {
+    displayManager = {
+      autoLogin = {
+        user = "${user}";
+        enable = true;
+      };
+    };
+  };
+
   services.xserver = {
     enable = true;
-    layout = "us";
-    xkbVariant = "";
-    xkbOptions = "caps:escape";
+    xkb = {
+      layout = "us";
+      variant = "";
+      options = "caps:escape";
+    };
     displayManager = {
       sessionCommands = ''
         # Set a background.
@@ -93,10 +104,6 @@ in
         # No screen saving.
         xset s off -dpms
       '';
-      autoLogin = {
-        user = "${user}";
-        enable = true;
-      };
     };
     windowManager = {
       xmonad = {
