@@ -54,3 +54,6 @@
 
 [init]
   defaultBranch = main
+
+[includeIf "gitdir:~/dev/w"]
+  path = ~/dev/w/work.gitconfig
