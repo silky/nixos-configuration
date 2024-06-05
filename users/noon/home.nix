@@ -624,7 +624,7 @@ in
     ".gitconfig".source = mkSym "gitconfig";
     ".config/contour/contour.yml".source = mkSym "contour.yml";
 
-    # These ones it's okay; it's easier to modify with Konsole then manually.
+    # These ones it's okay; it's easier to modify with the apps
     ".config/okularpartrc".source = mkSym "okularpartrc";
     ".local/share/konsole/Noons.colorscheme".source = mkSym "Noons.colorscheme";
     ".local/share/konsole/Profile 1.profile".source = mkSym "Profile 1.profile";
