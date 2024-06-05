@@ -612,7 +612,6 @@ in
   home.file = {
     # Note: Let's not let any app modify these files.
     ".config/konsolerc".source = ./konsolerc;
-    ".gitconfig".source = ./gitconfig;
     ".stack/config.yaml".source = ./stack-config.yaml;
     ".emacs.d/init.el".source = ./emacs/init.el;
 
@@ -621,6 +620,8 @@ in
       standard-library
     '';
 
+    # Ones I prefer to modify in place
+    ".gitconfig".source = mkSym "gitconfig";
     ".config/contour/contour.yml".source = mkSym "contour.yml";
 
     # These ones it's okay; it's easier to modify with Konsole then manually.
