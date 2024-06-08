@@ -6,33 +6,34 @@
 let
   mkSym = file: config.lib.file.mkOutOfStoreSymlink
     "${config.home.homeDirectory}/dev/nixos-configuration/users/${config.home.username}/${file}";
-  unstablePkgs = import unstable {};
+  unstablePkgs = import unstable { };
 in
 {
   home.stateVersion = "22.11";
 
   home.packages = with pkgs;
-  let
-    web = [
-      ungoogled-chromium
-    ];
-    dev = [
-      # docker
-      docker-compose
-      kdiff3
-      google-cloud-sdk
-      moreutils
-      openssl
-      unstablePkgs.konsole
-      vscode
-      yq
-    ];
-    apps = [
-      inkscape
-      vlc
-    ];
-    scripts = [];
-  in web ++ dev ++ apps ++ scripts;
+    let
+      web = [
+        ungoogled-chromium
+      ];
+      dev = [
+        # docker
+        docker-compose
+        kdiff3
+        google-cloud-sdk
+        moreutils
+        openssl
+        unstablePkgs.konsole
+        vscode
+        yq
+      ];
+      apps = [
+        inkscape
+        vlc
+      ];
+      scripts = [ ];
+    in
+    web ++ dev ++ apps ++ scripts;
 
   programs.firefox = {
     enable = true;
@@ -112,7 +113,7 @@ in
     '';
 
     plugins = with pkgs; [
-      ({
+      {
         # https://github.com/agkozak/agkozak-zsh-prompt
         name = "agkozak-zsh-prompt";
         src = fetchFromGitHub {
@@ -122,7 +123,7 @@ in
           sha256 = "sha256-TOfAWxw1uIV0hKV9o4EJjOlp+jmGWCONDex86ipegOY=";
         };
         file = "agkozak-zsh-prompt.plugin.zsh";
-      })
+      }
     ];
 
     sessionVariables =
@@ -217,9 +218,9 @@ in
 
   services.gpg-agent = {
     enable = true;
-  #   extraConfig = ''
-  #     pinentry-program ${pkgs.pinentry.qt}/bin/pinentry
-  #   '';
+    #   extraConfig = ''
+    #     pinentry-program ${pkgs.pinentry.qt}/bin/pinentry
+    #   '';
   };
 
   programs.gpg = {

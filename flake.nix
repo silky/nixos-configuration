@@ -2,47 +2,54 @@
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-24.05";
     unstable.url = "nixpkgs/nixos-unstable";
+
     home-manager.url = "github:nix-community/home-manager/release-24.05";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     cooklang-chef.url = "github:silky/cooklang-chef/nix-hacking";
     haskell-hacking-notebook.url = "github:silky/haskell-hacking-notebook/main";
-    # emacs-overlay.url = "github:nix-community/emacs-overlay";
-    cornelis = {
-      url = "github:isovector/cornelis";
-      # url = "git+file:///home/noon/dev/cornelis/";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+
+    cornelis.url = "github:isovector/cornelis";
+    cornelis.inputs.nixpkgs.follows = "nixpkgs";
+
+    nur.url = "github:nix-community/NUR";
+
+    nix-formatter-pack.url = "github:Gerschtli/nix-formatter-pack";
+    nix-formatter-pack.inputs.nixpkgs.follows = "nixpkgs";
   };
 
 
   outputs =
-    { self
-    , nixpkgs
+    { nixpkgs
     , unstable
     , home-manager
-    , nixos-hardware
     , cooklang-chef
     , haskell-hacking-notebook
-      # , emacs-overlay
     , cornelis
-    }@attrs:
+    , nur
+    , nix-formatter-pack
+    , ...
+    }@inputs:
     let
       overlays = [
-        (self: super: { fcitx-engines = self.fcitx5; })
-        # emacs-overlay.overlay
+        (self: _super: { fcitx-engines = self.fcitx5; })
         cornelis.overlays.cornelis
       ];
       pkgs = import nixpkgs { system = "x86_64-linux"; };
 
-      mkSystem = name: { user }:
+      mkSystem = name:
         nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          specialArgs = attrs // { inherit user name unstable; };
+          specialArgs = inputs // { inherit name unstable; };
           modules = [
             { nixpkgs.overlays = overlays; }
 
+            nur.nixosModules.nur
+
             # Common system configuration
-            ./users/${user}/common-configuration.nix
+            # ./users/${user}/common-configuration.nix
+            ./users/noon/common-configuration.nix
 
             # Specific machine configuration
             ./machines/${name}/configuration.nix
@@ -51,7 +58,8 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.${user} = import ./users/${user}/home.nix;
+              home-manager.users.noon = import ./users/noon/home.nix;
+              home-manager.users.gala = import ./users/gala/home.nix;
               home-manager.extraSpecialArgs = {
                 inherit
                   unstable
@@ -64,12 +72,18 @@
         };
     in
     {
-      formatter."x86_64-linux" = pkgs.nixpkgs-fmt;
-      nixosConfigurations.eqpac = mkSystem "eqpac" {
-        user = "noon";
-      };
-      nixosConfigurations.nqpac = mkSystem "nqpac" {
-        user = "noon";
-      };
+      formatter."x86_64-linux" =
+        nix-formatter-pack.lib.mkFormatter {
+          pkgs = nixpkgs.legacyPackages."x86_64-linux";
+          config.tools = {
+            deadnix.enable = true;
+            nixpkgs-fmt.enable = true;
+            statix.enable = true;
+          };
+        };
+
+
+      nixosConfigurations.eqpac = mkSystem "eqpac";
+      nixosConfigurations.nqpac = mkSystem "nqpac";
     };
 }

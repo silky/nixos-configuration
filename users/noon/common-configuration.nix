@@ -1,4 +1,4 @@
-{ name, config, pkgs, lib, nixos-hardware, unstable, ... }:
+{ name, config, pkgs, unstable, ... }:
 let
   unstablePkgs = import unstable { };
 in
