@@ -1,4 +1,4 @@
-{ user, name, config, pkgs, lib, nixos-hardware, unstable, ... }:
+{ name, config, pkgs, lib, nixos-hardware, unstable, ... }:
 let
   unstablePkgs = import unstable { };
 in
@@ -49,6 +49,29 @@ in
     xorg.xkill
     xsel
     zip
+
+
+    acpi
+    alsa-utils
+    arandr
+    baobab
+    brightnessctl
+    dmenu
+    feh
+    ffmpeg_6-full
+    gnome.eog
+    gnome.nautilus
+    gnome.seahorse
+    imagemagick
+    libnotify
+    nethogs
+    p7zip
+    pkgs.gedit
+    qmk
+    texlive.combined.scheme-full
+    unstablePkgs.flameshot
+    xclip
+    xorg.xmodmap
   ];
 
 
@@ -61,7 +84,7 @@ in
     # Wild guess.
     # See: <https://github.com/NixOS/nix/issues/1281>
     # settings.auto-optimise-store = false;
-    settings.trusted-users = [ "root" "${user}" ];
+    settings.trusted-users = [ "root" "noon" "gala" ];
     extraOptions = ''
       experimental-features = nix-command flakes recursive-nix ca-derivations repl-flake
       log-lines = 300
@@ -85,7 +108,7 @@ in
   services = {
     displayManager = {
       autoLogin = {
-        user = "${user}";
+        user = "noon";
         enable = true;
       };
     };
@@ -98,7 +121,9 @@ in
       variant = "";
       options = "caps:escape";
     };
+    # https://mynixos.com/nixpkgs/option/services.xserver.xrandrHeads
     displayManager = {
+      gdm.enable = true;
       sessionCommands = ''
         # Set a background.
         /home/noon/.fehbg || true
@@ -210,9 +235,15 @@ in
     pam.services.login.enableGnomeKeyring = true;
   };
 
-  users.users.${user} = {
+  users.users.noon = {
     isNormalUser = true;
-    description = "${user}";
+    description = "noon";
+    extraGroups = [ "networkmanager" "wheel" "dialout" "audio" "docker" ];
+  };
+
+  users.users.gala = {
+    isNormalUser = true;
+    description = "gala";
     extraGroups = [ "networkmanager" "wheel" "dialout" "audio" "docker" ];
   };
 

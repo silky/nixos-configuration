@@ -11,7 +11,7 @@ let
 
   hledgerFile = "${config.home.homeDirectory}/dev/life/accounts/hledger.journal";
   recipesDir = "${config.home.homeDirectory}/dev/life/recipes";
-  unstablePkgs = import unstable { };
+  unstablePkgs = import unstable {};
 
   # ---------------------------------------------------------------------------
   #
@@ -128,11 +128,10 @@ in
   home.packages = with pkgs;
     let
       web = [
-        firefox
         google-chrome
         ungoogled-chromium
 
-
+        # Hack so that gh browser doesn't say "Opening in new browser"
         (writers.writeDashBin "gh-browser" ''
           ${ungoogled-chromium}/bin/chromium-browser "$@" 1>/dev/null
         '')
@@ -144,7 +143,7 @@ in
         delta
         difftastic
         dnsutils
-        docker
+        # docker
         docker-compose
         fd
         fx
@@ -174,28 +173,7 @@ in
         unstablePkgs.konsole
         vscode
         yq
-        zsh
-      ];
-
-      sys = [
-        acpi
-        alsa-utils
-        arandr
-        baobab
-        brightnessctl
-        dmenu
-        feh
-        ffmpeg_6-full
-        gnome.eog
-        pkgs.gedit
-        gnome.nautilus
-        gnome.seahorse
-        libnotify
-        nethogs
-        p7zip
-        qmk
-        unstablePkgs.flameshot
-        xorg.xmodmap
+        # zsh
       ];
 
       apps = [
@@ -205,19 +183,16 @@ in
         gimp-with-plugins
         hunspell
         hunspellDicts.en-gb-ise
-        imagemagick
         inkscape
         lyx
         okular
         pandoc
         pass
-        texlive.combined.scheme-full
         unstablePkgs.haskellPackages.hledger
         unstablePkgs.haskellPackages.hledger-ui
         unstablePkgs.haskellPackages.hledger-web
         unstablePkgs.vokoscreen-ng
         vlc
-        xclip
         xournalpp
       ];
 
@@ -228,7 +203,7 @@ in
         work
       ];
     in
-    web ++ dev ++ sys ++ apps ++ scripts;
+    web ++ dev ++ apps ++ scripts;
 
 
   # ---------------------------------------------------------------------------
@@ -274,6 +249,21 @@ in
       Restart = "on-failure";
       ExecStart =
         "${cooklang-chef.packages.x86_64-linux.default}/bin/chef --path ${recipesDir} serve --port 5001";
+    };
+  };
+
+  programs.firefox = {
+    enable = true;
+    profiles = {
+      default = {
+        settings = {
+          "browser.urlbar.showSearchSuggestionsFirst" = false;
+        };
+        # TODO: Recover
+        # extensions = with config.nur.repos.rycee.firefox-addons; [
+        #   consent-o-matic # disabling cookie popups
+        # ];
+      };
     };
   };
 
@@ -542,9 +532,9 @@ in
 
   services.gpg-agent = {
     enable = true;
-    extraConfig = ''
-      pinentry-program ${pkgs.pinentry.qt}/bin/pinentry
-    '';
+  #   extraConfig = ''
+  #     pinentry-program ${pkgs.pinentry.qt}/bin/pinentry
+  #   '';
   };
 
   programs.direnv = {
@@ -613,7 +603,6 @@ in
     # Note: Let's not let any app modify these files.
     ".config/konsolerc".source = ./konsolerc;
     ".stack/config.yaml".source = ./stack-config.yaml;
-    ".emacs.d/init.el".source = ./emacs/init.el;
 
     # Agda
     ".agda/defaults".text = ''
