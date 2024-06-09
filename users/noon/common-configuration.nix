@@ -51,6 +51,11 @@ in
     zip
 
 
+    nvd # Nix package version diff
+    meld # Visual diff tool
+    vivaldi # Browser
+
+
     acpi
     alsa-utils
     arandr
@@ -142,6 +147,20 @@ in
     };
   };
 
+  # Bluetooth
+  hardware = {
+    # https://nixos.wiki/wiki/Bluetooth
+    bluetooth = {
+      enable = true;
+      package = pkgs.bluez;
+      settings = {
+        General = {
+          Enable = "Source,Sink,Media,Socket";
+          Experimental = true;
+        };
+      };
+    };
+  };
 
   # ---------------------------------------------------------------------------
   #

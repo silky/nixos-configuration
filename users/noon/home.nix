@@ -56,11 +56,11 @@ in
     let
       web = [
         google-chrome
-        ungoogled-chromium
+        # ungoogled-chromium
 
         # Hack so that gh browser doesn't say "Opening in new browser"
         (writers.writeDashBin "gh-browser" ''
-          ${ungoogled-chromium}/bin/chromium-browser "$@" 1>/dev/null
+          chromium-browser "$@" 1>/dev/null
         '')
       ];
 
@@ -104,6 +104,18 @@ in
       ];
 
       apps = [
+        asciicam # Terminal webcam
+        asciinema # Terminal recorder
+        asciinema-agg # Convert asciinema to .gif
+        bandwhich # Bandwidth monitor
+        chafa # Terminal image viewer
+        duf # Modern df
+        glow # Terminal Markdown renderer
+        hexyl # Hex viewer
+        hyperfine # Benchmarking
+        jiq # Interactive jq
+        procs # Modern ps
+        optipng # Optimise pngs
         age
         cooklang-chef.packages.x86_64-linux.default
         docbook5
@@ -132,6 +144,15 @@ in
     in
     web ++ dev ++ apps ++ scripts;
 
+  programs.chromium = {
+    package = pkgs.ungoogled-chromium;
+    enable = true;
+    # TODO: These aren't installed.
+    extensions = [
+      { id = "mdjildafknihdffpkfmmpnpoiajfjnjd"; } # Consent-O-Matic
+      { id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"; } # uBlock Origin
+    ];
+  };
 
   # ---------------------------------------------------------------------------
   #
@@ -149,20 +170,6 @@ in
   #     Restart = "on-failure";
   #     ExecStart = "${haskell-hacking-notebook.apps.x86_64-linux.default.program} --no-browser --port 5005 --IdentityProvider.token=abcd --notebook-dir /home/noon/tmp/haskell-hacking-notebooks";
   #     };
-  # };
-
-  # systemd.user.services.hledger = {
-  #   Unit = {
-  #     Description = "hledger-web";
-  #     After = [ "graphical-session-pre.target" ];
-  #     PartOf = [ "graphical-session.target" ];
-  #   };
-  #   Install = { WantedBy = [ "graphical-session.target" ]; };
-  #   Service = {
-  #     Restart = "on-failure";
-  #     ExecStart =
-  #       "${unstablePkgs.haskellPackages.hledger-web}/bin/hledger-web --serve -f ${hledgerFile}";
-  #   };
   # };
 
   systemd.user.services.cooklang-chef = {
@@ -186,7 +193,7 @@ in
         settings = {
           "browser.urlbar.showSearchSuggestionsFirst" = false;
         };
-        # TODO: Recover
+        # TODO: This don't seem to work
         # extensions = with config.nur.repos.rycee.firefox-addons; [
         #   consent-o-matic # disabling cookie popups
         # ];
@@ -194,17 +201,22 @@ in
     };
   };
 
-  programs.emacs = {
-    # No need for emacs at the moment.
-    enable = false;
-    package =
-      pkgs.emacsWithPackagesFromUsePackage
-        {
-          config = ./emacs/init.el;
-          alwaysEnsure = true;
-          package = pkgs.emacs-git;
-        };
+  programs.yt-dlp = {
+    enable = true;
+    package = pkgs.yt-dlp;
+    settings = {
+      audio-format = "best";
+      audio-quality = 0;
+      embed-chapters = true;
+      embed-metadata = true;
+      embed-subs = true;
+      embed-thumbnail = true;
+      remux-video = "aac>m4a/mov>mp4/mkv";
+      sponsorblock-mark = "sponsor";
+      sub-langs = "all";
+    };
   };
+
 
   # ---------------------------------------------------------------------------
   #
@@ -338,6 +350,8 @@ in
 
         # gh-dash
         GH_BROWSER = "gh-browser";
+
+        MANPAGER = "sh -c 'col --no-backspaces --spaces | bat --language man'";
       };
 
     shellAliases = {
@@ -387,6 +401,8 @@ in
       rg = "rg -M 1000";
       # Open my main config by default
       d = "gh-dash --config ~/dev/life/gh-dash-configs/config.yml";
+      # For glow, always use the pager
+      glow = "glow -p";
 
       # Text-editing
       v = "nvim";
@@ -447,13 +463,13 @@ in
 
   services.gpg-agent = {
     enable = true;
-    #   extraConfig = ''
-    #     pinentry-program ${pkgs.pinentry.qt}/bin/pinentry
-    #   '';
+    enableSshSupport = true;
+    pinentryPackage = pkgs.pinentry-curses;
   };
 
   programs.direnv = {
     enable = true;
+    enableZshIntegration = true;
     package = unstablePkgs.direnv;
     config.global.hide_env_diff = true;
     nix-direnv.enable = true;
@@ -466,47 +482,15 @@ in
   };
 
   programs.neovim = import ./vim.nix { inherit pkgs; };
-  # enable = true;
-  # extraConfig = builtins.readFile ./init.vim;
-  # plugins = with pkgs.vimPlugins; [
-  #   {
-  #     plugin = nvim-treesitter.withAllGrammars;
-  #   }
 
-  #   cabal-project-vim
-  #   dhall-vim
-  #   editorconfig-vim
-  #   elm-vim
-  #   fzf-vim
-  #   fzfWrapper
-  #   haskell-vim
-  #   noon-light-theme
-  #   purescript-vim
-  #   supertab
-  #   typescript-vim
-  #   unicode-vim
-  #   vim-autoread
-  #   vim-commentary
-  #   vim-cooklang
-  #   vim-easy-align
-  #   vim-easymotion
-  #   vim-quickscope
-  #   vim-ledger
-  #   vim-nix
-  #   vim-ormolu
-  #   vim-syntax-shakespeare
-  #   vim-toml
-  #   vim-textobj-user
-  #   xterm-color-table
-  #   nvim-hs-vim
-  #   {
-  #     # plugin packages in required Vim plugin dependencies
-  #     plugin = pkgs.vimPlugins.cornelis;
-  #     config = "let g:cornelis_use_global_binary = 1";
-  #   }
-  # ];
-  # extraPackages = [ pkgs.cornelis ];
-  # };
+  programs.zoxide = {
+    enable = true;
+    enableZshIntegration = true;
+    # Replace cd with z and add cdi to access zi
+    options = [
+      "--cmd cd"
+    ];
+  };
 
 
   # ---------------------------------------------------------------------------
