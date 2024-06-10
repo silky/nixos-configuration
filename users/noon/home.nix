@@ -10,6 +10,8 @@ let
   recipesDir = "${config.home.homeDirectory}/dev/life/recipes";
   unstablePkgs = import unstable { };
 
+  # TODO: Could refer to binary firectly, so it doesn't need to be assumed to
+  # exist.
   showBatteryState = pkgs.writeShellScriptBin "show-battery-state" ''
     mins=$(acpi | jc --acpi | jq '.[].charge_remaining_minutes')
     hrs=$(acpi | jc --acpi | jq '.[].charge_remaining_hours')
@@ -66,73 +68,26 @@ in
 
       dev = [
         (agda.withPackages (p: [ p.standard-library p.cubical ]))
-        csview
-        delta
-        difftastic
         dnsutils
-        # docker
-        docker-compose
-        fd
-        fx
-        git-crypt
-        google-cloud-sdk
-        html-tidy
-        httpie
-        jc
-        jd-diff-patch
-        jo
-        jq
-        kdiff3
-        lychee
+        html-tidy # HTML formatter/tidier
         moreutils
-        nix-output-monitor
-        nix-tree
-        openssl
         python310
         python310Packages.keyring
         stack
-        unixtools.xxd
-        unstablePkgs.contour
-        unstablePkgs.csvlens
+        unstablePkgs.csvlens # CSV file viewer
         unstablePkgs.gh # For gh-dash auth; `gh auth login`
-        unstablePkgs.gh-dash # https://dlvhdr.github.io/gh-dash/
-        unstablePkgs.ijq
-        unstablePkgs.konsole
-        vscode
-        yq
-        # zsh
+        unstablePkgs.gh-dash # GitHub dashboard https://dlvhdr.github.io/gh-dash/
+        vscode # Sometimes useful
       ];
 
       apps = [
-        asciicam # Terminal webcam
-        asciinema # Terminal recorder
-        asciinema-agg # Convert asciinema to .gif
-        bandwhich # Bandwidth monitor
-        chafa # Terminal image viewer
-        duf # Modern df
-        glow # Terminal Markdown renderer
-        hexyl # Hex viewer
-        hyperfine # Benchmarking
-        jiq # Interactive jq
-        procs # Modern ps
-        optipng # Optimise pngs
-        age
+        vivaldi # Browser
         cooklang-chef.packages.x86_64-linux.default
         docbook5
-        gimp-with-plugins
-        hunspell
-        hunspellDicts.en-gb-ise
-        inkscape
-        lyx
-        okular
-        pandoc
         pass
         unstablePkgs.haskellPackages.hledger
         unstablePkgs.haskellPackages.hledger-ui
         unstablePkgs.haskellPackages.hledger-web
-        unstablePkgs.vokoscreen-ng
-        vlc
-        xournalpp
       ];
 
       scripts = [

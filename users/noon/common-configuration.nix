@@ -20,65 +20,107 @@ in
   # ~ System Packages
   #
   # ---------------------------------------------------------------------------
-  environment.systemPackages = with pkgs; [
-    autoconf
-    automake
-    bashmount
-    binutils
-    cachix
-    curl
-    fuse
-    gcc
-    git
-    git-lfs
-    gmp
-    gnumake
-    htop
-    libtool
-    lsof
-    neovim # Standard one; not customised.
-    nixpkgs-fmt
-    ntfs3g
-    pavucontrol
-    psmisc
-    ripgrep
-    tree
-    unzip
-    wget
-    xorg.xev
-    xorg.xkill
-    xsel
-    zip
-
-
-    nvd # Nix package version diff
-    meld # Visual diff tool
-    vivaldi # Browser
-
-
-    acpi
-    alsa-utils
-    arandr
-    baobab
-    brightnessctl
-    dmenu
-    feh
-    ffmpeg_6-full
-    gnome.eog
-    gnome.nautilus
-    gnome.seahorse
-    imagemagick
-    libnotify
-    nethogs
-    p7zip
-    pkgs.gedit
-    qmk
-    texlive.combined.scheme-full
-    unstablePkgs.flameshot
-    xclip
-    xorg.xmodmap
-  ];
-
+  environment.systemPackages = with pkgs;
+    let
+      sys = [
+        # gcc # Sometimes useful
+        acpi # For power information
+        alsa-utils # Music control
+        arandr # Graphical xrandr
+        autoconf # ???
+        automake # ???
+        bashmount # Mount disks via TUI
+        binutils # ???
+        brightnessctl # Useful to change brightness
+        cachix # Nix Caching
+        curl # No explanation needed
+        dmenu # Launcher; used in XMonad setup
+        duf # Modern df
+        fuse # ???
+        git
+        git-lfs
+        git-crypt
+        gmp # ??
+        gnumake # ??
+        htop # Process viewer
+        libnotify # Notifications
+        libtool # ???
+        lsof # ???
+        neovim # Standard one; not customised.
+        ntfs3g # ???
+        p7zip # Yet another archive format
+        pavucontrol # Audio
+        procs # Modern ps
+        psmisc # ???
+        qmk # ???
+        tree # Tree view of directory
+        unzip
+        wget
+        xclip # Copy things to clipboard
+        xorg.xev # See key codes
+        xorg.xkill # Kill windows
+        xorg.xmodmap # Key mappings
+        xsel # Copy things to clipboard (used in init.vim)
+        zip
+      ];
+      dev = [
+        csview # For viewing csv's
+        delta # Delta git diff configuration
+        difftastic # Modern diffing
+        docker-compose
+        fd # Nicer find
+        fx # Json viewer
+        google-cloud-sdk # Inescapable
+        hexyl # Hex viewer
+        httpie # Simpler curl
+        hyperfine # Benchmarking
+        jc # Convert many outputs to json for further investigation
+        jd-diff-patch # JSON diff
+        jo # Create JSON
+        jq # JSON explorer
+        lychee # Markdown link checker
+        nix-tree # Browse nix dependency graphs
+        nvd # Nix package version diff
+        openssl # Sometimes useful
+        ripgrep # File searcher
+        unstablePkgs.ijq # Interactive JQ
+        unstablePkgs.konsole # Terminal
+        yq # jq for yaml
+      ];
+      app = [
+        age # Encryption tools
+        asciicam # Terminal webcam
+        asciinema # Terminal recorder
+        asciinema-agg # Convert asciinema to .gif
+        bandwhich # Bandwidth monitor
+        baobab # Disk space analyser
+        chafa # Terminal image viewer
+        feh # Set background images
+        ffmpeg_6-full # Video things
+        gimp-with-plugins # For making memes
+        glow # Terminal Markdown renderer
+        gnome.eog # Image viewer
+        gnome.nautilus # File browser
+        hunspell # Spelling
+        hunspellDicts.en-gb-ise # Spelling
+        imagemagick # Essential image tools
+        inkscape # Meme creation
+        lyx # For writing WYSIWYG TeX
+        meld # Visual diff tool
+        nix-output-monitor # Nicer build info when nixing
+        okular # PDF viewing
+        optipng # Optimise pngs
+        pandoc # Occasionally useful
+        pkgs.gedit # When times get desperate
+        texlive.combined.scheme-full # Full TeX environment
+        unstablePkgs.flameshot # Take screenshots
+        unstablePkgs.vokoscreen-ng # Screen recording for videos
+        vlc # For videos
+        xournalpp # PDF writing
+      ];
+    in
+    sys ++ dev ++ app
+  ;
 
   # ---------------------------------------------------------------------------
   #
@@ -131,7 +173,7 @@ in
       gdm.enable = true;
       sessionCommands = ''
         # Set a background.
-        /home/noon/.fehbg || true
+        ~/.fehbg || true
 
         # No screen saving.
         xset s off -dpms
