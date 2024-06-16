@@ -2,87 +2,16 @@
 , pkgs
 , unstable
 , cooklang-chef
-, haskell-hacking-notebook
 , ...
 }:
 let
   mkSym = file: config.lib.file.mkOutOfStoreSymlink
     "${config.home.homeDirectory}/dev/nixos-configuration/users/${config.home.username}/${file}";
-
-  hledgerFile = "${config.home.homeDirectory}/dev/life/accounts/hledger.journal";
   recipesDir = "${config.home.homeDirectory}/dev/life/recipes";
   unstablePkgs = import unstable { };
 
-  # ---------------------------------------------------------------------------
-  #
-  # ~ Vim plugins
-  #
-  # ---------------------------------------------------------------------------
-  vim-quickscope = pkgs.vimUtils.buildVimPlugin {
-    name = "quick-scope";
-    src = pkgs.fetchFromGitHub {
-      owner = "unblevable";
-      repo = "quick-scope";
-      rev = "256d81e391a22eeb53791ff62ce65f870418fa71";
-      sha256 = "sha256-TcA4jZIdnQd06V+JrXGiCMr0Yhm9gB6OMiTSdzMt/Qw=";
-    };
-  };
-
-  vim-cooklang = pkgs.vimUtils.buildVimPlugin {
-    name = "vim-cooklang";
-    src = pkgs.fetchFromGitHub {
-      owner = "silky";
-      repo = "vim-cooklang";
-      rev = "7f8c2190b5675ad4465e9719cd4b773c1db2ce6e";
-      sha256 = "sha256-vWlk7G1V4DLC0G0f3GLEG3JsvAwJ637CPocmMmFxQek=";
-    };
-  };
-  vim-autoread = pkgs.vimUtils.buildVimPlugin {
-    name = "vim-autoread";
-    src = pkgs.fetchFromGitHub {
-      owner = "djoshea";
-      repo = "vim-autoread";
-      rev = "7e83d47a71fdafc271005fc39c89863204278c77";
-      sha256 = "sha256-IGgJ/D2AGDtbO+RZk2zd+zO9ZtANsle4QSjsh+VOXpg=";
-    };
-  };
-  nvim-hs-vim = pkgs.vimUtils.buildVimPlugin {
-    name = "nvim-hs.vim";
-    src = pkgs.fetchFromGitHub {
-      owner = "neovimhaskell";
-      repo = "nvim-hs.vim";
-      rev = "d4a6b7278ae6a1fdc64e300c3ebc1e24719af342";
-      sha256 = "sha256-umsuGGP5tOf92bzWEhqD2y6dN0FDBsmLx60f45xgmig=";
-    };
-  };
-  noon-light-theme = pkgs.vimUtils.buildVimPlugin {
-    name = "noon-light-theme";
-    src = pkgs.fetchFromGitHub {
-      owner = "silky";
-      repo = "noon-light-vim";
-      rev = "edbd5fc9477e5697747acc286f9af5bbbbec3d39";
-      sha256 = "sha256-WtB9gcRVRL2isy18UIqZDvyxINHvRPp0FqYj3roXM9E=";
-    };
-  };
-  vim-syntax-shakespeare = pkgs.vimUtils.buildVimPlugin {
-    name = "vim-syntax-shakespeare";
-    src = pkgs.fetchFromGitHub {
-      owner = "pbrisbin";
-      repo = "vim-syntax-shakespeare";
-      rev = "2f4f61eae55b8f1319ce3a086baf9b5ab57743f3";
-      sha256 = "sha256-sdCXJOvB+vJE0ir+qsT/u1cHNxrksMnqeQi4D/Vg6UA=";
-    };
-  };
-  cabal-project-vim = pkgs.vimUtils.buildVimPlugin {
-    name = "cabal-project-vim";
-    src = pkgs.fetchFromGitHub {
-      owner = "vmchale";
-      repo = "cabal-project-vim";
-      rev = "0d41e7e41b1948de84847d9731023407bf2aea04";
-      sha256 = "sha256-j1igpjk1+j/1/y99ZaI3W5+VYNmQqsFp2qX4qzkpNpc=";
-    };
-  };
-
+  # TODO: Could refer to binary firectly, so it doesn't need to be assumed to
+  # exist.
   showBatteryState = pkgs.writeShellScriptBin "show-battery-state" ''
     mins=$(acpi | jc --acpi | jq '.[].charge_remaining_minutes')
     hrs=$(acpi | jc --acpi | jq '.[].charge_remaining_hours')
@@ -128,97 +57,48 @@ in
   home.packages = with pkgs;
     let
       web = [
-        firefox
         google-chrome
-        ungoogled-chromium
-
-
+        # Hack so that gh browser doesn't say "Opening in new browser"
         (writers.writeDashBin "gh-browser" ''
-          ${ungoogled-chromium}/bin/chromium-browser "$@" 1>/dev/null
+          chromium-browser "$@" 1>/dev/null
         '')
       ];
 
       dev = [
-        (agda.withPackages (p: [ p.standard-library p.cubical ]))
-        csview
-        delta
-        difftastic
+        (agda.withPackages (p: with p; [ standard-library cubical ]))
         dnsutils
-        docker
-        docker-compose
-        fd
-        fx
-        git-crypt
-        google-cloud-sdk
-        html-tidy
-        httpie
-        jc
-        jd-diff-patch
-        jo
-        jq
-        kdiff3
-        lychee
+        html-tidy # HTML formatter/tidier
         moreutils
-        nix-output-monitor
-        nix-tree
-        openssl
-        python310
-        python310Packages.keyring
-        stack
-        unixtools.xxd
-        unstablePkgs.contour
-        unstablePkgs.csvlens
-        unstablePkgs.gh      # For gh-dash auth; `gh auth login`
-        unstablePkgs.gh-dash # https://dlvhdr.github.io/gh-dash/
-        unstablePkgs.ijq
-        unstablePkgs.konsole
-        vscode
-        yq
-        zsh
-      ];
-
-      sys = [
-        acpi
-        alsa-utils
-        arandr
-        baobab
-        brightnessctl
-        dmenu
-        feh
-        ffmpeg_6-full
-        gnome.eog
-        pkgs.gedit
-        gnome.nautilus
-        gnome.seahorse
-        libnotify
-        nethogs
-        p7zip
-        qmk
-        unstablePkgs.flameshot
-        xorg.xmodmap
+        python3
+        # Random haskell hacking
+        (ghc.withPackages (
+          p: with p;
+          [
+            QuickCheck
+            aeson
+            containers
+            lens
+            mtl
+            text
+            vector
+          ]
+        )
+        )
+        stack # Haskell project manager
+        unstablePkgs.csvlens # CSV file viewer
+        unstablePkgs.gh # For gh-dash auth; `gh auth login`
+        unstablePkgs.gh-dash # GitHub dashboard https://dlvhdr.github.io/gh-dash/
+        vscode # Sometimes useful
       ];
 
       apps = [
-        age
+        vivaldi # Browser
         cooklang-chef.packages.x86_64-linux.default
         docbook5
-        gimp-with-plugins
-        hunspell
-        hunspellDicts.en-gb-ise
-        imagemagick
-        inkscape
-        lyx
-        okular
-        pandoc
         pass
-        texlive.combined.scheme-full
         unstablePkgs.haskellPackages.hledger
         unstablePkgs.haskellPackages.hledger-ui
         unstablePkgs.haskellPackages.hledger-web
-        unstablePkgs.vokoscreen-ng
-        vlc
-        xclip
-        xournalpp
       ];
 
       scripts = [
@@ -228,8 +108,17 @@ in
         work
       ];
     in
-    web ++ dev ++ sys ++ apps ++ scripts;
+    web ++ dev ++ apps ++ scripts;
 
+  programs.chromium = {
+    package = pkgs.ungoogled-chromium;
+    enable = true;
+    # TODO: These aren't installed.
+    extensions = [
+      { id = "mdjildafknihdffpkfmmpnpoiajfjnjd"; } # Consent-O-Matic
+      { id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"; } # uBlock Origin
+    ];
+  };
 
   # ---------------------------------------------------------------------------
   #
@@ -249,20 +138,6 @@ in
   #     };
   # };
 
-  # systemd.user.services.hledger = {
-  #   Unit = {
-  #     Description = "hledger-web";
-  #     After = [ "graphical-session-pre.target" ];
-  #     PartOf = [ "graphical-session.target" ];
-  #   };
-  #   Install = { WantedBy = [ "graphical-session.target" ]; };
-  #   Service = {
-  #     Restart = "on-failure";
-  #     ExecStart =
-  #       "${unstablePkgs.haskellPackages.hledger-web}/bin/hledger-web --serve -f ${hledgerFile}";
-  #   };
-  # };
-
   systemd.user.services.cooklang-chef = {
     Unit = {
       Description = "cooklang-chef";
@@ -277,29 +152,37 @@ in
     };
   };
 
-  programs.emacs = {
-    # No need for emacs at the moment.
-    enable = false;
-    package =
-      let
-        epkgs = epkgs: with epkgs;
-          [
-            agda2-mode
-            all-the-icons
-            atom-one-dark-theme
-            company
-            dashboard
-            doom-modeline
-          ];
-      in
-      (pkgs.emacsWithPackagesFromUsePackage
-        {
-          config = ./emacs/init.el;
-          alwaysEnsure = true;
-          package = pkgs.emacs-git;
-        }
-      );
+  programs.firefox = {
+    enable = true;
+    profiles = {
+      default = {
+        settings = {
+          "browser.urlbar.showSearchSuggestionsFirst" = false;
+        };
+        # TODO: This don't seem to work
+        # extensions = with config.nur.repos.rycee.firefox-addons; [
+        #   consent-o-matic # disabling cookie popups
+        # ];
+      };
+    };
   };
+
+  programs.yt-dlp = {
+    enable = true;
+    package = pkgs.yt-dlp;
+    settings = {
+      audio-format = "best";
+      audio-quality = 0;
+      embed-chapters = true;
+      embed-metadata = true;
+      embed-subs = true;
+      embed-thumbnail = true;
+      remux-video = "aac>m4a/mov>mp4/mkv";
+      sponsorblock-mark = "sponsor";
+      sub-langs = "all";
+    };
+  };
+
 
   # ---------------------------------------------------------------------------
   #
@@ -375,7 +258,7 @@ in
     '';
 
     plugins = with pkgs; [
-      ({
+      {
         # https://github.com/agkozak/agkozak-zsh-prompt
         name = "agkozak-zsh-prompt";
         src = fetchFromGitHub {
@@ -385,7 +268,7 @@ in
           sha256 = "sha256-TOfAWxw1uIV0hKV9o4EJjOlp+jmGWCONDex86ipegOY=";
         };
         file = "agkozak-zsh-prompt.plugin.zsh";
-      })
+      }
     ];
 
     sessionVariables =
@@ -433,6 +316,8 @@ in
 
         # gh-dash
         GH_BROWSER = "gh-browser";
+
+        MANPAGER = "sh -c 'col --no-backspaces --spaces | bat --language man'";
       };
 
     shellAliases = {
@@ -443,9 +328,7 @@ in
       nu = "nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
 
       # Haskell
-      b = "stack build --nix";
-      bf = "stack build --nix --fast --file-watch";
-      g = "stack ghci --nix";
+      g = "ghci";
       c = "cabal build";
 
       # hledger
@@ -482,6 +365,8 @@ in
       rg = "rg -M 1000";
       # Open my main config by default
       d = "gh-dash --config ~/dev/life/gh-dash-configs/config.yml";
+      # For glow, always use the pager
+      glow = "glow -p";
 
       # Text-editing
       v = "nvim";
@@ -542,13 +427,13 @@ in
 
   services.gpg-agent = {
     enable = true;
-    extraConfig = ''
-      pinentry-program ${pkgs.pinentry.qt}/bin/pinentry
-    '';
+    enableSshSupport = true;
+    pinentryPackage = pkgs.pinentry-curses;
   };
 
   programs.direnv = {
     enable = true;
+    enableZshIntegration = true;
     package = unstablePkgs.direnv;
     config.global.hide_env_diff = true;
     nix-direnv.enable = true;
@@ -560,47 +445,15 @@ in
     enableZshIntegration = true;
   };
 
-  programs.neovim = {
-    enable = true;
-    extraConfig = builtins.readFile ./init.vim;
-    plugins = with pkgs.vimPlugins; [
-      {
-        plugin = nvim-treesitter.withAllGrammars;
-      }
+  programs.neovim = import ./vim.nix { inherit pkgs; };
 
-      cabal-project-vim
-      dhall-vim
-      editorconfig-vim
-      elm-vim
-      fzf-vim
-      fzfWrapper
-      haskell-vim
-      noon-light-theme
-      purescript-vim
-      supertab
-      typescript-vim
-      unicode-vim
-      vim-autoread
-      vim-commentary
-      vim-cooklang
-      vim-easy-align
-      vim-easymotion
-      vim-quickscope
-      vim-ledger
-      vim-nix
-      vim-ormolu
-      vim-syntax-shakespeare
-      vim-toml
-      vim-textobj-user
-      xterm-color-table
-      nvim-hs-vim
-      {
-        # plugin packages in required Vim plugin dependencies
-        plugin = pkgs.vimPlugins.cornelis;
-        config = "let g:cornelis_use_global_binary = 1";
-      }
+  programs.zoxide = {
+    enable = true;
+    enableZshIntegration = true;
+    # Replace cd with z and add cdi to access zi
+    options = [
+      "--cmd cd"
     ];
-    extraPackages = [ pkgs.cornelis ];
   };
 
 
@@ -613,7 +466,6 @@ in
     # Note: Let's not let any app modify these files.
     ".config/konsolerc".source = ./konsolerc;
     ".stack/config.yaml".source = ./stack-config.yaml;
-    ".emacs.d/init.el".source = ./emacs/init.el;
 
     # Agda
     ".agda/defaults".text = ''
