@@ -58,8 +58,6 @@ in
     let
       web = [
         google-chrome
-        # ungoogled-chromium
-
         # Hack so that gh browser doesn't say "Opening in new browser"
         (writers.writeDashBin "gh-browser" ''
           chromium-browser "$@" 1>/dev/null
@@ -67,13 +65,26 @@ in
       ];
 
       dev = [
-        (agda.withPackages (p: [ p.standard-library p.cubical ]))
+        (agda.withPackages (p: with p; [ standard-library cubical ]))
         dnsutils
         html-tidy # HTML formatter/tidier
         moreutils
-        python310
-        python310Packages.keyring
-        stack
+        python3
+        # Random haskell hacking
+        (ghc.withPackages (
+          p: with p;
+          [
+            QuickCheck
+            aeson
+            containers
+            lens
+            mtl
+            text
+            vector
+          ]
+        )
+        )
+        stack # Haskell project manager
         unstablePkgs.csvlens # CSV file viewer
         unstablePkgs.gh # For gh-dash auth; `gh auth login`
         unstablePkgs.gh-dash # GitHub dashboard https://dlvhdr.github.io/gh-dash/
@@ -317,9 +328,7 @@ in
       nu = "nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
 
       # Haskell
-      b = "stack build --nix";
-      bf = "stack build --nix --fast --file-watch";
-      g = "stack ghci --nix";
+      g = "ghci";
       c = "cabal build";
 
       # hledger
