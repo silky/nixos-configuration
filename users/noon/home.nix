@@ -316,8 +316,6 @@ in
 
         # gh-dash
         GH_BROWSER = "gh-browser";
-
-        MANPAGER = "sh -c 'col --no-backspaces --spaces | bat --language man'";
       };
 
     shellAliases = {
