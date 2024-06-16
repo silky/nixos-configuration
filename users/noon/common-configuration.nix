@@ -23,7 +23,6 @@ in
   environment.systemPackages = with pkgs;
     let
       sys = [
-        # gcc # Sometimes useful
         acpi # For power information
         alsa-utils # Music control
         arandr # Graphical xrandr
@@ -38,8 +37,8 @@ in
         duf # Modern df
         fuse # ???
         git
-        git-lfs
         git-crypt
+        git-lfs
         gmp # ??
         gnumake # ??
         htop # Process viewer
@@ -170,7 +169,6 @@ in
     };
     # https://mynixos.com/nixpkgs/option/services.xserver.xrandrHeads
     displayManager = {
-      gdm.enable = true;
       sessionCommands = ''
         # Set a background.
         ~/.fehbg || true
