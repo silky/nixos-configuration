@@ -1,3 +1,5 @@
+# vi: ft=gitconfig
+
 [color]
   branch      = always
   diff        = auto
