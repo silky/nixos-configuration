@@ -471,8 +471,8 @@ in
     '';
 
     # Ones I prefer to modify in place
+    ".gitignore".source = mkSym "gitignore";
     ".gitconfig".source = mkSym "gitconfig";
-    ".config/contour/contour.yml".source = mkSym "contour.yml";
 
     # These ones it's okay; it's easier to modify with the apps
     ".config/okularpartrc".source = mkSym "okularpartrc";

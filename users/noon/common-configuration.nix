@@ -82,6 +82,7 @@ in
         nvd # Nix package version diff
         openssl # Sometimes useful
         ripgrep # File searcher
+        sd # Modern find and replace
         unstablePkgs.ijq # Interactive JQ
         unstablePkgs.konsole # Terminal
         yq # jq for yaml

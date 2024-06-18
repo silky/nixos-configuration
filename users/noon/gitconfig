@@ -46,6 +46,7 @@
 [core]
   editor = nvim
   pager = delta
+  excludesfile = ~/.gitignore
 
 [filter "lfs"]
   clean    = git-lfs clean -- %f
