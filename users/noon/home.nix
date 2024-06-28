@@ -371,10 +371,6 @@ in
       vim = "nvim";
       vv = "nvim -R";
       e = "emacs";
-
-      # Don't ask (TZ)
-      pc = "pre-commit";
-      pca = "pre-commit run --all";
     };
   };
 
