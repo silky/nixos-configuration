@@ -82,8 +82,8 @@ in
             text
             vector
           ]
-        )
-        )
+          ))
+        jujutsu # Version-control on top of Gith
         stack # Haskell project manager
         unstablePkgs.csvlens # CSV file viewer
         unstablePkgs.gh # For gh-dash auth; `gh auth login`
@@ -92,6 +92,7 @@ in
       ];
 
       apps = [
+        anki # For remembering things
         vivaldi # Browser
         cooklang-chef.packages.x86_64-linux.default
         docbook5
