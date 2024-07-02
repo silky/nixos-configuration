@@ -93,13 +93,14 @@ in
 
       apps = [
         anki # For remembering things
-        vivaldi # Browser
         cooklang-chef.packages.x86_64-linux.default
         docbook5
         pass
+        sweethome3d.application # Home design
         unstablePkgs.haskellPackages.hledger
         unstablePkgs.haskellPackages.hledger-ui
         unstablePkgs.haskellPackages.hledger-web
+        vivaldi # Browser
       ];
 
       scripts = [
