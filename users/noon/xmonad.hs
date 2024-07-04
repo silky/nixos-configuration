@@ -18,6 +18,7 @@
 import Data.List.Split (splitOn)
 import Data.Maybe (isJust)
 import System.IO
+import Control.Monad.Trans.Maybe (MaybeT)
 import XMonad hiding ( (|||) )
 import XMonad.Actions.CopyWindow
 import XMonad.Actions.CycleWS
@@ -36,6 +37,7 @@ import XMonad.Layout.Groups.Examples
 import XMonad.Layout.LayoutCombinators
 import XMonad.Layout.LayoutHints
 import XMonad.Layout.MultiColumns
+import XMonad.Layout.ResizableTile
 import XMonad.Layout.Named (named)
 import XMonad.Layout.NoBorders
 import XMonad.Layout.OneBig
@@ -59,6 +61,7 @@ myLayout = layoutHints $ smartBorders $
     ||| named "TallCols"       (Mirror $ multiCol [1] 1 0.01 (0.5))
     ||| named "Circle"         Circle
     ||| named "Big"            (OneBig (3/4) (3/4))
+    ||| named "Resizable"      (ResizableTall nmaster delta (1/2) [])
   where
      tiled   = Tall nmaster delta ratio
 
@@ -69,58 +72,76 @@ myLayout = layoutHints $ smartBorders $
      ratio   = (2/(1 + (toRational (sqrt 5 :: Double))))
 
      -- Percent of screen to increment by when resizing panes
-     delta   = 2/100
+     delta   = 3/100
 
 
 layoutChangeModMask = mod1Mask .|. shiftMask
 
 
 myKeys conf =
-   [ ((layoutChangeModMask, xK_f), sendMessage $ JumpToLayout "Full")
-   , ((layoutChangeModMask, xK_t), sendMessage $ JumpToLayout "Tiled")
-   , ((layoutChangeModMask, xK_w), sendMessage $ JumpToLayout "MTiled")
-   , ((layoutChangeModMask, xK_b), sendMessage $ JumpToLayout "Big")
-   --
-   -- Alt-Shift-Q: Doesn't logout.
-   --
-   , ((layoutChangeModMask, xK_q), return () )
-   --
-   -- Brightness: Alt-Shift +/-
-   , ((layoutChangeModMask, xK_equal), spawn "brightnessctl s '2%+'")
-   , ((layoutChangeModMask, xK_minus), spawn "brightnessctl s '2%-'")
-   -- Screens:
-   --   Alt-Shift M = Mobile
-   -- , ((layoutChangeModMask, xK_minus), spawn "TODO")
-   --   Alt-Shift W = Work
-   -- , ((layoutChangeModMask, xK_minus), spawn "TODO")
-   --
-   , ((mod1Mask, xK_o), spawn "nautilus --no-desktop")
-   , ((mod1Mask, xK_m), spawn "konsole -e alsamixer")
-   , ((mod1Mask, xK_e), spawn "konsole -e nvim")
-   , ((mod1Mask, xK_p), spawn "dmenu_run -nb '#d1f0ff' -sf '#b141e5' -nf '#333333' -sb '#d1f0ff'")
-   --
-   -- -- Show a random image full-screen
-   -- , ((mod1Mask, xK_i), spawn "feh -Z -. --randomize --image-bg black /home/noon/images"
-   --                      >> sendMessage (JumpToLayout "Full")
-     -- )
-   --
-   -- , ((layoutChangeModMask, xK_i), spawn "feh -. -x -q -D 600 -B black -F -Z -z -r /home/noon/slideshow-images"
-   --                      >> sendMessage (JumpToLayout "Full")
-     -- )
-   --
-   -- Move mouse focus to the other screen; useful for more a setup with more
-   -- than one screen
-   , ((mod1Mask, xK_q), screenWorkspace 0 >>= flip whenJust (windows . W.view))
-   , ((mod1Mask, xK_r), screenWorkspace 1 >>= flip whenJust (windows . W.view))
-   --
-   -- Flameshot: <https://github.com/lupoDharkael/flameshot>
-   , ((mod1Mask, xK_s), spawn "flameshot gui")
-   --
-   , ((layoutChangeModMask, xK_s), swapScreen)
-   --
-   -- Show battery status via our script (defined in nix.)
-   , ((mod1Mask, xK_b), spawn "show-battery-state")
-   , ((mod1Mask, xK_g), bringMenu) -- "Grab"
+  [ ((layoutChangeModMask, xK_f), sendMessage $ JumpToLayout "Full")
+  , ((layoutChangeModMask, xK_t), sendMessage $ JumpToLayout "Tiled")
+  -- , ((layoutChangeModMask, xK_w), sendMessage $ JumpToLayout "MTiled")
+  , ((layoutChangeModMask, xK_b), sendMessage $ JumpToLayout "Big")
+  , ((layoutChangeModMask, xK_p), sendMessage $ JumpToLayout "Resizable")
+  --
+  , ((mod1Mask, xK_a), sendMessage MirrorShrink)
+  , ((mod1Mask, xK_z), sendMessage MirrorExpand)
+
+  -- TODO:
+  -- Shift to 'work' screens
+  , ((mod1Mask, xK_w), spawn "feh --bg-fill ~/Pictures/bgs/work.jpg")
+  -- Shift to 'personal' screens
+  , ((layoutChangeModMask, xK_w), spawn "feh --bg-fill ~/Pictures/bgs/work.jpg")
+
+  -- todo: include
+  -- , ((shiftMask, xK_t), spawn "feh --bg-fill ~/Pictures/bgs/work.jpg")
+  -- , ((shiftMask .|. controlMask, xK_t), spawn "feh --bg-fill ~/Pictures/bgs/normal.jpg")
+  --
+  -- Stop Alt-Shift-Q logging out
+  --
+  , ((layoutChangeModMask, xK_q), pure () )
+  --
+  -- Brightness: Alt-Shift +/-
+  , ((layoutChangeModMask, xK_equal), spawn "brightnessctl s '2%+'")
+  , ((layoutChangeModMask, xK_minus), spawn "brightnessctl s '2%-'")
+  -- Screens:
+  --   Alt-Shift M = Mobile
+  -- , ((layoutChangeModMask, xK_minus), spawn "TODO")
+  --   Alt-Shift W = Work
+  -- , ((layoutChangeModMask, xK_minus), spawn "TODO")
+  --
+  , ((mod1Mask, xK_o), spawn "nautilus --no-desktop")
+  , ((mod1Mask, xK_m), spawn "konsole -e alsamixer")
+  , ((mod1Mask, xK_e), spawn "konsole -e nvim")
+  , ((mod1Mask, xK_p), spawn "dmenu_run -nb '#d1f0ff' -sf '#b141e5' -nf '#333333' -sb '#d1f0ff'")
+  --
+  -- -- Show a random image full-screen
+  -- , ((mod1Mask, xK_i), spawn "feh -Z -. --randomize --image-bg black /home/noon/images"
+  --                      >> sendMessage (JumpToLayout "Full")
+    -- )
+  --
+  -- , ((layoutChangeModMask, xK_i), spawn "feh -. -x -q -D 600 -B black -F -Z -z -r /home/noon/slideshow-images"
+  --                      >> sendMessage (JumpToLayout "Full")
+    -- )
+  --
+  -- Move mouse focus to the other screen; useful for more a setup with more
+  -- than one screen
+  , ((mod1Mask, xK_q), screenWorkspace 0 >>= flip whenJust (windows . W.view))
+  , ((mod1Mask, xK_r), screenWorkspace 1 >>= flip whenJust (windows . W.view))
+  --
+  -- Flameshot: <https://github.com/lupoDharkael/flameshot>
+  , ((mod1Mask, xK_s), spawn "flameshot gui")
+  --
+  , ((layoutChangeModMask, xK_s), swapScreen)
+
+  -- TODO: WIP
+  -- , ((layoutChangeModMask, xK_i), foo conf head)
+  -- , ((layoutChangeModMask, xK_l), foo conf last)
+  --
+  -- Show battery status via our script (defined in nix.)
+  , ((mod1Mask, xK_b), spawn "show-battery-state")
+  , ((mod1Mask, xK_g), bringMenu) -- "Grab"
   ]
   ++
   [ ((mod1Mask .|. e, k), windows $ onCurrentScreen f i)
@@ -129,18 +150,24 @@ myKeys conf =
   ]
 
 
+-- TODO: Screen stuff.
+-- https://stackoverflow.com/a/70308008
+
+
+
+
 -- https://stackoverflow.com/questions/33547168/xmonad-combine-dwm-style-workspaces-per-physical-screen-with-cycling-function
 swapScreen =  do
   x <- currentScreen
   y <- gets (W.tag . W.workspace . W.current . windowset)
 
+  -- TODO: Could use unmarshall/marshall
   -- HACK: Relies on details of `XMonad.Layout.IndependentScreens` ...
   let [left,right] = splitOn "_" y
       toggle "0"   = "1"
       toggle "1"   = "0"
 
   windows $ W.shift (toggle left ++ "_" ++ right)
-
 
 -- Toggle the active workspace with the 'Forward/Back' mouse buttons.
 myMouseMod = 0
@@ -162,7 +189,10 @@ nonEmptySpacesOnCurrentScreen = WSIs $ do
 
 main :: IO ()
 main = do
+  -- Double the number of screens as we're going to have a "second space",
+  -- where work things will live.
   nScreens <- countScreens
+  -- nScreens <- fmap (*2) countScreens
   let myConfig = ewmh def {
           borderWidth        = 1
         , workspaces         = withScreens nScreens (workspaces def)

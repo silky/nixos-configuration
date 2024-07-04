@@ -94,6 +94,7 @@ in
       apps = [
         anki # For remembering things
         cooklang-chef.packages.x86_64-linux.default
+        discord
         docbook5
         pass
         sweethome3d.application # Home design
