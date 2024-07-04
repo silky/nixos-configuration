@@ -151,7 +151,14 @@ myKeys conf =
 
 
 -- TODO: Screen stuff.
--- https://stackoverflow.com/a/70308008
+-- <https://stackoverflow.com/a/70308008>
+-- <https://hackage.haskell.org/package/xmonad-contrib-0.18.0/docs/XMonad-Actions-CycleWS.html>
+-- <https://hackage.haskell.org/package/xmonad-0.18.0/docs/XMonad-Operations.html#v:windows>
+-- <https://hackage.haskell.org/package/xmonad-0.18.0/docs/doc-index-All.html>
+-- <https://hackage.haskell.org/package/xmonad-0.18.0/docs/XMonad-StackSet.html#v:shift>
+-- <https://hackage.haskell.org/package/xmonad-contrib-0.13/docs/XMonad-Layout-IndependentScreens.html#t:VirtualWorkspace>
+-- <https://hackage.haskell.org/package/xmonad-contrib-0.18.0/docs/XMonad-Config-Prime.html#v:screenWorkspace>
+-- <https://xiangji.me/2018/11/19/my-xmonad-configuration/>
 
 
 
