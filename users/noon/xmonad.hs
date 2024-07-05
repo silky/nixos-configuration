@@ -116,7 +116,8 @@ myKeys conf =
   ]
   -- Normal-mode open screens
   ++
-  [ ((mod1Mask .|. e, k), altSwitchScreen 0 f i)
+  [ ((mod1Mask .|. e, k), windows $ onCurrentScreen f i)
+  -- [ ((mod1Mask .|. e, k), altSwitchScreen 0 f i)
       | (i, k) <- zip (workspaces' conf) [xK_1 .. xK_9]
       , (f, e) <- [(W.greedyView, 0), (W.shift, shiftMask)]
   ]
