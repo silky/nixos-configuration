@@ -13,7 +13,7 @@
     cornelis.url = "github:isovector/cornelis";
     cornelis.inputs.nixpkgs.follows = "nixpkgs";
 
-    nur.url = "github:nix-community/NUR";
+    # nur.url = "github:nix-community/NUR";
 
     nix-formatter-pack.url = "github:Gerschtli/nix-formatter-pack";
     nix-formatter-pack.inputs.nixpkgs.follows = "nixpkgs";
@@ -27,7 +27,7 @@
     , cooklang-chef
     , haskell-hacking-notebook
     , cornelis
-    , nur
+    # , nur
     , nix-formatter-pack
     , ...
     }@inputs:
@@ -45,7 +45,8 @@
           modules = [
             { nixpkgs.overlays = overlays; }
 
-            nur.nixosModules.nur
+            # TODO: Re-instate
+            # nur.nixosModules.nur
 
             # Common system configuration
             # ./users/${user}/common-configuration.nix

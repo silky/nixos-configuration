@@ -307,10 +307,16 @@ function! AgdaFiletype()
     nnoremap <buffer> ng        :CornelisNextGoal<CR>
     nnoremap <buffer> <C-A>     :CornelisInc<CR>
     nnoremap <buffer> <C-X>     :CornelisDec<CR>
-    call cornelis#bind_input("st", "≡⟨⟩")
-    " My local-leader is ","; and I still want to be able to type it.
-    call cornelis#bind_input(",",  ",")
+    " call cornelis#bind_input("st", "≡⟨⟩")
+    let g:cornelis_no_agda_input=1
 endfunction
+
+
+" Depends on 'vim-agda-input' plugin. Uncomment this to disable it:
+" let g:agda_input_no_agda_input=1
+let g:agda_input_prefix="<tab>"
+call agda_input#bind_input("st", "≡⟨⟩")
+
 
 vmap <leader><space> <Plug>(EasyAlign)
 

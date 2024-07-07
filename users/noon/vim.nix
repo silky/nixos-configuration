@@ -2,6 +2,19 @@
 , ...
 }:
 let
+  vim-agda-input = pkgs.vimUtils.buildVimPlugin {
+    name = "vim-agda-input";
+    src = pkgs.fetchFromGitHub {
+      owner = "silky";
+      repo = "vim-agda-input";
+      rev = "112fc11a08aff4b1596903fdf723d7d5b3b6f81a";
+      sha256 = "sha256-Fm+PduWz0nfLeDbEO4CA1GRX6lHWzwoZKWy4iN8PxDg=";
+    };
+    # Local hacking
+    # src = builtins.fetchGit {
+    #   url = "file:///home/noon/dev/vim-agda-input";
+    # };
+  };
   cabal-project-vim = pkgs.vimUtils.buildVimPlugin {
     name = "cabal-project-vim";
     src = pkgs.fetchFromGitHub {
@@ -99,6 +112,7 @@ in
     vim-textobj-user
     xterm-color-table
     nvim-hs-vim
+    vim-agda-input
     {
       plugin = pkgs.vimPlugins.cornelis;
       config = "let g:cornelis_use_global_binary = 1";
