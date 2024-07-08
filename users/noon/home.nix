@@ -472,6 +472,7 @@ in
     # Ones I prefer to modify in place
     ".gitignore".source = mkSym "gitignore";
     ".gitconfig".source = mkSym "gitconfig";
+    ".editorconfig".source = mkSym "editorconfig";
 
     # These ones it's okay; it's easier to modify with the apps
     ".config/okularpartrc".source = mkSym "okularpartrc";
