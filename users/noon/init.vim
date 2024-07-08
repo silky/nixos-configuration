@@ -314,7 +314,8 @@ endfunction
 
 " Depends on 'vim-agda-input' plugin. Uncomment this to disable it:
 " let g:agda_input_no_agda_input=1
-let g:agda_input_prefix="<tab>"
+let g:agda_input_prefix="<S-Tab>"
+" call agda_input#bind_input("~", "~")
 call agda_input#bind_input("st", "≡⟨⟩")
 
 
