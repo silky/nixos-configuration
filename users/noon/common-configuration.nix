@@ -201,6 +201,12 @@ in
         };
       };
     };
+
+    pulseaudio.extraConfig = "
+      load-module module-switch-on-connect
+      load-module module-bluetooth-policy
+      load-module module-bluetooth-discover
+    ";
   };
 
   # ---------------------------------------------------------------------------
@@ -231,6 +237,7 @@ in
       support32Bit = true;
     };
   };
+
 
 
   # ---------------------------------------------------------------------------
