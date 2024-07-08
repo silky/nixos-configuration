@@ -188,26 +188,6 @@ in
     };
   };
 
-  # Bluetooth
-  hardware = {
-    # https://nixos.wiki/wiki/Bluetooth
-    bluetooth = {
-      enable = true;
-      package = pkgs.bluez;
-      settings = {
-        General = {
-          Enable = "Source,Sink,Media,Socket";
-          Experimental = true;
-        };
-      };
-    };
-
-    pulseaudio.extraConfig = "
-      load-module module-switch-on-connect
-      load-module module-bluetooth-policy
-      load-module module-bluetooth-discover
-    ";
-  };
 
   # ---------------------------------------------------------------------------
   #
@@ -238,6 +218,26 @@ in
     };
   };
 
+  # Bluetooth
+  hardware = {
+    # https://nixos.wiki/wiki/Bluetooth
+    bluetooth = {
+      enable = true;
+      package = pkgs.bluez;
+      settings = {
+        General = {
+          Enable = "Source,Sink,Media,Socket";
+          Experimental = true;
+        };
+      };
+    };
+
+    pulseaudio.extraConfig = "
+      load-module module-switch-on-connect
+      load-module module-bluetooth-policy
+      load-module module-bluetooth-discover
+    ";
+  };
 
 
   # ---------------------------------------------------------------------------
