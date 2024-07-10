@@ -97,6 +97,7 @@ in
         discord
         docbook5
         pass
+        steam-run # ???
         sweethome3d.application # Home design
         unstablePkgs.haskellPackages.hledger
         unstablePkgs.haskellPackages.hledger-ui
