@@ -140,7 +140,10 @@ in
   };
 
   nixpkgs.config = {
+    # TODO: Somehow this isn't enough to allow unfree; I still seem to need
+    # the environment variable.
     allowUnfree = true;
+    allowUnfreePredicate = pkg: true;
     permittedInsecurePackages = [
       "electron-25.9.0"
     ];
@@ -232,11 +235,13 @@ in
       };
     };
 
-    pulseaudio.extraConfig = "
-      load-module module-switch-on-connect
-      load-module module-bluetooth-policy
-      load-module module-bluetooth-discover
-    ";
+    pulseaudio.enable = false;
+
+    # pulseaudio.extraConfig = "
+    #   load-module module-switch-on-connect
+    #   load-module module-bluetooth-policy
+    #   load-module module-bluetooth-discover
+    # ";
   };
 
 

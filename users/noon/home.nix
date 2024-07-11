@@ -83,7 +83,7 @@ in
             vector
           ]
           ))
-        jujutsu # Version-control on top of Gith
+        jujutsu # Version-control on top of Git
         stack # Haskell project manager
         unstablePkgs.csvlens # CSV file viewer
         unstablePkgs.gh # For gh-dash auth; `gh auth login`
@@ -95,10 +95,10 @@ in
       apps = [
         anki # For remembering things
         cooklang-chef.packages.x86_64-linux.default
-        discord
+        unstablePkgs.discord
         docbook5
         pass
-        steam-run # ???
+        steam-run # Running dynamically-linked executables
         sweethome3d.application # Home design
         unstablePkgs.haskellPackages.hledger
         unstablePkgs.haskellPackages.hledger-ui

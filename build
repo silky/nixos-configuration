@@ -2,8 +2,10 @@
 
 set -e
 
+export NIXPKGS_ALLOW_UNFREE=1
+
 nixos-rebuild build --flake ".#${HOST}" --impure "$@"
 
 nvd diff /run/current-system result
 
-sudo nixos-rebuild switch --flake ".#${HOST}" --impure "$@"
+sudo NIXPKGS_ALLOW_UNFREE=1 nixos-rebuild switch --flake ".#${HOST}" --impure "$@"

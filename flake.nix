@@ -44,7 +44,6 @@
           specialArgs = inputs // { inherit name unstable; };
           modules = [
             { nixpkgs.overlays = overlays; }
-
             # TODO: Re-instate
             # nur.nixosModules.nur
 
