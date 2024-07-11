@@ -89,6 +89,7 @@ in
         unstablePkgs.gh # For gh-dash auth; `gh auth login`
         unstablePkgs.gh-dash # GitHub dashboard https://dlvhdr.github.io/gh-dash/
         vscode # Sometimes useful
+        websocat # Websocket chatting
       ];
 
       apps = [
