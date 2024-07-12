@@ -90,12 +90,13 @@ in
         unstablePkgs.gh-dash # GitHub dashboard https://dlvhdr.github.io/gh-dash/
         vscode # Sometimes useful
         websocat # Websocket chatting
+        pciutils # Device debugging
       ];
 
       apps = [
         anki # For remembering things
         cooklang-chef.packages.x86_64-linux.default
-        unstablePkgs.discord
+        unstablePkgs.discord-ptb
         docbook5
         pass
         steam-run # Running dynamically-linked executables
