@@ -331,6 +331,7 @@ in
       n = "nix-shell";
       nix-shell-unstable = "nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
       nu = "nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
+      bb = "nom build";
 
       # Haskell
       g = "ghci";
