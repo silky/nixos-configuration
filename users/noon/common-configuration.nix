@@ -225,7 +225,6 @@ in
 
   # Bluetooth
   hardware = {
-    pulseaudio.package = unstablePkgs.pulseaudioFull;
     # https://nixos.wiki/wiki/Bluetooth
     bluetooth = {
       enable = true;
