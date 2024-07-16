@@ -91,6 +91,9 @@ in
         vscode # Sometimes useful
         websocat # Websocket chatting
         pciutils # Device debugging
+        podman # Containers
+        qemu # Emulation
+        j # J programming language
       ];
 
       apps = [
@@ -365,7 +368,7 @@ in
       dc = "docker compose";
       df = "df -h";
       f = "format";
-      j = "jupyter notebook --no-browser --ip=localhost -y";
+      # j = "jupyter notebook --no-browser --ip=localhost -y";
       m = "make";
       p = "python";
       rg = "rg -M 1000";
