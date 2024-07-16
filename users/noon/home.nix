@@ -95,6 +95,7 @@ in
         qemu # Emulation
         j # J programming language
         frink # Calculator
+        picat # Logic programming
       ];
 
       apps = [
