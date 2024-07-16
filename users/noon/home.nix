@@ -94,6 +94,7 @@ in
         podman # Containers
         qemu # Emulation
         j # J programming language
+        frink # Calculator
       ];
 
       apps = [
