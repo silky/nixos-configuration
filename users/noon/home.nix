@@ -96,6 +96,7 @@ in
         j # J programming language
         frink # Calculator
         picat # Logic programming
+        wasmtime # wasm runtime
       ];
 
       apps = [
