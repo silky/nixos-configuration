@@ -58,7 +58,7 @@ myLayout = layoutHints $ smartBorders $
     ||| named "MTiled"         (Mirror tiled)
     ||| named "CenteredMaster" (zoomRow)
     ||| noBorders Full
-    ||| named "TallCols"       (Mirror $ multiCol [1] 1 0.01 (0.5))
+    ||| named "TallCols"       (Mirror $ multiCol [1] nmaster delta (1/2))
     ||| named "Circle"         Circle
     ||| named "Big"            (OneBig (3/4) (3/4))
     ||| named "Resizable"      (ResizableTall nmaster delta (1/2) [])
@@ -72,7 +72,7 @@ myLayout = layoutHints $ smartBorders $
      ratio   = (2/(1 + (toRational (sqrt 5 :: Double))))
 
      -- Percent of screen to increment by when resizing panes
-     delta   = 3/100
+     delta   = 1/100
 
 
 layoutChangeModMask = mod1Mask .|. shiftMask
