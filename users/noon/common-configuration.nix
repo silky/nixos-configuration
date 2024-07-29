@@ -278,7 +278,7 @@ in
     # Note: Unfortunately, this isn't exactly working.
     fontconfig = {
       defaultFonts = {
-        monospace = [ "Fira Code" ];
+        monospace = [ "iMWritingMono Nerd Font" ];
         emoji = [ "Twemoji" "Noto Color Emoji" "Symbola" ];
       };
     };

@@ -204,6 +204,7 @@ in
   programs.zsh = {
     enable = true;
     autocd = true;
+    package = unstablePkgs.zsh;
     enableCompletion = true;
     syntaxHighlighting = {
       enable = true;
@@ -213,8 +214,11 @@ in
         command = "none";
         default = "none";
         alias = "none";
+        global-alias = "none";
+        suffix-alias = "none";
         function = "none";
         path = "none";
+        autodirectory = "none";
         # Don't highlight errors; it's okay.
         unknown-token = "none";
       };
@@ -276,7 +280,7 @@ in
         src = fetchFromGitHub {
           owner = "agkozak";
           repo = "agkozak-zsh-prompt";
-          rev = "v3.11.1";
+          rev = "v3.11.3";
           sha256 = "sha256-TOfAWxw1uIV0hKV9o4EJjOlp+jmGWCONDex86ipegOY=";
         };
         file = "agkozak-zsh-prompt.plugin.zsh";
@@ -410,7 +414,7 @@ in
 
     settings = {
       global = {
-        font = "Fira Code 12";
+        font = "iMWritingMono Nerd Font 12";
         format = "%s — %b";
         frame_width = "0";
         width = "(0, 500)";
