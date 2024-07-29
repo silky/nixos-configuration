@@ -290,7 +290,7 @@ in
         exitStatus = "%(?..%F{\${AGKOZAK_COLORS_EXIT_STATUS}}(%?%)%f )";
         # userAndHost = "%(!.%S.%F{cyan})%n%1v%(!.%s.%f)";
         envHint = "%(10V.%F{blue}[%10v]%f .)";
-        path = "%F{green}%c%f";
+        path = "%F{red}%c%f";
         time = "%F{blue}%D{%I:%M %P}%f";
         gitStatus = "%(3V.%F{\${AGKOZAK_COLORS_BRANCH_STATUS}}%3v%f.)";
         prompt = executionTime
