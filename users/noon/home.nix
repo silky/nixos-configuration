@@ -160,7 +160,7 @@ in
     Service = {
       Restart = "on-failure";
       ExecStart =
-        "${cooklang-chef.packages.x86_64-linux.default}/bin/chef --path ${recipesDir} serve --port 6001";
+        "${cooklang-chef.packages.x86_64-linux.default}/bin/chef --path ${recipesDir} serve --port 6006";
     };
   };
 
