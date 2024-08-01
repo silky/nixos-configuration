@@ -27,7 +27,7 @@
     , cooklang-chef
     , haskell-hacking-notebook
     , cornelis
-    # , nur
+      # , nur
     , nix-formatter-pack
     , ...
     }@inputs:

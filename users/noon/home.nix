@@ -82,7 +82,9 @@ in
             text
             vector
           ]
-          ))
+        ))
+        haskellPackages.fast-tags # For haskell-tools-nvim
+        haskellPackages.haskell-debug-adapter # For haskell-tools-nvim
         jujutsu # Version-control on top of Git
         stack # Haskell project manager
         unstablePkgs.csvlens # CSV file viewer
@@ -457,7 +459,7 @@ in
     enableZshIntegration = true;
   };
 
-  programs.neovim = import ./vim.nix { inherit pkgs; };
+  programs.neovim = import ./vim.nix { inherit pkgs unstablePkgs; };
 
   programs.zoxide = {
     enable = true;
@@ -488,6 +490,10 @@ in
     ".gitignore".source = mkSym "gitignore";
     ".gitconfig".source = mkSym "gitconfig";
     ".editorconfig".source = mkSym "editorconfig";
+
+    # TODO: Bring back.
+    # haskell-tools lsp madness
+    # ".config/nvim/after/ftplugin/haskell.lua".source = mkSym "haskell.lua";
 
     # These ones it's okay; it's easier to modify with the apps
     ".config/okularpartrc".source = mkSym "okularpartrc";

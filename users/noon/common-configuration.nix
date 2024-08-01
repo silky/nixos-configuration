@@ -143,7 +143,7 @@ in
     # TODO: Somehow this isn't enough to allow unfree; I still seem to need
     # the environment variable.
     allowUnfree = true;
-    allowUnfreePredicate = pkg: true;
+    allowUnfreePredicate = _pkg: true;
     permittedInsecurePackages = [
       "electron-25.9.0"
     ];

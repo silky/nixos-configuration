@@ -1,4 +1,5 @@
 { pkgs
+, unstablePkgs
 , ...
 }:
 let
@@ -29,8 +30,8 @@ let
     src = pkgs.fetchFromGitHub {
       owner = "silky";
       repo = "noon-light-vim";
-      rev = "edbd5fc9477e5697747acc286f9af5bbbbec3d39";
-      sha256 = "sha256-WtB9gcRVRL2isy18UIqZDvyxINHvRPp0FqYj3roXM9E=";
+      rev = "13d5a09848b202086ebab6deb36d8d477ac3bfd0";
+      sha256 = "sha256-bTzHMyb+Aok8Ho7hqRy2J91V4lfAWWIJepNi99gCRMk=";
     };
   };
   vim-syntax-shakespeare = pkgs.vimUtils.buildVimPlugin {
@@ -82,10 +83,8 @@ in
 {
   extraConfig = builtins.readFile ./init.vim;
   enable = true;
+  package = unstablePkgs.neovim-unwrapped;
   plugins = with pkgs.vimPlugins; [
-    {
-      plugin = nvim-treesitter.withAllGrammars;
-    }
     cabal-project-vim
     dhall-vim
     editorconfig-vim
@@ -94,25 +93,29 @@ in
     fzfWrapper
     haskell-vim
     noon-light-theme
+    nvim-hs-vim
+    nvim-treesitter.withAllGrammars
     purescript-vim
     supertab
     typescript-vim
     unicode-vim
+    # TODO: Bring back.
+    # Too complicated at the moment.
+    # unstablePkgs.vimPlugins.haskell-tools-nvim
+    vim-agda-input
     vim-autoread
     vim-commentary
     vim-cooklang
     vim-easy-align
     vim-easymotion
-    vim-quickscope
     vim-ledger
     vim-nix
     vim-ormolu
+    vim-quickscope
     vim-syntax-shakespeare
-    vim-toml
     vim-textobj-user
+    vim-toml
     xterm-color-table
-    nvim-hs-vim
-    vim-agda-input
     {
       plugin = pkgs.vimPlugins.cornelis;
       config = "let g:cornelis_use_global_binary = 1";

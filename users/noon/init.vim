@@ -12,6 +12,10 @@ set formatprg="PARINIT='rTbgqR B=.,?_A_a Q=_s>|' par\ -w72"
 
 set nocompatible
 syntax on
+
+" TODO: If this is uncommented, then it uses `guifg` stuff by default; but I
+" don't have any of that in my colorscheme that the moment.
+set notermguicolors
 colorscheme noon-light
 
 
@@ -246,7 +250,6 @@ noremap <leader>p "+p
 " Yank to the general clipboard.
 noremap <leader>y "+y
 
-" set termguicolors
 set clipboard+=unnamed
 
 " Mapping selecting mappings
