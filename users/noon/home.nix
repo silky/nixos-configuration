@@ -273,6 +273,44 @@ in
       gpgconf --launch gpg-agent
 
       export PATH=~/.local/bin:$PATH
+
+
+      # https://lobste.rs/s/ahmi0i/quick_bits_realise_nix_symlinks
+      function hijack() {
+          local item
+          for item; do
+              if [[ ! -L "$item" ]]; then
+                  continue
+              fi
+
+              local bak="$(dirname "$item")/.$(basename "$item").hijack.bak"
+              local tmp="''${bak%.bak}.tmp"
+
+              cp --no-dereference --remove-destination "$item" "$bak" || return $?
+
+              rm -rf "$tmp" || return $?
+              cp -r "$(readlink --canonicalize "$item")" "$tmp" || return $?
+              chmod -R u+w "$tmp" || return $?
+
+              rm "$item" || return $?
+              mv "$tmp" "$item" || return $?
+          done
+
+          $EDITOR -- "$@"
+          local ret=$?
+
+          for item; do
+              local bak="$(dirname "$item")/.$(basename "$item").hijack.bak"
+
+              if [[ ! -e "$bak" ]]; then
+                  continue
+              fi
+
+              mv "$bak" "$item" || return $?
+          done
+
+          return $ret
+      }
     '';
 
     plugins = with pkgs; [
