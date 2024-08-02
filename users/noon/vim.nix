@@ -94,12 +94,28 @@ in
     cabal-project-vim
     cornelisPlugin
     dhall-vim
+    diffview-nvim
     editorconfig-vim
     elm-vim
     fzf-vim
     fzfWrapper
+    gitsigns-nvim
     haskell-vim
-    neogit
+
+    {
+      # https://github.com/NeogitOrg/neogit
+      plugin = neogit;
+      config = ''
+lua <<EOF
+local neogit = require('neogit')
+neogit.setup {
+  graph_style = "unicode",
+  integrations = { diffview = true },
+}
+EOF
+      '';
+    }
+
     noon-light-theme
     nvim-hs-vim
     nvim-treesitter.withAllGrammars
@@ -107,6 +123,7 @@ in
     supertab
     typescript-vim
     unicode-vim
+    nvim-unception
     vim-agda-input
     vim-autoread
     vim-commentary
@@ -121,6 +138,17 @@ in
     vim-textobj-user
     vim-toml
     xterm-color-table
+
+    # To investigate
+    # vim-unimpaired # https://github.com/tpope/vim-unimpaired/
+    # nvim-treesitter-context
+    # telescope-nvim # https://github.com/nvim-telescope/telescope.nvim/
+    # telescope-fzy-native-nvim # https://github.com/nvim-telescope/telescope-fzy-native.nvim
+    nvim-cmp
+    cmp-nvim-lsp
+    cmp-nvim-lsp-signature-help
+    cmp-buffer
+    cmp-path
   ];
   extraPackages = [ pkgs.cornelis ];
 }
