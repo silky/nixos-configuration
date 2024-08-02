@@ -79,19 +79,27 @@ let
       sha256 = "sha256-umsuGGP5tOf92bzWEhqD2y6dN0FDBsmLx60f45xgmig=";
     };
   };
+
+  cornelisPlugin = {
+    plugin = pkgs.vimPlugins.cornelis;
+    config = "let g:cornelis_use_global_binary = 1";
+  };
 in
 {
   extraConfig = builtins.readFile ./init.vim;
   enable = true;
   package = unstablePkgs.neovim-unwrapped;
-  plugins = with pkgs.vimPlugins; [
+  plugins = with unstablePkgs.vimPlugins; [
+    # unstablePkgs.vimPlugins.haskell-tools-nvim TODO: Bring back.
     cabal-project-vim
+    cornelisPlugin
     dhall-vim
     editorconfig-vim
     elm-vim
     fzf-vim
     fzfWrapper
     haskell-vim
+    neogit
     noon-light-theme
     nvim-hs-vim
     nvim-treesitter.withAllGrammars
@@ -99,9 +107,6 @@ in
     supertab
     typescript-vim
     unicode-vim
-    # TODO: Bring back.
-    # Too complicated at the moment.
-    # unstablePkgs.vimPlugins.haskell-tools-nvim
     vim-agda-input
     vim-autoread
     vim-commentary
@@ -116,10 +121,6 @@ in
     vim-textobj-user
     vim-toml
     xterm-color-table
-    {
-      plugin = pkgs.vimPlugins.cornelis;
-      config = "let g:cornelis_use_global_binary = 1";
-    }
   ];
   extraPackages = [ pkgs.cornelis ];
 }
