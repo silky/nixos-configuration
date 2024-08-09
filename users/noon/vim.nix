@@ -30,8 +30,8 @@ let
     src = pkgs.fetchFromGitHub {
       owner = "silky";
       repo = "noon-light-vim";
-      rev = "929a3d4b08b25c9a1b921333aa6abad3dba81ecc";
-      sha256 = "sha256-mth8iLm1yRSSL7j/OPfEl1AFwGE9eiCmuqRt4PoEfrE=";
+      rev = "7b8f3679102bd29807398eb15c3f33a8aaaf3e5a";
+      sha256 = "sha256-lty3/EoDhWViV8LzWULNVklrWV3CYrrQ0iMwEPMD9r8=";
     };
   };
   vim-syntax-shakespeare = pkgs.vimUtils.buildVimPlugin {
@@ -90,7 +90,11 @@ in
   enable = true;
   package = unstablePkgs.neovim-unwrapped;
   plugins = with unstablePkgs.vimPlugins; [
-    # unstablePkgs.vimPlugins.haskell-tools-nvim TODO: Bring back.
+    {
+      plugin = unstablePkgs.vimPlugins.haskell-tools-nvim;
+      # Note: Config is done on filetypes
+    }
+
     cabal-project-vim
     cornelisPlugin
     dhall-vim
@@ -141,9 +145,9 @@ EOF
 
     # To investigate
     # vim-unimpaired # https://github.com/tpope/vim-unimpaired/
-    # nvim-treesitter-context
-    # telescope-nvim # https://github.com/nvim-telescope/telescope.nvim/
-    # telescope-fzy-native-nvim # https://github.com/nvim-telescope/telescope-fzy-native.nvim
+    # nvim-treesitter-context # No.
+    telescope-nvim # https://github.com/nvim-telescope/telescope.nvim/
+    telescope-fzy-native-nvim # https://github.com/nvim-telescope/telescope-fzy-native.nvim
     nvim-cmp
     cmp-nvim-lsp
     cmp-nvim-lsp-signature-help

@@ -116,7 +116,6 @@ set notimeout
 set nottimeout
 set autowrite
 
-
 set guioptions=aegit
 set completeopt=longest,menuone,preview " TODO: Review
 set smarttab
@@ -128,7 +127,6 @@ set wrap
 set textwidth=78
 set formatoptions=qrjtco
 
-
 set noswapfile
 set undodir=~/.tmp/vim/undo/      " undo files
 set backupdir=~/.tmp/vim/backup/  " backups
@@ -136,8 +134,9 @@ set directory=~/.tmp/vim/swap/    " swap files
 set nobackup                      " disabled
 set nowb
 set nocursorcolumn
-set nocursorline
-set rnu
+set cursorline
+set relativenumber
+set number
 
 let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 0
 set guicursor=
