@@ -530,7 +530,7 @@ in
     ".editorconfig".source = mkSym "editorconfig";
 
     # haskell-tools lsp madness
-    ".config/nvim/after/ftplugin/haskell.lua".source = mkSym "haskell.lua";
+    # ".config/nvim/after/ftplugin/haskell.lua".source = mkSym "haskell.lua";
 
     # These ones it's okay; it's easier to modify with the apps
     ".config/okularpartrc".source = mkSym "okularpartrc";

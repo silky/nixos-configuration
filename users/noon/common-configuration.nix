@@ -213,9 +213,16 @@ in
 
   sound.enable = true;
   services.pipewire = {
+    package = unstablePkgs.pipewire;
     enable = true;
-    pulse.enable = true;
-    wireplumber.enable = true;
+    pulse = {
+      # package = unstablePkgs.pulseaudioFull;
+      enable = true;
+    };
+    wireplumber = {
+      # package = unstablePkgs.wireplumber;
+      enable = true;
+    };
     jack.enable = true;
     alsa = {
       enable = true;
@@ -264,7 +271,7 @@ in
   };
 
   fonts = {
-    packages = with pkgs; [
+    packages = with unstablePkgs.pkgs; [
       nerdfonts
       noto-fonts-emoji
       raleway
@@ -275,7 +282,6 @@ in
       twitter-color-emoji
     ];
     enableDefaultPackages = true;
-    # Note: Unfortunately, this isn't exactly working.
     fontconfig = {
       defaultFonts = {
         monospace = [ "iMWritingMono Nerd Font" ];
@@ -291,7 +297,6 @@ in
   #
   # ---------------------------------------------------------------------------
   time.timeZone = "Europe/London";
-  # time.timeZone      = "America/Mexico_City";
   i18n.defaultLocale = "en_GB.utf8";
 
 

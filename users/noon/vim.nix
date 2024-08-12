@@ -30,8 +30,8 @@ let
     src = pkgs.fetchFromGitHub {
       owner = "silky";
       repo = "noon-light-vim";
-      rev = "7b8f3679102bd29807398eb15c3f33a8aaaf3e5a";
-      sha256 = "sha256-lty3/EoDhWViV8LzWULNVklrWV3CYrrQ0iMwEPMD9r8=";
+      rev = "d4e702db1629efc9a45e637eb90852e3abd3ac0a";
+      sha256 = "sha256-U7oGs8BjqIT32cN8wsj+GmW5LwrHJ1MhicYbXy4kd6M=";
     };
   };
   vim-syntax-shakespeare = pkgs.vimUtils.buildVimPlugin {
@@ -91,8 +91,10 @@ in
   package = unstablePkgs.neovim-unwrapped;
   plugins = with unstablePkgs.vimPlugins; [
     {
-      plugin = unstablePkgs.vimPlugins.haskell-tools-nvim;
+      plugin = haskell-tools-nvim;
       # Note: Config is done on filetypes
+      type = "lua";
+      config = builtins.readFile ./haskell.lua;
     }
 
     cabal-project-vim
@@ -109,14 +111,13 @@ in
     {
       # https://github.com/NeogitOrg/neogit
       plugin = neogit;
+      type = "lua";
       config = ''
-lua <<EOF
 local neogit = require('neogit')
 neogit.setup {
   graph_style = "unicode",
   integrations = { diffview = true },
 }
-EOF
       '';
     }
 
@@ -133,7 +134,43 @@ EOF
     vim-commentary
     vim-cooklang
     vim-easy-align
-    vim-easymotion
+    nvim-web-devicons
+    mini-nvim
+
+    {
+      plugin = which-key-nvim;
+      type = "lua";
+      config = ''
+        require("which-key").setup {
+          win = {
+            border = "single",
+          },
+        }
+      '';
+    }
+
+    # Todo: Setup
+    {
+      plugin = hop-nvim;
+      type = "lua";
+      # Todo: Configure this
+      # <https://github.com/smoka7/hop.nvim?tab=readme-ov-file#keybindings>
+      }
+
+    # TODO: Configure
+    # {
+    #   plugin = telescope_hoogle;
+    #   config = ''
+    #     lua <<EOF
+    #     local telescope = require("telescope")
+    #     telescope.setup {
+    #     }
+    #     telescope.load_extension("hoogle")
+    #     EOF
+    #   '';
+    # }
+
+    # vim-easymotion
     vim-ledger
     vim-nix
     vim-ormolu

@@ -143,6 +143,9 @@ set guicursor=
 
 set clipboard+=unnamedplus
 
+" Lsp things
+set signcolumn=yes
+
 " let g:clipboard = {
 "   \   'name': 'helic',
 "   \   'copy': {
