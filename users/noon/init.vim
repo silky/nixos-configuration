@@ -132,11 +132,13 @@ set undodir=~/.tmp/vim/undo/      " undo files
 set backupdir=~/.tmp/vim/backup/  " backups
 set directory=~/.tmp/vim/swap/    " swap files
 set nobackup                      " disabled
-set nowb
+set nowritebackup
 set nocursorcolumn
 set cursorline
 set relativenumber
 set number
+
+set updatetime=300
 
 let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 0
 set guicursor=
