@@ -88,8 +88,7 @@ in
 {
   extraConfig = builtins.readFile ./init.vim;
   enable = true;
-  package = unstablePkgs.neovim-unwrapped;
-  plugins = with unstablePkgs.vimPlugins; [
+  plugins = with pkgs.vimPlugins; [
     {
       plugin = haskell-tools-nvim;
       # Note: Config is done on filetypes

@@ -1,11 +1,12 @@
 {
   inputs = {
     # nixpkgs.url = "nixpkgs/nixos-24.05";
-    # Whatever; let's just try everything unstable
+    # Let's just try everything unstable
     nixpkgs.url = "nixpkgs/nixos-unstable";
     unstable.url = "nixpkgs/nixos-unstable";
 
     # home-manager.url = "github:nix-community/home-manager/release-24.05";
+    # Home-manager also needs to be unstable.
     home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -51,7 +52,6 @@
             # nur.nixosModules.nur
 
             # Common system configuration
-            # ./users/${user}/common-configuration.nix
             ./users/noon/common-configuration.nix
 
             # Specific machine configuration

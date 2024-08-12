@@ -83,13 +83,13 @@ in
             vector
           ]
         ))
-        haskellPackages.fast-tags # For haskell-tools-nvim
+        # haskellPackages.fast-tags # For haskell-tools-nvim
         haskellPackages.haskell-debug-adapter # For haskell-tools-nvim
         jujutsu # Version-control on top of Git
         stack # Haskell project manager
-        unstablePkgs.csvlens # CSV file viewer
-        unstablePkgs.gh # For gh-dash auth; `gh auth login`
-        unstablePkgs.gh-dash # GitHub dashboard https://dlvhdr.github.io/gh-dash/
+        csvlens # CSV file viewer
+        gh # For gh-dash auth; `gh auth login`
+        gh-dash # GitHub dashboard https://dlvhdr.github.io/gh-dash/
         vscode # Sometimes useful
         websocat # Websocket chatting
         pciutils # Device debugging
@@ -104,14 +104,14 @@ in
       apps = [
         anki # For remembering things
         cooklang-chef.packages.x86_64-linux.default
-        unstablePkgs.discord-ptb
+        discord-ptb
         docbook5
         pass
         steam-run # Running dynamically-linked executables
         sweethome3d.application # Home design
-        unstablePkgs.haskellPackages.hledger
-        unstablePkgs.haskellPackages.hledger-ui
-        unstablePkgs.haskellPackages.hledger-web
+        haskellPackages.hledger
+        haskellPackages.hledger-ui
+        haskellPackages.hledger-web
         vivaldi # Browser
       ];
 
@@ -206,7 +206,6 @@ in
   programs.zsh = {
     enable = true;
     autocd = true;
-    package = unstablePkgs.zsh;
     enableCompletion = true;
     syntaxHighlighting = {
       enable = true;
@@ -274,6 +273,16 @@ in
 
       export PATH=~/.local/bin:$PATH
 
+      # Run a cabal test function a bit simpler
+      function tt () {
+        if [ $# -lt 2 ]
+        then
+          echo "Require two args."
+          return
+        fi
+
+        cabal test "$1" --test-options="$2"
+      }
 
       # https://lobste.rs/s/ahmi0i/quick_bits_realise_nix_symlinks
       function hijack() {
@@ -440,7 +449,6 @@ in
   # ---------------------------------------------------------------------------
   programs.gpg = {
     enable = true;
-    package = unstablePkgs.gnupg;
   };
 
   services.dunst = {
@@ -486,10 +494,8 @@ in
   programs.direnv = {
     enable = true;
     enableZshIntegration = true;
-    package = unstablePkgs.direnv;
     config.global.hide_env_diff = true;
     nix-direnv.enable = true;
-    nix-direnv.package = unstablePkgs.nix-direnv;
   };
 
   programs.fzf = {
