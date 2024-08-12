@@ -99,8 +99,8 @@ in
         ffmpeg_6-full # Video things
         gimp-with-plugins # For making memes
         glow # Terminal Markdown renderer
-        gnome.eog # Image viewer
-        gnome.nautilus # File browser
+        eog # Image viewer
+        nautilus # File browser
         hunspell # Spelling
         hunspellDicts.en-gb-ise # Spelling
         imagemagick # Essential image tools
@@ -211,7 +211,7 @@ in
   #
   # ---------------------------------------------------------------------------
 
-  sound.enable = true;
+  # sound.enable = true;
   services.pipewire = {
     package = unstablePkgs.pipewire;
     enable = true;
@@ -235,7 +235,7 @@ in
     # https://nixos.wiki/wiki/Bluetooth
     bluetooth = {
       enable = true;
-      package = pkgs.bluez;
+      package = unstablePkgs.bluez;
       settings = {
         General = {
           Enable = "Source,Sink,Media,Socket";
