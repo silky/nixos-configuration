@@ -1,6 +1,6 @@
 let g:ormolu_disable=1
 
-let $FZF_DEFAULT_COMMAND = 'rg --files -M 1000'
+let $FZF_DEFAULT_COMMAND = 'rg --files -M 1000 --.'
 let g:fzf_preview_window = ''
 
 " Firstly define the leaders.

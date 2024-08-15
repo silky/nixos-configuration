@@ -22,6 +22,7 @@
     conflictstyle = zdiff3
 
 [alias]
+  a = commit --amend
   cs = "!f() { git log --pretty='format:%C(yellow)%h %G? %ad%Cred%d %Creset%s%C(cyan) [%cn]' --decorate --after=\"$1 0:00\" --before=\"$1 23:59\" --author \"`git config user.name`\"; }; f"
   d    = difftool
   hist = log --oneline --graph --decorate

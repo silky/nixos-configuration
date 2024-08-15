@@ -2,6 +2,7 @@
 , pkgs
 , unstable
 , cooklang-chef
+, lib
 , ...
 }:
 let
@@ -69,7 +70,7 @@ in
         dnsutils
         html-tidy # HTML formatter/tidier
         moreutils
-        python3
+        python3 # Can't live without it
         # Random haskell hacking
         (ghc.withPackages (
           p: with p;
@@ -99,6 +100,12 @@ in
         frink # Calculator
         picat # Logic programming
         wasmtime # wasm runtime
+
+        # TODO: Investigate again. The problem with wezterm at the moment is
+        # that it doesn't resize well with XMonad; the inner terminal resizes,
+        # but the outer window holding it doesn't. Also, the fonts don't seem
+        # to render as well as in konsole.
+        wezterm # terminal
       ];
 
       apps = [
@@ -537,8 +544,11 @@ in
 
     # haskell-tools lsp madness
     # ".config/nvim/after/ftplugin/haskell.lua".source = mkSym "haskell.lua";
+    #
+    ".config/wezterm/wezterm.lua".source = mkSym "wezterm.lua";
 
     # These ones it's okay; it's easier to modify with the apps
+    ".rgignore".source = mkSym "rgignore";
     ".config/okularpartrc".source = mkSym "okularpartrc";
     ".local/share/konsole/Noons.colorscheme".source = mkSym "Noons.colorscheme";
     ".local/share/konsole/Profile 1.profile".source = mkSym "Profile 1.profile";
