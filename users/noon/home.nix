@@ -444,7 +444,8 @@ in
       v = "nvim";
       vim = "nvim";
       # w = vim in pairing mode (vv)
-      w = "nvim -c 'source ~/dev/nixos-configuration/users/noon/pairing.vim'";
+      w  = "nvim -c 'source ~/dev/nixos-configuration/users/noon/pairing.vim'";
+      vv = "nvim -c 'source ~/dev/nixos-configuration/users/noon/pairing.vim'";
       e = "emacs";
     };
   };
