@@ -443,7 +443,8 @@ in
       # Text-editing
       v = "nvim";
       vim = "nvim";
-      vv = "nvim -R";
+      # w = vim in pairing mode (vv)
+      w = "nvim -c 'source ~/dev/nixos-configuration/users/noon/pairing.vim'";
       e = "emacs";
     };
   };
