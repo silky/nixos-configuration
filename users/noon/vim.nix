@@ -181,9 +181,42 @@ neogit.setup {
 
     # To investigate
     # vim-unimpaired # https://github.com/tpope/vim-unimpaired/
-    # nvim-treesitter-context # No.
-    telescope-nvim # https://github.com/nvim-telescope/telescope.nvim/
-    telescope-fzy-native-nvim # https://github.com/nvim-telescope/telescope-fzy-native.nvim
+    # telescope-nvim # https://github.com/nvim-telescope/telescope.nvim/
+    telescope-fzf-native-nvim # https://github.com/nvim-telescope/telescope-fzy-native.nvim
+
+    {
+      plugin = telescope-nvim;
+      type = "lua";
+      config = ''
+        tel = require('telescope')
+        tel.setup {
+          extensions = {
+            fzf = {
+              fuzzy = true,
+              override_generic_sorter = true,
+              override_file_sorter = true,
+              case_mode = "smart_case",
+            }
+          },
+          defaults = {
+            layout_config = {
+              -- We don't want the preview window.
+              -- TODO: Maybe we do want it sometimes.
+              preview_width = 0,
+            },
+          },
+          preview = false,
+          pickers = {
+            find_files = {
+              -- theme = "ivy",
+            },
+          },
+        }
+
+        tel.load_extension('fzf')
+      '';
+    }
+
     nvim-cmp
     cmp-nvim-lsp
     cmp-nvim-lsp-signature-help
