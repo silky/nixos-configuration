@@ -127,10 +127,16 @@ in
   # ~ Nix
   #
   # ---------------------------------------------------------------------------
+  #
+  # Prevent /boot from filling up
+  boot.loader.grub.configurationLimit = 5;
   nix = {
-    # Wild guess.
-    # See: <https://github.com/NixOS/nix/issues/1281>
-    # settings.auto-optimise-store = false;
+    gc = {
+      automatic = true;
+      randomizedDelaySec = "14m";
+      options = "--delete-older-than 30d";
+    };
+
     settings.trusted-users = [ "root" "noon" "gala" ];
     extraOptions = ''
       experimental-features = nix-command flakes recursive-nix ca-derivations repl-flake
@@ -200,8 +206,9 @@ in
   networking = {
     hostName = "${name}";
     networkmanager.enable = true;
-    firewall.allowedTCPPorts = [ ];
+    firewall.allowedTCPPorts = [];
     firewall.enable = true;
+    # nftables.enable = true;
   };
 
 
@@ -213,7 +220,6 @@ in
 
   # sound.enable = true;
   services.pipewire = {
-    package = unstablePkgs.pipewire;
     enable = true;
     pulse = {
       # package = unstablePkgs.pulseaudioFull;
@@ -264,6 +270,13 @@ in
     vnstat.enable = true;
     udev.packages = [ pkgs.qmk-udev-rules ];
   };
+
+  # From <https://kokada.capivaras.dev/blog/an-unordered-list-of-hidden-gems-inside-nixos/>
+  zramSwap = {
+    enable = true;
+    algorithm = "zstd";
+  };
+  services.dbus.implementation = "broker";
 
   virtualisation.docker = {
     package = unstablePkgs.docker;
