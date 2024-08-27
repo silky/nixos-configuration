@@ -84,7 +84,7 @@ in
             vector
           ]
         ))
-        haskellPackages.fast-tags # For haskell-tools-nvim
+        # haskellPackages.fast-tags # For haskell-tools-nvim
         haskellPackages.haskell-debug-adapter # For haskell-tools-nvim
         jujutsu # Version-control on top of Git
         stack # Haskell project manager
