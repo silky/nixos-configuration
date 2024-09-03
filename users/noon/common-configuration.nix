@@ -52,6 +52,7 @@ in
         procs # Modern ps
         psmisc # ???
         qmk # ???
+        systemctl-tui # tui for systemd glancing
         tree # Tree view of directory
         unzip
         wget
