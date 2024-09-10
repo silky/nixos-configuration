@@ -70,6 +70,7 @@ in
         dnsutils
         html-tidy # HTML formatter/tidier
         moreutils
+        gcc
         python3 # Can't live without it
         # Random haskell hacking
         (ghc.withPackages (

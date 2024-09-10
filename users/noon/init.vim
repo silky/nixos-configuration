@@ -13,11 +13,8 @@ set formatprg="PARINIT='rTbgqR B=.,?_A_a Q=_s>|' par\ -w72"
 set nocompatible
 syntax on
 
-" TODO: If this is uncommented, then it uses `guifg` stuff by default; but I
-" don't have any of that in my colorscheme that the moment.
-set notermguicolors
+set termguicolors
 colorscheme noon-light
-
 
 " Set 7 lines to the cursor - when moving vertically using j/k
 set so=7
@@ -50,10 +47,9 @@ set whichwrap+=<,>,h,l
 " https://www.hillelwayne.com/post/intermediate-vim/
 set inccommand=nosplit
 
-set ai   " Auto indent
-set si   " Smart indent
-set wrap " Wrap lines
-
+set autoindent
+set smartindent
+set wrap
 
 " Treat long lines as break lines
 nnoremap j gj
@@ -257,10 +253,11 @@ noremap <leader>y "+y
 set clipboard+=unnamed
 
 " Mapping selecting mappings
-nmap <Tab>e :Files<cr>
-nmap <Tab>s :GFiles?<cr>
-" TODO: How to make this work with input()/<expr> ?
-" nmap <Tab>l :Lines <cr>
+" Telescope is way too slow for this, so we will use fzf-vim instead.
+nmap <silent> <Tab>e :Files<cr>
+" nmap <silent> <Tab>e :Telescope find_files<cr>
+nmap <silent> <Tab>o :Telescope grep_string<cr>
+nmap <silent> <Tab>s :Telescope live_grep<cr>
 
 " Window Navigation
 noremap <Tab>h <C-w>h
@@ -271,7 +268,6 @@ noremap <Tab><Tab> <C-w>p
 
 " Clear highlights from search, also sets the last search to be empty.
 noremap <silent> <leader><space> :noh<cr>:call clearmatches()<cr>
-
 
 function! SynStack()
   if !exists("*synstack")
@@ -284,18 +280,13 @@ endfunc
 let g:matchparen_timeout = 10
 let g:matchparen_insert_timeout = 10
 
-
 set timeoutlen=1000 ttimeoutlen=0
-
-
 
 nmap \\  <Plug>CommentaryLine
 vmap \\  <Plug>Commentary
 
-
 " EasyMotion
 let g:EasyMotion_leader_key = '.'
-
 
 au BufRead,BufNewFile *.agda call AgdaFiletype()
 au QuitPre *.agda :CornelisCloseInfoWindows
@@ -318,32 +309,17 @@ function! AgdaFiletype()
     let g:cornelis_no_agda_input=1
 endfunction
 
-
 " Depends on 'vim-agda-input' plugin. Uncomment this to disable it:
 " let g:agda_input_no_agda_input=1
 let g:agda_input_prefix="<S-Tab>"
 " call agda_input#bind_input("~", "~")
 call agda_input#bind_input("st", "≡⟨⟩")
 
-
 vmap <leader><space> <Plug>(EasyAlign)
-
 
 let g:easy_align_delimiters = {
 \ 'r': { 'pattern': '[≤≡≈∎]', 'left_margin': 2, 'right_margin': 0 },
 \ }
-
-
-
-" Pandoc
-augroup ft_pandoc
-    au!
-
-    " Convert current file to pdf.
-    au FileType pandoc noremap <buffer> <leader>ll :!pandoc -o "%.pdf" --template=a.latex "%"<cr>
-    au FileType pandoc setlocal nocindent
-    au FileType pandoc setlocal formatoptions=tcqron1
-augroup END
 
 let g:elm_format_autosave = 0
 
@@ -351,7 +327,6 @@ let g:elm_format_autosave = 0
 set errorformat=%C%*\\s•\ %m,
                \%-C\ %.%#,
                \%A%f:%l:%c:\ %t%.%#
-
 
 " Vim quick-scope
 " https://github.com/unblevable/quick-scope

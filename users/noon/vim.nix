@@ -30,8 +30,8 @@ let
     src = pkgs.fetchFromGitHub {
       owner = "silky";
       repo = "noon-light-vim";
-      rev = "d4e702db1629efc9a45e637eb90852e3abd3ac0a";
-      sha256 = "sha256-U7oGs8BjqIT32cN8wsj+GmW5LwrHJ1MhicYbXy4kd6M=";
+      rev = "161e79e347be31a0bd4f86b0945b3ff9d6526699";
+      sha256 = "sha256-JMQzHZqWtF9E7CfA0Jr7iSHzhclD2rsQ8wMP4UzPa90=";
     };
   };
   vim-syntax-shakespeare = pkgs.vimUtils.buildVimPlugin {
@@ -87,8 +87,12 @@ let
 in
 {
   extraConfig = builtins.readFile ./init.vim;
+  extraLuaConfig = ''
+  '';
   enable = true;
   plugins = with pkgs.vimPlugins; [
+    # lazy-nvim
+
     {
       plugin = haskell-tools-nvim;
       # Note: Config is done on filetypes
@@ -99,7 +103,7 @@ in
     cabal-project-vim
     cornelisPlugin
     dhall-vim
-    diffview-nvim
+    # diffview-nvim
     editorconfig-vim
     elm-vim
     fzf-vim
@@ -107,34 +111,37 @@ in
     gitsigns-nvim
     haskell-vim
 
-    {
-      # https://github.com/NeogitOrg/neogit
-      plugin = neogit;
-      type = "lua";
-      config = ''
-local neogit = require('neogit')
-neogit.setup {
-  graph_style = "unicode",
-  integrations = { diffview = true },
-}
-      '';
-    }
+    # Kinda useful for interative colour scheming, but in the end more trouble
+    # than it's worth.
+    # lush-nvim
 
+    # {
+    #   # https://github.com/NeogitOrg/neogit
+    #   plugin = neogit;
+    #   type = "lua";
+    #   config = ''
+# local neogit = require('neogit')
+# neogit.setup {
+  # graph_style = "unicode",
+  # integrations = { diffview = true },
+# }
+    #   '';
+    # }
+
+    mini-nvim
     noon-light-theme
     nvim-hs-vim
     nvim-treesitter.withAllGrammars
+    nvim-unception
     purescript-vim
     supertab
     typescript-vim
     unicode-vim
-    nvim-unception
     vim-agda-input
     vim-autoread
     vim-commentary
-    vim-cooklang
     vim-easy-align
-    nvim-web-devicons
-    mini-nvim
+    # nvim-web-devicons
 
     {
       plugin = which-key-nvim;
@@ -147,14 +154,6 @@ neogit.setup {
         }
       '';
     }
-
-    # Todo: Setup
-    {
-      plugin = hop-nvim;
-      type = "lua";
-      # Todo: Configure this
-      # <https://github.com/smoka7/hop.nvim?tab=readme-ov-file#keybindings>
-      }
 
     # TODO: Configure
     # {
@@ -169,7 +168,7 @@ neogit.setup {
     #   '';
     # }
 
-    # vim-easymotion
+    vim-easymotion
     vim-ledger
     vim-nix
     vim-ormolu
@@ -208,7 +207,6 @@ neogit.setup {
           preview = false,
           pickers = {
             find_files = {
-              -- theme = "ivy",
             },
           },
         }
@@ -217,11 +215,11 @@ neogit.setup {
       '';
     }
 
-    nvim-cmp
-    cmp-nvim-lsp
-    cmp-nvim-lsp-signature-help
-    cmp-buffer
-    cmp-path
+    # nvim-cmp
+    # cmp-nvim-lsp
+    # cmp-nvim-lsp-signature-help
+    # cmp-buffer
+    # cmp-path
   ];
   extraPackages = [ pkgs.cornelis ];
 }

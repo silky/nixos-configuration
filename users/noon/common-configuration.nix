@@ -31,6 +31,7 @@ in
         bashmount # Mount disks via TUI
         binutils # ???
         brightnessctl # Useful to change brightness
+        btop # Cool usage thing
         cachix # Nix Caching
         curl # No explanation needed
         dmenu # Launcher; used in XMonad setup
