@@ -11,8 +11,6 @@ let
   recipesDir = "${config.home.homeDirectory}/dev/life/recipes";
   unstablePkgs = import unstable { };
 
-  # TODO: Could refer to binary firectly, so it doesn't need to be assumed to
-  # exist.
   showBatteryState = pkgs.writeShellScriptBin "show-battery-state" ''
     mins=$(acpi | jc --acpi | jq '.[].charge_remaining_minutes')
     hrs=$(acpi | jc --acpi | jq '.[].charge_remaining_hours')
@@ -23,26 +21,22 @@ let
   # Hacky monitor things
   work = pkgs.writeShellScriptBin "work" ''
     xrandr \
-       --output DP-1   --off \
-       --output DP-2   --primary --mode 2560x1440 --pos 0x619 --rotate normal \
-       --output HDMI-1 --mode 2560x1440 --pos 2560x0 --rotate left \
-       --output eDP-1  --off
-     ~/.fehbg
-  '';
-  silver-desk = pkgs.writeShellScriptBin "silver-desk" ''
-    xrandr \
-       --output DP-1   --mode 2560x1440 --pos 2560x0 --rotate right \
-       --output DP-2   --primary --mode 2560x1440 --pos 0x560 --rotate normal \
-       --output HDMI-1 --off \
-       --output eDP-1  --off
+      --output HDMI-1 --mode 2560x1440 --pos 2560x0 --rotate right \
+      --output DP-3 --primary --mode 2560x1440 --pos 0x766 \
+      --output eDP-1 --off \
+      --output DP-1 --off \
+      --output DP-2 --off \
+      --rotate normal --output DP-4 --off
      ~/.fehbg
   '';
   mobile = pkgs.writeShellScriptBin "mobile" ''
     xrandr \
-      --output DP-1   --off \
-      --output DP-2   --off \
+      --output eDP-1 --primary --mode 2560x1600 --pos 0x0 --rotate normal \
       --output HDMI-1 --off \
-      --output eDP-1  --primary --mode 2560x1400 --pos 0x0 --rotate normal
+      --output DP-1 --off \
+      --output DP-2 --off \
+      --output DP-3 --off \
+      --output DP-4 --off
     ~/.fehbg
   '';
 in
@@ -126,7 +120,6 @@ in
       scripts = [
         mobile
         showBatteryState
-        silver-desk
         work
       ];
     in

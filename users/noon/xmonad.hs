@@ -102,6 +102,11 @@ myKeys conf =
   , ((mod1Mask, xK_e), spawn "konsole -e nvim")
   , ((mod1Mask, xK_p), spawn "dmenu_run -nb '#d1f0ff' -sf '#b141e5' -nf '#333333' -sb '#d1f0ff'")
   , ((mod1Mask, xK_b), spawn "show-battery-state")
+
+  -- Monitors
+  , ((mod1Mask, xK_n), spawn "mobile") -- "(N)o work"
+  , ((mod1Mask, xK_w), spawn "work")   -- "(W)ork"
+  --
   --
   -- Move mouse focus to the other screen; useful for more a setup with more
   -- than one screen
