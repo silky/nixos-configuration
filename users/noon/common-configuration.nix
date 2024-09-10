@@ -290,6 +290,7 @@ in
       nerdfonts
       noto-fonts-emoji
       raleway
+      recursive
       source-code-pro
       source-sans-pro
       source-serif-pro
