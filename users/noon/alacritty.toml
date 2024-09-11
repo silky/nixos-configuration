@@ -1,0 +1,29 @@
+live_config_reload = true
+
+[font]
+normal = { family = "iMWritingMono Nerd Font" }
+size = 11
+
+[shell]
+program = "zsh"
+
+[window]
+decorations = "None"
+dynamic_padding = true
+
+[colors.primary]
+foreground = "#2f2f2f"
+background = "#fff7f1"
+
+[colors.normal]
+black = "#2f2f2f"
+red = "#ff4485"
+green = "#4833a5"
+blue = "#002aff"
+yellow = "#b218b2"
+magenta = "#a600ff"
+cyan = "#ffaaff"
+white = "#2f2f2f"
+
+[scrolling]
+history = 100000

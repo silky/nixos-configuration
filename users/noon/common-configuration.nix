@@ -85,6 +85,7 @@ in
         openssl # Sometimes useful
         ripgrep # File searcher
         sd # Modern find and replace
+        unstablePkgs.alacritty # Terminal
         unstablePkgs.ijq # Interactive JQ
         unstablePkgs.konsole # Terminal
         yq # jq for yaml
