@@ -98,23 +98,24 @@ in
         bandwhich # Bandwidth monitor
         baobab # Disk space analyser
         chafa # Terminal image viewer
+        eog # Image viewer
         feh # Set background images
         ffmpeg_6-full # Video things
         gimp-with-plugins # For making memes
         glow # Terminal Markdown renderer
-        eog # Image viewer
-        nautilus # File browser
         hunspell # Spelling
         hunspellDicts.en-gb-ise # Spelling
         imagemagick # Essential image tools
         inkscape # Meme creation
         lyx # For writing WYSIWYG TeX
         meld # Visual diff tool
+        nautilus # File browser
         nix-output-monitor # Nicer build info when nixing
         okular # PDF viewing
         optipng # Optimise pngs
         pandoc # Occasionally useful
         pkgs.gedit # When times get desperate
+        rofimoji # Emoji picker
         texlive.combined.scheme-full # Full TeX environment
         unstablePkgs.flameshot # Take screenshots
         unstablePkgs.vokoscreen-ng # Screen recording for videos
