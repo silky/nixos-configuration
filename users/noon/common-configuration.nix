@@ -291,6 +291,7 @@ in
     packages = with unstablePkgs.pkgs; [
       nerdfonts
       noto-fonts-emoji
+      noto-fonts-color-emoji
       raleway
       recursive
       source-code-pro
@@ -303,7 +304,7 @@ in
     fontconfig = {
       defaultFonts = {
         monospace = [ "iMWritingMono Nerd Font" ];
-        emoji = [ "Twemoji" "Noto Color Emoji" "Symbola" ];
+        emoji = [ "Noto Color Emoji" ];
       };
     };
   };
