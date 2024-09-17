@@ -79,6 +79,7 @@ in
         jd-diff-patch # JSON diff
         jo # Create JSON
         jq # JSON explorer
+        k9s # Kubernetes cluster management
         lychee # Markdown link checker
         nix-tree # Browse nix dependency graphs
         nvd # Nix package version diff
