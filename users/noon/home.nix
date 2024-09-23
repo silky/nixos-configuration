@@ -423,7 +423,7 @@ in
 
       # Misc
       dc = "docker compose";
-      df = "duf -only local -output mountpoint,size,used,usage,avail -theme ansi";
+      df = "duf -only local -output mountpoint,size,used,usage,avail";
       f = "format";
       # j = "jupyter notebook --no-browser --ip=localhost -y";
       m = "make";
