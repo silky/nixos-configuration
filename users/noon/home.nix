@@ -247,7 +247,7 @@ in
       setopt HIST_NO_STORE         # Don't store history commands
       setopt HIST_REDUCE_BLANKS    # Remove superfluous blanks from each command line being added to the history.
 
-      export FZF_DEFAULT_COMMAND='rg --hidden -g ""'
+      export FZF_DEFAULT_COMMAND='rg --files -M 1000 --.'
 
       # Control-arrows
       bindkey "^[[1;5C" forward-word
@@ -428,7 +428,7 @@ in
       # j = "jupyter notebook --no-browser --ip=localhost -y";
       m = "make";
       p = "python";
-      rg = "rg -M 1000";
+      rg = "rg --files -M 1000 --.";
       # Open my main config by default
       d = "gh-dash --config ~/dev/life/gh-dash-configs/config.yml";
       # For glow, always use the pager
