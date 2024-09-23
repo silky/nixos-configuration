@@ -99,7 +99,7 @@ myKeys conf =
   -- Launch specific things
   , ((mod1Mask, xK_o), spawn "nautilus --no-desktop")
   , ((mod1Mask, xK_m), spawn "alacritty -e alsamixer")
-  , ((mod1Mask, xK_e), spawn "alacritt -e nvim")
+  , ((mod1Mask, xK_e), spawn "alacritty -e nvim")
   , ((mod1Mask, xK_p), spawn "dmenu_run -nb '#d1f0ff' -sf '#b141e5' -nf '#333333' -sb '#d1f0ff'")
   , ((mod1Mask, xK_b), spawn "show-battery-state")
 
