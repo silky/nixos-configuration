@@ -268,22 +268,7 @@ in
 
       source ~/.profile
 
-      export GPG_TTY="$(tty)"
-      export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
-      gpgconf --launch gpg-agent
-
       export PATH=~/.local/bin:$PATH
-
-      # Run a cabal test function a bit simpler
-      function tt () {
-        if [ $# -lt 2 ]
-        then
-          echo "Require two args."
-          return
-        fi
-
-        cabal test "$1" --test-options="$2"
-      }
 
       # https://lobste.rs/s/ahmi0i/quick_bits_realise_nix_symlinks
       function hijack() {

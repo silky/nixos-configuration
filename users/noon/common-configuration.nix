@@ -65,6 +65,7 @@ in
         zip
       ];
       dev = [
+        alacritty # Terminal
         csview # For viewing csv's
         delta # Delta git diff configuration
         difftastic # Modern diffing
@@ -75,20 +76,20 @@ in
         hexyl # Hex viewer
         httpie # Simpler curl
         hyperfine # Benchmarking
+        ijq # Interactive JQ
         jc # Convert many outputs to json for further investigation
         jd-diff-patch # JSON diff
         jo # Create JSON
         jq # JSON explorer
         k9s # Kubernetes cluster management
+        konsole # Terminal
         lychee # Markdown link checker
+        nix-prefetch-git # Get nix hashes
         nix-tree # Browse nix dependency graphs
         nvd # Nix package version diff
         openssl # Sometimes useful
         ripgrep # File searcher
         sd # Modern find and replace
-        unstablePkgs.alacritty # Terminal
-        unstablePkgs.ijq # Interactive JQ
-        unstablePkgs.konsole # Terminal
         yq # jq for yaml
       ];
       app = [
