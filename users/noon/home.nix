@@ -473,11 +473,11 @@ in
     };
   };
 
-  services.gpg-agent = {
-    enable = true;
-    enableSshSupport = true;
-    pinentryPackage = pkgs.pinentry-curses;
-  };
+  # services.gpg-agent = {
+  #   enable = true;
+  #   enableSshSupport = true;
+  #   pinentryPackage = pkgs.pinentry-curses;
+  # };
 
   programs.direnv = {
     enable = true;
