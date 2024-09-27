@@ -254,10 +254,15 @@ set clipboard+=unnamed
 
 " Mapping selecting mappings
 " Telescope is way too slow for this, so we will use fzf-vim instead.
+" Fuzzy-find files
 nmap <silent> <Tab>e :Files<cr>
+"
+" Find-find only git-modified files
+nmap <silent> <Tab>s :GFiles?<cr>
+
 " nmap <silent> <Tab>e :Telescope find_files<cr>
-nmap <silent> <Tab>o :Telescope grep_string<cr>
-nmap <silent> <Tab>s :Telescope live_grep<cr>
+" nmap <silent> <Tab>o :Telescope grep_string<cr>
+" nmap <silent> <Tab>s :Telescope live_grep<cr>
 
 " Window Navigation
 noremap <Tab>h <C-w>h
