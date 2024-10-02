@@ -65,6 +65,7 @@ in
         html-tidy # HTML formatter/tidier
         moreutils
         gcc
+        lazygit
         python3 # Can't live without it
         # Random haskell hacking
         (ghc.withPackages (
@@ -418,6 +419,7 @@ in
       d = "gh-dash --config ~/dev/life/gh-dash-configs/config.yml";
       # For glow, always use the pager
       glow = "glow -p";
+      lg = "lazygit";
 
       # Text-editing
       v = "nvim";
