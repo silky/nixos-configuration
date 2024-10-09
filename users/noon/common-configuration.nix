@@ -79,9 +79,10 @@ in
         ijq # Interactive JQ
         jc # Convert many outputs to json for further investigation
         jd-diff-patch # JSON diff
+        jless # Interactive json exploring
         jo # Create JSON
         jq # JSON explorer
-        k9s # Kubernetes cluster management
+        # k9s # Kubernetes cluster management
         konsole # Terminal
         lychee # Markdown link checker
         nix-prefetch-git # Get nix hashes
