@@ -16,6 +16,15 @@ let
     #   url = "file:///home/noon/dev/vim-agda-input";
     # };
   };
+  daily-notes-nvim = pkgs.vimUtils.buildVimPlugin {
+    name = "dailynotes.nvim";
+    src = pkgs.fetchFromGitHub {
+      owner = "kperath";
+      repo = "dailynotes.nvim";
+      rev = "7d3074c32f20c61329315737350cb8f797fabc85";
+      sha256 = "sha256-YrqzsBicHTJ0uPcWbEB92DdUqV9wk3XRQVbzd3jPaEQ=";
+    };
+  };
   cabal-project-vim = pkgs.vimUtils.buildVimPlugin {
     name = "cabal-project-vim";
     src = pkgs.fetchFromGitHub {
@@ -111,22 +120,32 @@ in
     gitsigns-nvim
     haskell-vim
 
+    {
+      plugin = daily-notes-nvim;
+      type = "lua";
+      config = ''
+require "dailynotes".setup({
+    path = '~/dev/w/notes/'
+})
+        '';
+    }
+
     # Kinda useful for interative colour scheming, but in the end more trouble
     # than it's worth.
     # lush-nvim
 
-    # {
-    #   # https://github.com/NeogitOrg/neogit
-    #   plugin = neogit;
-    #   type = "lua";
-    #   config = ''
-# local neogit = require('neogit')
-# neogit.setup {
-  # graph_style = "unicode",
-  # integrations = { diffview = true },
-# }
-    #   '';
-    # }
+    {
+      # https://github.com/NeogitOrg/neogit
+      plugin = neogit;
+      type = "lua";
+      config = ''
+local neogit = require('neogit')
+neogit.setup {
+  graph_style = "unicode",
+  integrations = { diffview = true },
+}
+      '';
+    }
 
     mini-nvim
     noon-light-theme

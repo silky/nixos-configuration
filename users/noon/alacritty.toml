@@ -2,7 +2,7 @@ live_config_reload = true
 
 [font]
 normal = { family = "iMWritingMono Nerd Font" }
-size = 7
+size = 10
 
 [shell]
 program = "zsh"
