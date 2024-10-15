@@ -20,6 +20,11 @@ in
   # ~ System Packages
   #
   # ---------------------------------------------------------------------------
+  environment.pathsToLink = [
+    "/share/bash-completion"
+    "/share/zsh"
+  ];
+
   environment.systemPackages = with pkgs;
     let
       sys = [
