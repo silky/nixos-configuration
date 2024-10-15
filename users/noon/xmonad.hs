@@ -163,9 +163,11 @@ swapScreen =  do
 -- Toggle the active workspace with the 'Forward/Back' mouse buttons.
 myMouseMod = 0
 myMouseBindings x = M.fromList $
-    [ ((myMouseMod, 8), const $ moveTo Prev nonEmptySpacesOnCurrentScreen)
-    , ((myMouseMod, 9), const $ moveTo Next nonEmptySpacesOnCurrentScreen)
-    ]
+  [ ((myMouseMod, 8), const $ moveTo Prev (nonEmptySpacesOnCurrentScreen (/= "0")))
+  , ((myMouseMod, 9), const $ moveTo Next (nonEmptySpacesOnCurrentScreen (/= "0")))
+  , ((myMouseMod .|. shiftMask, 8), const $ moveTo Prev (nonEmptySpacesOnCurrentScreen (== "0")))
+  , ((myMouseMod .|. shiftMask, 9), const $ moveTo Next (nonEmptySpacesOnCurrentScreen (== "0")))
+  ]
 
 
 isOnScreen :: ScreenId -> WindowSpace -> Bool
@@ -176,15 +178,13 @@ currentScreen :: X ScreenId
 currentScreen = gets (W.screen . W.current . windowset)
 
 
--- TODO: Could make this shift to the secondary layer with shift, or
--- something.
-nonEmptySpacesOnCurrentScreen :: WSType
-nonEmptySpacesOnCurrentScreen = WSIs $ do
+nonEmptySpacesOnCurrentScreen :: (String -> Bool) -> WSType
+nonEmptySpacesOnCurrentScreen p = WSIs $ do
   s <- currentScreen
   return $ \x ->
     isJust (W.stack x)
     && isOnScreen s x
-    && (unmarshallW (W.tag x) /= "0") -- Skip the "scratch" workspaces
+    && (p $ unmarshallW (W.tag x)) -- Skip the "scratch" workspaces
 
 
 myWorkspaces :: [WorkspaceId]
