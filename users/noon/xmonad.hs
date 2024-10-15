@@ -123,8 +123,7 @@ myKeys conf =
   -- Normal-mode open screens
   ++
   [ ((mod1Mask .|. e, k), windows $ onCurrentScreen f i)
-  -- [ ((mod1Mask .|. e, k), altSwitchScreen 0 f i)
-      | (i, k) <- zip (workspaces' conf) [xK_1 .. xK_9]
+      | (i, k) <- zip myWorkspaces [ xK_0, xK_1 .. xK_9 ]
       , (f, e) <- [(W.greedyView, 0), (W.shift, shiftMask)]
   ]
   -- Alt-mode open screens
@@ -177,10 +176,19 @@ currentScreen :: X ScreenId
 currentScreen = gets (W.screen . W.current . windowset)
 
 
+-- TODO: Could make this shift to the secondary layer with shift, or
+-- something.
 nonEmptySpacesOnCurrentScreen :: WSType
 nonEmptySpacesOnCurrentScreen = WSIs $ do
   s <- currentScreen
-  return $ \x -> isJust (W.stack x) && isOnScreen s x
+  return $ \x ->
+    isJust (W.stack x)
+    && isOnScreen s x
+    && (unmarshallW (W.tag x) /= "0") -- Skip the "scratch" workspaces
+
+
+myWorkspaces :: [WorkspaceId]
+myWorkspaces = map show [ 0, 1 .. 9 :: Int ]
 
 
 main :: IO ()
@@ -191,7 +199,7 @@ main = do
   -- nScreens <- fmap (*2) countScreens
   let myConfig = ewmh def {
           borderWidth        = 1
-        , workspaces         = withScreens nScreens (workspaces def)
+        , workspaces         = withScreens nScreens myWorkspaces
         , terminal           = "alacritty"
         , normalBorderColor  = "#000000"
         , focusedBorderColor = "#b141f2"
