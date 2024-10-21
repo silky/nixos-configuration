@@ -65,7 +65,7 @@ in
         moreutils
         gcc
         lazygit
-        python3 # Can't live without it
+        (python3.withPackages (ps: with ps; [ ps.pandas ]))# Can't live without it
         # Random haskell hacking
         (ghc.withPackages (
           p: with p;
@@ -95,12 +95,7 @@ in
         frink # Calculator
         picat # Logic programming
         wasmtime # wasm runtime
-
-        # TODO: Investigate again. The problem with wezterm at the moment is
-        # that it doesn't resize well with XMonad; the inner terminal resizes,
-        # but the outer window holding it doesn't. Also, the fonts don't seem
-        # to render as well as in konsole.
-        wezterm # terminal
+        kubectl # Kubernetes hacking
       ];
 
       apps = [
