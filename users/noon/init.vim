@@ -239,10 +239,10 @@ inoremap <Up>    <nop>
 inoremap <Down>  <nop>
 inoremap <Left>  <nop>
 inoremap <Right> <nop>
-noremap <Up>     <nop>
 noremap <Down>   <nop>
-noremap <Left>   <nop>
-noremap <Right>  <nop>
+noremap <silent> <Up>     :Daily<cr>
+noremap <silent> <Left>   :DailyPrev<cr>
+noremap <silent> <Right>  :DailyNext<cr>
 
 
 " Paste from general clipboard.
