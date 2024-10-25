@@ -151,7 +151,7 @@ in
 
     settings.trusted-users = [ "root" "noon" "gala" ];
     extraOptions = ''
-      experimental-features = nix-command flakes recursive-nix ca-derivations repl-flake
+      experimental-features = nix-command flakes recursive-nix ca-derivations
       log-lines = 300
       warn-dirty = false
     '';
