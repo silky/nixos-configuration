@@ -1,11 +1,12 @@
+[general]
 live_config_reload = true
 
 [font]
 normal = { family = "iMWritingMono Nerd Font" }
 size = 10
 
-[shell]
-program = "zsh"
+[terminal]
+shell = "zsh"
 
 [window]
 decorations = "None"
