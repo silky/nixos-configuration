@@ -515,6 +515,7 @@ in
     '';
 
     # Ones I prefer to modify in place
+    ".hspec".source = mkSym "hspec";
     ".gitignore".source = mkSym "gitignore";
     ".gitconfig".source = mkSym "gitconfig";
     ".editorconfig".source = mkSym "editorconfig";
