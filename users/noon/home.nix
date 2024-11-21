@@ -103,13 +103,14 @@ in
         cooklang-chef.packages.x86_64-linux.default
         discord-ptb
         docbook5
-        pass
-        steam-run # Running dynamically-linked executables
-        sweethome3d.application # Home design
         haskellPackages.hledger
         haskellPackages.hledger-ui
         haskellPackages.hledger-web
+        pass
+        steam-run # Running dynamically-linked executables
+        sweethome3d.application # Home design
         vivaldi # Browser
+        xmobar
       ];
 
       scripts = [
