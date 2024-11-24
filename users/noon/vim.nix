@@ -160,6 +160,7 @@ neogit.setup {
     vim-autoread
     vim-commentary
     vim-easy-align
+    vim-go
     # nvim-web-devicons
 
     {
@@ -240,5 +241,8 @@ neogit.setup {
     # cmp-buffer
     # cmp-path
   ];
-  extraPackages = [ pkgs.cornelis ];
+  extraPackages = [
+    pkgs.cornelis
+    pkgs.gopls
+  ];
 }
