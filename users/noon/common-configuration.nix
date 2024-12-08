@@ -77,7 +77,16 @@ in
         docker-compose
         fd # Nicer find
         fx # Json viewer
-        google-cloud-sdk # Inescapable
+
+        (google-cloud-sdk.withExtraComponents
+          (with google-cloud-sdk.components; [
+            gke-gcloud-auth-plugin
+            gsutil
+            kubectl
+          ])
+        )
+        certbot
+
         hexyl # Hex viewer
         httpie # Simpler curl
         hyperfine # Benchmarking
@@ -282,6 +291,24 @@ in
     vnstat.enable = true;
     udev.packages = [ pkgs.qmk-udev-rules ];
   };
+
+  # networking.extraHosts = ''
+  #   127.0.0.1 monica.local
+  # '';
+
+  # services.monica = {
+  #   # Disable SSL
+  #   config.APP_ENV = pkgs.lib.mkForce "local";
+  #   enable = true;
+  #   hostname = "monica.local";
+  #   appKeyFile = "/home/noon/dev/life/monica-key";
+  #   nginx = {
+  #     serverAliases = [
+  #       "monica.local"
+  #     ];
+  #     forceSSL = false;
+  #   };
+  # };
 
   # From <https://kokada.capivaras.dev/blog/an-unordered-list-of-hidden-gems-inside-nixos/>
   zramSwap = {
