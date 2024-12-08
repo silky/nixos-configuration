@@ -95,7 +95,6 @@ in
         frink # Calculator
         picat # Logic programming
         wasmtime # wasm runtime
-        # kubectl # Kubernetes hacking
       ];
 
       apps = [
