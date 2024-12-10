@@ -295,13 +295,15 @@ in
   # networking.extraHosts = ''
   #   127.0.0.1 monica.local
   # '';
-
   # services.monica = {
   #   # Disable SSL
   #   config.APP_ENV = pkgs.lib.mkForce "local";
   #   enable = true;
+  #   # user = "noon";
+  #   # group = "users";
+  #   # dataDir = "/home/noon/.data/monica";
   #   hostname = "monica.local";
-  #   appKeyFile = "/home/noon/dev/life/monica-key";
+  #   appKeyFile = "/tmp/monica-key";
   #   nginx = {
   #     serverAliases = [
   #       "monica.local"
