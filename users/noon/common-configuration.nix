@@ -77,6 +77,7 @@ in
         docker-compose
         fd # Nicer find
         fx # Json viewer
+        fq # jq for binary data
 
         (google-cloud-sdk.withExtraComponents
           (with google-cloud-sdk.components; [
