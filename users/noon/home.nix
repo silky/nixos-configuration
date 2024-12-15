@@ -63,6 +63,11 @@ in
         dnsutils
         html-tidy # HTML formatter/tidier
         moreutils
+        gron # Greppable JSON https://github.com/tomnomnom/gron
+        xh # http request thingy https://github.com/ducaale/xh
+        duc # disk usage
+        ncdu # disk usage
+        yazi # file browser
         gcc
         lazygit
         (python3.withPackages (ps: with ps; [ ps.pandas ]))# Can't live without it
