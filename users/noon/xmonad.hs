@@ -105,8 +105,9 @@ myKeys conf =
   , ((mod1Mask, xK_b), spawn "show-battery-state")
 
   -- Monitors
-  , ((mod1Mask, xK_n), spawn "mobile") -- "(N)o work"
-  , ((mod1Mask, xK_w), spawn "work")   -- "(W)ork"
+  , ((mod1Mask, xK_n), spawn "mobile")   -- "(N)o work"
+  , ((mod1Mask, xK_w), spawn "work")     -- "(W)ork"
+  , ((mod1Mask, xK_c), spawn "climbing") -- "(C)limbing"
   --
   --
   -- Move mouse focus to the other screen; useful for more a setup with more
