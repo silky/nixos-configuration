@@ -327,7 +327,7 @@ in
 
   fonts = {
     packages = with unstablePkgs.pkgs; [
-      nerdfonts
+      nerd-fonts.im-writing
       noto-fonts-emoji
       noto-fonts-color-emoji
       raleway
