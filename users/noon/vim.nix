@@ -162,7 +162,7 @@ neogit.setup {
     vim-easy-align
 
     {
-      plugn = vim-go;
+      plugin = vim-go;
       config = ''
         let g:go_fmt_autosave = 0
         '';
