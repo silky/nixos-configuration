@@ -160,7 +160,14 @@ neogit.setup {
     vim-autoread
     vim-commentary
     vim-easy-align
-    vim-go
+
+    {
+      plugn = vim-go;
+      config = ''
+        let g:go_fmt_autosave = 0
+        '';
+    }
+
     # nvim-web-devicons
 
     {
