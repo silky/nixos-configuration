@@ -17,8 +17,6 @@
     cornelis.url = "github:isovector/cornelis";
     cornelis.inputs.nixpkgs.follows = "nixpkgs";
 
-    # nur.url = "github:nix-community/NUR";
-
     nix-formatter-pack.url = "github:Gerschtli/nix-formatter-pack";
     nix-formatter-pack.inputs.nixpkgs.follows = "nixpkgs";
   };
@@ -31,7 +29,6 @@
     , cooklang-chef
     , haskell-hacking-notebook
     , cornelis
-      # , nur
     , nix-formatter-pack
     , ...
     }@inputs:
@@ -48,9 +45,6 @@
           specialArgs = inputs // { inherit name unstable; };
           modules = [
             { nixpkgs.overlays = overlays; }
-            # TODO: Re-instate
-            # nur.nixosModules.nur
-
             # Common system configuration
             ./users/noon/common-configuration.nix
 
@@ -88,5 +82,6 @@
 
       nixosConfigurations.eqpac = mkSystem "eqpac";
       nixosConfigurations.nqpac = mkSystem "nqpac";
+      nixosConfigurations.lqpac = mkSystem "lqpac";
     };
 }
