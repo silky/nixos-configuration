@@ -3,7 +3,6 @@ let
   unstablePkgs = import unstable { };
 in
 {
-
   # See: https://nixos.wiki/wiki/Fwupd
   #
   #   fwupmgr refresh
@@ -168,8 +167,6 @@ in
   };
 
   nixpkgs.config = {
-    # TODO: Somehow this isn't enough to allow unfree; I still seem to need
-    # the environment variable.
     allowUnfree = true;
     allowUnfreePredicate = _pkg: true;
     permittedInsecurePackages = [
@@ -382,18 +379,4 @@ in
     description = "gala";
     extraGroups = [ "networkmanager" "wheel" "dialout" "audio" "docker" ];
   };
-
-  # ---------------------------------------------------------------------------
-  #
-  # ~ NixOS
-  #
-  # ---------------------------------------------------------------------------
-
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "22.05"; # Did you read the comment?
 }
