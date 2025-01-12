@@ -1,10 +1,9 @@
-{ pkgs, ... }:
+{ pkgs, nixos-hardware, ... }:
 {
   imports =
     [
       ./hardware.nix
-      # TODO: Use something appropriate here
-      # nixos-hardware.nixosModules.lenovo-thinkpad-x1-7th-gen
+      nixos-hardware.nixosModules.lenovo-thinkpad-x1-12th-gen
     ];
   # ---------------------------------------------------------------------------
   #

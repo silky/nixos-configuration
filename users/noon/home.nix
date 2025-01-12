@@ -95,8 +95,6 @@ in
         ))
         # haskellPackages.fast-tags # For haskell-tools-nvim
         haskellPackages.haskell-debug-adapter # For haskell-tools-nvim
-        jujutsu # Version-control on top of Git
-        # stack # Haskell project manager
         csvlens # CSV file viewer
         gh # For gh-dash auth; `gh auth login`
         gh-dash # GitHub dashboard https://dlvhdr.github.io/gh-dash/
@@ -120,7 +118,6 @@ in
         lorien # Whiteboardy thing
         pass
         steam-run # Running dynamically-linked executables
-        sweethome3d.application # Home design
         vivaldi # Browser
         xmobar
       ];
