@@ -79,7 +79,6 @@ in
         ncdu # disk usage
         yazi # file browser
         gcc
-        lazygit
         (python3.withPackages (ps: with ps; [ ps.pandas ]))# Can't live without it
         # Random haskell hacking
         (ghc.withPackages (
@@ -97,35 +96,33 @@ in
         # haskellPackages.fast-tags # For haskell-tools-nvim
         haskellPackages.haskell-debug-adapter # For haskell-tools-nvim
         jujutsu # Version-control on top of Git
-        stack # Haskell project manager
+        # stack # Haskell project manager
         csvlens # CSV file viewer
         gh # For gh-dash auth; `gh auth login`
         gh-dash # GitHub dashboard https://dlvhdr.github.io/gh-dash/
         vscode # Sometimes useful
         websocat # Websocket chatting
         pciutils # Device debugging
-        podman # Containers
         qemu # Emulation
-        j # J programming language
+        # j # J programming language
         frink # Calculator
         picat # Logic programming
         wasmtime # wasm runtime
       ];
 
       apps = [
-        anki # For remembering things
         cooklang-chef.packages.x86_64-linux.default
         discord-ptb
         docbook5
         haskellPackages.hledger
         haskellPackages.hledger-ui
         haskellPackages.hledger-web
+        lorien # Whiteboardy thing
         pass
         steam-run # Running dynamically-linked executables
         sweethome3d.application # Home design
         vivaldi # Browser
         xmobar
-        lorien # Whiteboardy thing
       ];
 
       scripts = [

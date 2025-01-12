@@ -118,8 +118,8 @@ in
         eog # Image viewer
         feh # Set background images
         ffmpeg_6-full # Video things
-        gimp-with-plugins # For making memes
-        glow # Terminal Markdown renderer
+        # gimp-with-plugins # For making memes
+        # glow # Terminal Markdown renderer
         hunspell # Spelling
         hunspellDicts.en-gb-ise # Spelling
         imagemagick # Essential image tools
