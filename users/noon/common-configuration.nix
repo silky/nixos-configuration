@@ -1,13 +1,10 @@
-{ name, config, pkgs, unstable, ... }:
-let
-  unstablePkgs = import unstable { };
-in
+{ name, config, pkgs, ... }:
 {
   # See: https://nixos.wiki/wiki/Fwupd
   #
-  #   fwupmgr refresh
-  #   fwupmgr get-updates
-  #   fwupmgr update
+  #   fwupdmgr refresh
+  #   fwupdmgr get-updates
+  #   fwupdmgr update
   #
   services.fwupd.enable = true;
 
@@ -134,8 +131,8 @@ in
         pkgs.gedit # When times get desperate
         rofimoji # Emoji picker
         texlive.combined.scheme-full # Full TeX environment
-        unstablePkgs.flameshot # Take screenshots
-        unstablePkgs.vokoscreen-ng # Screen recording for videos
+        flameshot # Take screenshots
+        vokoscreen-ng # Screen recording for videos
         vlc # For videos
         xournalpp # PDF writing
       ];
@@ -241,11 +238,11 @@ in
   services.pipewire = {
     enable = true;
     pulse = {
-      # package = unstablePkgs.pulseaudioFull;
+      # package = pulseaudioFull;
       enable = true;
     };
     wireplumber = {
-      # package = unstablePkgs.wireplumber;
+      # package = wireplumber;
       enable = true;
     };
     jack.enable = true;
@@ -260,7 +257,6 @@ in
     # https://nixos.wiki/wiki/Bluetooth
     bluetooth = {
       enable = true;
-      package = unstablePkgs.bluez;
       settings = {
         General = {
           Enable = "Source,Sink,Media,Socket";
@@ -268,16 +264,9 @@ in
         };
       };
     };
-
-    pulseaudio.enable = false;
-
-    # pulseaudio.extraConfig = "
-    #   load-module module-switch-on-connect
-    #   load-module module-bluetooth-policy
-    #   load-module module-bluetooth-discover
-    # ";
   };
 
+  services.pulseaudio.enable = false;
 
   # ---------------------------------------------------------------------------
   #
@@ -318,12 +307,11 @@ in
   services.dbus.implementation = "broker";
 
   virtualisation.docker = {
-    package = unstablePkgs.docker;
     enable = true;
   };
 
   fonts = {
-    packages = with unstablePkgs.pkgs; [
+    packages = with pkgs; [
       nerd-fonts.im-writing
       noto-fonts-emoji
       noto-fonts-color-emoji

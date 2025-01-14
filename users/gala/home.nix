@@ -1,12 +1,10 @@
 { config
 , pkgs
-, unstable
 , ...
 }:
 let
   mkSym = file: config.lib.file.mkOutOfStoreSymlink
     "${config.home.homeDirectory}/dev/nixos-configuration/users/${config.home.username}/${file}";
-  unstablePkgs = import unstable { };
 in
 {
   home.stateVersion = "22.11";
@@ -23,7 +21,7 @@ in
         google-cloud-sdk
         moreutils
         openssl
-        unstablePkgs.konsole
+        konsole
         vscode
         yq
       ];
@@ -205,10 +203,9 @@ in
 
   programs.direnv = {
     enable = true;
-    package = unstablePkgs.direnv;
+    enableZshIntegration = true;
     config.global.hide_env_diff = true;
     nix-direnv.enable = true;
-    nix-direnv.package = unstablePkgs.nix-direnv;
   };
 
   programs.fzf = {
@@ -225,7 +222,6 @@ in
 
   programs.gpg = {
     enable = true;
-    package = unstablePkgs.gnupg;
   };
 
   home.file = {

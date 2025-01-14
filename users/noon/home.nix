@@ -1,6 +1,5 @@
 { config
 , pkgs
-, unstable
 , cooklang-chef
 , lib
 , ...
@@ -9,7 +8,6 @@ let
   mkSym = file: config.lib.file.mkOutOfStoreSymlink
     "${config.home.homeDirectory}/dev/nixos-configuration/users/${config.home.username}/${file}";
   recipesDir = "${config.home.homeDirectory}/dev/life/recipes";
-  unstablePkgs = import unstable { };
 
   showBatteryState = pkgs.writeShellScriptBin "show-battery-state" ''
     mins=$(acpi | jc --acpi | jq '.[].charge_remaining_minutes')
@@ -498,7 +496,7 @@ in
     enableZshIntegration = true;
   };
 
-  programs.neovim = import ./vim.nix { inherit pkgs unstablePkgs; };
+  programs.neovim = import ./vim.nix { inherit pkgs; };
 
   programs.zoxide = {
     enable = true;

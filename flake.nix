@@ -3,7 +3,6 @@
     # nixpkgs.url = "nixpkgs/nixos-24.05";
     # Let's just try everything unstable
     nixpkgs.url = "nixpkgs/nixos-unstable";
-    unstable.url = "nixpkgs/nixos-unstable";
 
     # home-manager.url = "github:nix-community/home-manager/release-24.05";
     # Home-manager also needs to be unstable.
@@ -24,7 +23,6 @@
 
   outputs =
     { nixpkgs
-    , unstable
     , home-manager
     , cooklang-chef
     , haskell-hacking-notebook
@@ -42,7 +40,7 @@
       mkSystem = name:
         nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          specialArgs = inputs // { inherit name unstable; };
+          specialArgs = inputs // { inherit name; };
           modules = [
             { nixpkgs.overlays = overlays; }
             # Common system configuration
@@ -59,7 +57,6 @@
               home-manager.users.gala = import ./users/gala/home.nix;
               home-manager.extraSpecialArgs = {
                 inherit
-                  unstable
                   cooklang-chef
                   haskell-hacking-notebook
                   ;
