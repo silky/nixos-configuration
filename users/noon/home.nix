@@ -430,7 +430,6 @@ in
       # w = vim in pairing mode (vv)
       w  = "nvim -c 'source ~/dev/nixos-configuration/users/noon/pairing.vim'";
       vv = "nvim -c 'source ~/dev/nixos-configuration/users/noon/pairing.vim'";
-      e = "emacs";
     };
   };
 
@@ -478,10 +477,10 @@ in
     };
   };
 
-  services.gpg-agent = {
-    enable = true;
-    enableSshSupport = true;
-  };
+  # services.gpg-agent = {
+  #   enable = true;
+  #   enableSshSupport = true;
+  # };
 
   programs.direnv = {
     enable = true;
