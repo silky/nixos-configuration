@@ -1,2 +1,5 @@
 .direnv/
 tags
+
+# Whatever
+.hspec-failures
