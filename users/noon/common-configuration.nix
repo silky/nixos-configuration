@@ -74,6 +74,7 @@
         fd # Nicer find
         fx # Json viewer
         fq # jq for binary data
+        tcpdump # For working with/creating pcaps
 
         (google-cloud-sdk.withExtraComponents
           (with google-cloud-sdk.components; [
