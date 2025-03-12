@@ -513,7 +513,6 @@ in
   # ---------------------------------------------------------------------------
   home.file = {
     # Note: Let's not let any app modify these files.
-    ".config/konsolerc".source = ./konsolerc;
     ".stack/config.yaml".source = ./stack-config.yaml;
 
     # Agda

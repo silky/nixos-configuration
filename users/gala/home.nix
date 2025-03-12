@@ -21,7 +21,7 @@ in
         google-cloud-sdk
         moreutils
         openssl
-        konsole
+        kdePackages.konsole
         vscode
         yq
       ];

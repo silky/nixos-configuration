@@ -95,7 +95,6 @@
         jo # Create JSON
         jq # JSON explorer
         # k9s # Kubernetes cluster management
-        konsole # Terminal
         lychee # Markdown link checker
         nix-prefetch-git # Get nix hashes
         nix-tree # Browse nix dependency graphs
@@ -126,7 +125,7 @@
         meld # Visual diff tool
         nautilus # File browser
         nix-output-monitor # Nicer build info when nixing
-        okular # PDF viewing
+        kdePackages.okular # PDF viewing
         optipng # Optimise pngs
         pandoc # Occasionally useful
         pkgs.gedit # When times get desperate
