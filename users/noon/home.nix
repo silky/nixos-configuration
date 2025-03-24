@@ -477,10 +477,13 @@ in
     };
   };
 
-  # services.gpg-agent = {
-  #   enable = true;
-  #   enableSshSupport = true;
-  # };
+  services.gpg-agent = {
+    enable = true;
+    enableSshSupport = true;
+    pinentryPackage = pkgs.pinentry-qt;
+  };
+
+  services.gnome-keyring.enable = true;
 
   programs.direnv = {
     enable = true;
