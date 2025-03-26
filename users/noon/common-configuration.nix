@@ -8,8 +8,7 @@
   #
   services.fwupd.enable = true;
 
-
-  programs.atop.enable = true;
+  # programs.atop.enable = true;
 
   # ---------------------------------------------------------------------------
   #
