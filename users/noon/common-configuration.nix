@@ -134,6 +134,7 @@
         vokoscreen-ng # Screen recording for videos
         vlc # For videos
         xournalpp # PDF writing
+        exiftool # Image Metadata
       ];
     in
     sys ++ dev ++ app
