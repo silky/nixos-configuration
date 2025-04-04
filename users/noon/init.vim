@@ -112,7 +112,7 @@ set notimeout
 set nottimeout
 set autowrite
 
-set guioptions=aegit
+"set guioptions=aegit
 set completeopt=longest,menuone,preview " TODO: Review
 set smarttab
 set tabstop=2
