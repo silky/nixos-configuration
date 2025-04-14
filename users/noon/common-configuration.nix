@@ -43,6 +43,7 @@
         gmp # ??
         gnumake # ??
         htop # Process viewer
+        isd # interactive systemd
         libnotify # Notifications
         libtool # ???
         lsof # ???
