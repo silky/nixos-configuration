@@ -34,15 +34,15 @@
       overlays = [
         (self: super: {
           fcitx-engines = self.fcitx5;
-          linux-firmware = super.linux-firmware.overrideAttrs (
-            old: {
-              src = super.fetchgit{
-                url = "https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git";
-                rev = "710a336b31981773a3a16e7909fd83daeaec9db1";
-                sha256 = "sha256-/314E3GvMI+c9t+nHeKoZVN90UBUEgVZP3zXPmnM9UE=";
-              };
-            }
-          );
+          # linux-firmware = super.linux-firmware.overrideAttrs (
+          #   old: {
+          #     src = super.fetchgit{
+          #       url = "https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git";
+          #       rev = "710a336b31981773a3a16e7909fd83daeaec9db1";
+          #       sha256 = "sha256-/314E3GvMI+c9t+nHeKoZVN90UBUEgVZP3zXPmnM9UE=";
+          #     };
+          #   }
+          # );
         })
         cornelis.overlays.cornelis
       ];
