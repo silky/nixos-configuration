@@ -240,7 +240,7 @@ in
       extended = true;
     };
 
-    initExtra = ''
+    initContent = ''
       # History things
       HIST_STAMPS="yyyy-mm-dd"
 
