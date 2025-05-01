@@ -83,8 +83,8 @@
             kubectl
           ])
         )
-        certbot
-
+        gh-gfm-preview # GitHub-format Markdown Preview
+        certbot # Generate SSL certs
         hexyl # Hex viewer
         httpie # Simpler curl
         hyperfine # Benchmarking

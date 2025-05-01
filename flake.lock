@@ -58,6 +58,21 @@
       }
     },
     "flake-compat_2": {
+      "locked": {
+        "lastModified": 1733328505,
+        "narHash": "sha256-NeCCThCEP3eCl2l/+27kNNK7QrwZB1IJCrXfrbv5oqU=",
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "rev": "ff81ac966bb2cae68946d5ed5fc4994f96d0ffec",
+        "type": "github"
+      },
+      "original": {
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "type": "github"
+      }
+    },
+    "flake-compat_3": {
       "flake": false,
       "locked": {
         "lastModified": 1696426674,
@@ -73,7 +88,7 @@
         "type": "github"
       }
     },
-    "flake-compat_3": {
+    "flake-compat_4": {
       "flake": false,
       "locked": {
         "lastModified": 1673956053,
@@ -89,7 +104,7 @@
         "type": "github"
       }
     },
-    "flake-compat_4": {
+    "flake-compat_5": {
       "flake": false,
       "locked": {
         "lastModified": 1627913399,
@@ -105,7 +120,7 @@
         "type": "github"
       }
     },
-    "flake-compat_5": {
+    "flake-compat_6": {
       "flake": false,
       "locked": {
         "lastModified": 1673956053,
@@ -187,6 +202,27 @@
         "type": "github"
       }
     },
+    "gh-gfm-preview": {
+      "inputs": {
+        "flake-compat": "flake-compat_2",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1746002181,
+        "narHash": "sha256-UgJXVH21DNUJtwN9SHzmIj7QCPbUHOp6MB6c4cb5SyY=",
+        "owner": "thiagokokada",
+        "repo": "gh-gfm-preview",
+        "rev": "f66db7d28712251c0b6414cda6470dbf98645684",
+        "type": "github"
+      },
+      "original": {
+        "owner": "thiagokokada",
+        "repo": "gh-gfm-preview",
+        "type": "github"
+      }
+    },
     "gitignore": {
       "flake": false,
       "locked": {
@@ -228,7 +264,7 @@
     },
     "haskell-hacking-notebook": {
       "inputs": {
-        "flake-compat": "flake-compat_2",
+        "flake-compat": "flake-compat_3",
         "flake-utils": "flake-utils_2",
         "jupyenv": "jupyenv",
         "nixpkgs": "nixpkgs_4"
@@ -250,7 +286,7 @@
     },
     "hls": {
       "inputs": {
-        "flake-compat": "flake-compat_4",
+        "flake-compat": "flake-compat_5",
         "flake-utils": "flake-utils_4",
         "gitignore": "gitignore",
         "nixpkgs": "nixpkgs_2",
@@ -326,7 +362,7 @@
     },
     "jupyenv": {
       "inputs": {
-        "flake-compat": "flake-compat_3",
+        "flake-compat": "flake-compat_4",
         "flake-utils": "flake-utils_3",
         "ihaskell": "ihaskell",
         "nix-dart": "nix-dart",
@@ -746,7 +782,7 @@
     },
     "pre-commit-hooks_2": {
       "inputs": {
-        "flake-compat": "flake-compat_5",
+        "flake-compat": "flake-compat_6",
         "flake-utils": [
           "haskell-hacking-notebook",
           "jupyenv",
@@ -794,6 +830,7 @@
       "inputs": {
         "cooklang-chef": "cooklang-chef",
         "cornelis": "cornelis",
+        "gh-gfm-preview": "gh-gfm-preview",
         "haskell-hacking-notebook": "haskell-hacking-notebook",
         "home-manager": "home-manager",
         "nix-formatter-pack": "nix-formatter-pack",

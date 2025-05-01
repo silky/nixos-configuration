@@ -18,6 +18,9 @@
 
     nix-formatter-pack.url = "github:Gerschtli/nix-formatter-pack";
     nix-formatter-pack.inputs.nixpkgs.follows = "nixpkgs";
+
+    gh-gfm-preview.url = "github:thiagokokada/gh-gfm-preview";
+    gh-gfm-preview.inputs.nixpkgs.follows = "nixpkgs";
   };
 
 
@@ -28,12 +31,14 @@
     , haskell-hacking-notebook
     , cornelis
     , nix-formatter-pack
+    , gh-gfm-preview
     , ...
     }@inputs:
     let
       overlays = [
         (self: super: {
           fcitx-engines = self.fcitx5;
+          gh-gfm-preview = inputs.gh-gfm-preview.packages.x86_64-linux.default;
           # linux-firmware = super.linux-firmware.overrideAttrs (
           #   old: {
           #     src = super.fetchgit{

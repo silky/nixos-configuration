@@ -439,9 +439,9 @@ in
   # ~ Misc
   #
   # ---------------------------------------------------------------------------
-  programs.gpg = {
-    enable = true;
-  };
+  # programs.gpg = {
+  #   enable = true;
+  # };
 
   services.dunst = {
     enable = true;
@@ -477,11 +477,11 @@ in
     };
   };
 
-  services.gpg-agent = {
-    enable = true;
-    enableSshSupport = true;
-    pinentryPackage = pkgs.pinentry-qt;
-  };
+  # services.gpg-agent = {
+  #   enable = true;
+  #   enableSshSupport = true;
+  #   pinentryPackage = pkgs.pinentry-qt;
+  # };
 
   services.gnome-keyring.enable = true;
 
