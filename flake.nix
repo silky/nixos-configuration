@@ -21,6 +21,8 @@
 
     gh-gfm-preview.url = "github:thiagokokada/gh-gfm-preview";
     gh-gfm-preview.inputs.nixpkgs.follows = "nixpkgs";
+
+    feedback.url = "github:NorfairKing/feedback";
   };
 
 
@@ -32,6 +34,7 @@
     , cornelis
     , nix-formatter-pack
     , gh-gfm-preview
+    , feedback
     , ...
     }@inputs:
     let
@@ -39,6 +42,7 @@
         (self: super: {
           fcitx-engines = self.fcitx5;
           gh-gfm-preview = inputs.gh-gfm-preview.packages.x86_64-linux.default;
+          feedback = inputs.feedback.packages.x86_64-linux.default;
           # linux-firmware = super.linux-firmware.overrideAttrs (
           #   old: {
           #     src = super.fetchgit{

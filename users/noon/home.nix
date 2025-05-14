@@ -77,6 +77,7 @@ in
         ncdu # disk usage
         yazi # file browser
         gcc
+        feedback # https://github.com/NorfairKing/feedback#readme
         (python3.withPackages (ps: with ps; [ ps.pandas ]))# Can't live without it
         # Random haskell hacking
         (ghc.withPackages (
@@ -381,6 +382,8 @@ in
       nix-shell-unstable = "nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
       nu = "nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
       bb = "nom build";
+
+      fb = "feedback";
 
       # Haskell
       g = "ghci";
