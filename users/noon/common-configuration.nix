@@ -96,6 +96,7 @@
         jq # JSON explorer
         # k9s # Kubernetes cluster management
         lychee # Markdown link checker
+        magic-wormhole-rs # magic-wormhole for sending files
         nix-prefetch-git # Get nix hashes
         nix-tree # Browse nix dependency graphs
         nvd # Nix package version diff
