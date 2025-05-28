@@ -417,7 +417,6 @@ in
       dc = "docker compose";
       df = "duf -only local -output mountpoint,size,used,usage,avail";
       f = "format";
-      # j = "jupyter notebook --no-browser --ip=localhost -y";
       m = "make";
       p = "python";
       rg = "rg -M 1000 --.";
@@ -426,6 +425,7 @@ in
       # For glow, always use the pager
       glow = "glow -p";
       lg = "lazygit";
+      wormhole = "wormhole-rs";
 
       # Text-editing
       v = "nvim";
