@@ -23,6 +23,7 @@
     gh-gfm-preview.inputs.nixpkgs.follows = "nixpkgs";
 
     feedback.url = "github:NorfairKing/feedback";
+    flake-parts.url = "github:hercules-ci/flake-parts";
   };
 
 
@@ -35,6 +36,7 @@
     , nix-formatter-pack
     , gh-gfm-preview
     , feedback
+    , flake-parts
     , ...
     }@inputs:
     let
@@ -86,6 +88,10 @@
         };
     in
     {
+      imports = [
+        inputs.flake-parts.flakeModules.modules
+      ];
+
       formatter."x86_64-linux" =
         nix-formatter-pack.lib.mkFormatter {
           pkgs = nixpkgs.legacyPackages."x86_64-linux";
