@@ -109,7 +109,7 @@ in
 
       apps = [
         cooklang-chef.packages.x86_64-linux.default
-        discord-ptb
+        # discord-ptb
         docbook5
         haskellPackages.hledger
         haskellPackages.hledger-ui
@@ -117,7 +117,6 @@ in
         lorien # Whiteboardy thing
         pass
         steam-run # Running dynamically-linked executables
-        vivaldi # Browser
         xmobar
       ];
 
