@@ -63,6 +63,7 @@
         xorg.xkill # Kill windows
         xorg.xmodmap # Key mappings
         xsel # Copy things to clipboard (used in init.vim)
+        xxd
         zip
       ];
       dev = [
