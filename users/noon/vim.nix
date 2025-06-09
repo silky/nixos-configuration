@@ -152,7 +152,7 @@ neogit.setup {
     nvim-treesitter.withAllGrammars
     nvim-unception
     purescript-vim
-    #supertab
+    supertab
     typescript-vim
     unicode-vim
     vim-agda-input
