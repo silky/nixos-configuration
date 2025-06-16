@@ -202,6 +202,9 @@ in
     };
   };
 
+  # programs.fish = {
+  #   enable = true;
+  # };
 
   # ---------------------------------------------------------------------------
   #
@@ -534,13 +537,9 @@ in
 
     # haskell-tools lsp madness
     # ".config/nvim/after/ftplugin/haskell.lua".source = mkSym "haskell.lua";
-    #
-    ".config/wezterm/wezterm.lua".source = mkSym "wezterm.lua";
 
     # These ones it's okay; it's easier to modify with the apps
     ".rgignore".source = mkSym "rgignore";
     ".config/okularpartrc".source = mkSym "okularpartrc";
-    ".local/share/konsole/Noons.colorscheme".source = mkSym "Noons.colorscheme";
-    ".local/share/konsole/Profile 1.profile".source = mkSym "Profile 1.profile";
   };
 }
