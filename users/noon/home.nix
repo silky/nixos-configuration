@@ -444,8 +444,22 @@ in
   # ~ Misc
   #
   # ---------------------------------------------------------------------------
-  # programs.gpg = {
+
+  # Disabled presently due to home-manager zed config bug.
+  # programs.zed-editor = {
   #   enable = true;
+    # extensions = [
+    #   "html"
+    #   "haskell"
+    #   "nix"
+    # ];
+    # userSettings = {
+    #   buffer_font_family = iMWritingMono Nerd Font";
+    #   them = {
+    #     mode = "system";
+    #     light = "Catppuccin Latte";
+    #   };
+    # };
   # };
 
   services.dunst = {
