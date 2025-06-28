@@ -3,7 +3,7 @@
   imports =
     [
       ./hardware.nix
-      nixos-hardware.nixosModules.lenovo-thinkpad-x1-12th-gen
+      nixos-hardware.nixosModules.lenovo-thinkpad-x1-13th-gen
     ];
   # ---------------------------------------------------------------------------
   #

@@ -45,6 +45,7 @@
           fcitx-engines = self.fcitx5;
           gh-gfm-preview = inputs.gh-gfm-preview.packages.x86_64-linux.default;
           feedback = inputs.feedback.packages.x86_64-linux.default;
+          # This is how to get a new linux firmware
           # linux-firmware = super.linux-firmware.overrideAttrs (
           #   old: {
           #     src = super.fetchgit{
