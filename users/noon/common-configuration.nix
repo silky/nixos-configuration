@@ -241,38 +241,36 @@
   services.pipewire = {
     enable = true;
     pulse = {
-      # package = pulseaudioFull;
       enable = true;
     };
     wireplumber = {
-      # package = wireplumber;
       enable = true;
     };
-    jack.enable = true;
+    # jack.enable = true;
     alsa = {
       enable = true;
       support32Bit = true;
     };
   };
+  services.pulseaudio.enable = false;
 
   # Bluetooth
   hardware = {
     # https://nixos.wiki/wiki/Bluetooth
     bluetooth = {
       enable = true;
-      settings = {
-        General = {
-          Enable = "Source,Sink,Media,Socket";
-          Experimental = true;
-        };
-        Policy = {
-          AutoEnable = true;
-        };
-      };
+      # settings = {
+      #   General = {
+      #     Enable = "Source,Sink,Media,Socket";
+      #     Experimental = true;
+      #   };
+      #   Policy = {
+      #     AutoEnable = true;
+      #   };
+      # };
     };
   };
 
-  services.pulseaudio.enable = false;
 
   # ---------------------------------------------------------------------------
   #
