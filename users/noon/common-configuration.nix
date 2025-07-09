@@ -246,7 +246,7 @@
     wireplumber = {
       enable = true;
     };
-    # jack.enable = true;
+    jack.enable = true;
     alsa = {
       enable = true;
       support32Bit = true;
@@ -258,7 +258,7 @@
   hardware = {
     # https://nixos.wiki/wiki/Bluetooth
     bluetooth = {
-      enable = true;
+      enable = false;
       # settings = {
       #   General = {
       #     Enable = "Source,Sink,Media,Socket";
