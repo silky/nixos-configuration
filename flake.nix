@@ -1,6 +1,6 @@
 {
   inputs = {
-    # nixpkgs.url = "nixpkgs/nixos-24.05";
+    # nixpkgs.url = "nixpkgs/nixos-25.05";
     # Let's just try everything unstable
     nixpkgs.url = "nixpkgs/nixos-unstable";
 
