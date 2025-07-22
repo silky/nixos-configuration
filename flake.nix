@@ -50,8 +50,8 @@
           #   old: {
           #     src = super.fetchgit{
           #       url = "https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git";
-          #       rev = "710a336b31981773a3a16e7909fd83daeaec9db1";
-          #       sha256 = "sha256-/314E3GvMI+c9t+nHeKoZVN90UBUEgVZP3zXPmnM9UE=";
+          #       rev = "fa42eda204398542aa9b92fe462d4dd069897de0";
+          #       sha256 = "sha256-TJ97A9I0ipsqgg7ex3pAQgdhDJcLbkNCvuLppt9a07o=";
           #     };
           #   }
           # );

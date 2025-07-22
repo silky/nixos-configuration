@@ -43,7 +43,7 @@
         gmp # ??
         gnumake # ??
         htop # Process viewer
-        isd # interactive systemd
+        # isd # interactive systemd
         libnotify # Notifications
         libtool # ???
         lsof # ???
@@ -342,7 +342,8 @@
   # ~ Internationalisation / i18n
   #
   # ---------------------------------------------------------------------------
-  time.timeZone = "Europe/London";
+  # time.timeZone = "Europe/London";
+  time.timeZone = "America/Mexico_City";
   i18n.defaultLocale = "en_GB.UTF-8";
 
 

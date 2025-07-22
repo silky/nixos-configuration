@@ -78,7 +78,7 @@ in
         yazi # file browser
         gcc
         feedback # https://github.com/NorfairKing/feedback#readme
-        (python3.withPackages (ps: with ps; [ ps.pandas ]))# Can't live without it
+        python3
         # Random haskell hacking
         (ghc.withPackages (
           p: with p;
