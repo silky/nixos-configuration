@@ -324,7 +324,7 @@
       source-code-pro
       source-sans-pro
       source-serif-pro
-      symbola
+      # symbola
       twitter-color-emoji
     ];
     enableDefaultPackages = true;
