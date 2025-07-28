@@ -105,6 +105,7 @@
         ripgrep # File searcher
         sd # Modern find and replace
         yq # jq for yaml
+        kdePackages.kate # simple text editor
       ];
       app = [
         age # Encryption tools
