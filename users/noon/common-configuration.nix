@@ -106,6 +106,7 @@
         sd # Modern find and replace
         yq # jq for yaml
         kdePackages.kate # simple text editor
+        jujutsu
       ];
       app = [
         age # Encryption tools
