@@ -1,9 +1,9 @@
 {
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-unstable";
+    nixpkgs.url = "nixpkgs/nixos-25.05";
 
     # Home-manager also needs to be unstable.
-    home-manager.url = "github:nix-community/home-manager/master";
+    home-manager.url = "github:nix-community/home-manager/release-25.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";

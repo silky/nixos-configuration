@@ -443,16 +443,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1753387274,
-        "narHash": "sha256-Y1hAI9h+9DLBbgKvZBsHaeptFIcRw4iC6ySPmzyqmlM=",
+        "lastModified": 1753592768,
+        "narHash": "sha256-oV695RvbAE4+R9pcsT9shmp6zE/+IZe6evHWX63f2Qg=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "a35f6b60430ff0c7803bd2a727df84c87569c167",
+        "rev": "fc3add429f21450359369af74c2375cb34a2d204",
         "type": "github"
       },
       "original": {
         "owner": "nix-community",
-        "ref": "master",
+        "ref": "release-25.05",
         "repo": "home-manager",
         "type": "github"
       }
@@ -571,11 +571,11 @@
         "nmt": "nmt"
       },
       "locked": {
-        "lastModified": 1742249870,
-        "narHash": "sha256-U37ECk3zpfp92D3H0gzfWPyb5sf0RdOdublCq1zjq+w=",
+        "lastModified": 1753647809,
+        "narHash": "sha256-QCkCQIF2biY3Lh3j3J/FQ8hnwYWZrxxXnJzAY7Ow0T0=",
         "owner": "Gerschtli",
         "repo": "nix-formatter-pack",
-        "rev": "fe5b4498e3161191bd93fe0683dff347f6f689df",
+        "rev": "5c4c97df6a05fa102cc5d7907f516588f2e578c6",
         "type": "github"
       },
       "original": {
@@ -745,16 +745,16 @@
     },
     "nixpkgs_7": {
       "locked": {
-        "lastModified": 1753250450,
-        "narHash": "sha256-i+CQV2rPmP8wHxj0aq4siYyohHwVlsh40kV89f3nw1s=",
+        "lastModified": 1753489912,
+        "narHash": "sha256-uDCFHeXdRIgJpYmtcUxGEsZ+hYlLPBhR83fdU+vbC1s=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "fc02ee70efb805d3b2865908a13ddd4474557ecf",
+        "rev": "13e8d35b7d6028b7198f8186bc0347c6abaa2701",
         "type": "github"
       },
       "original": {
         "id": "nixpkgs",
-        "ref": "nixos-unstable",
+        "ref": "nixos-25.05",
         "type": "indirect"
       }
     },
