@@ -76,7 +76,6 @@
         fx # Json viewer
         fq # jq for binary data
         tcpdump # For working with/creating pcaps
-
         (google-cloud-sdk.withExtraComponents
           (with google-cloud-sdk.components; [
             gke-gcloud-auth-plugin
@@ -107,6 +106,7 @@
         yq # jq for yaml
         kdePackages.kate # simple text editor
         jujutsu
+        mergiraf
       ];
       app = [
         age # Encryption tools
