@@ -328,6 +328,7 @@
       source-serif-pro
       # symbola
       twitter-color-emoji
+      julia-mono
     ];
     enableDefaultPackages = true;
     fontconfig = {
