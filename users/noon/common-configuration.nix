@@ -323,12 +323,15 @@
       noto-fonts-color-emoji
       raleway
       recursive
-      source-code-pro
-      source-sans-pro
-      source-serif-pro
+      # source-code-pro
+      # source-sans-pro
+      # source-serif-pro
       # symbola
       twitter-color-emoji
-      julia-mono
+      # julia-mono
+      # monaspace
+      # cartograph # Paid
+      # fragment-mono
     ];
     enableDefaultPackages = true;
     fontconfig = {
