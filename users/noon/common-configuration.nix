@@ -107,6 +107,7 @@
         kdePackages.kate # simple text editor
         jujutsu
         mergiraf
+        miniserve # Simple HTTP server
       ];
       app = [
         age # Encryption tools
