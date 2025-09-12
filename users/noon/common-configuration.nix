@@ -8,7 +8,8 @@
   #
   services.fwupd.enable = true;
 
-  # programs.atop.enable = true;
+  # Screen locking
+  programs.slock.enable = true;
 
   # ---------------------------------------------------------------------------
   #

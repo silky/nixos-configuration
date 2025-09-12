@@ -84,6 +84,7 @@ myKeys conf =
   -- , ((layoutChangeModMask, xK_w), sendMessage $ JumpToLayout "MTiled")
   , ((layoutChangeModMask, xK_b), sendMessage $ JumpToLayout "Big")
   , ((layoutChangeModMask, xK_p), sendMessage $ JumpToLayout "Resizable")
+  , ((layoutChangeModMask, xK_l), spawn "slock")
   --
   -- Expand sub-sections in Resizable-Tall
   , ((mod1Mask, xK_a), sendMessage MirrorShrink)
