@@ -11,7 +11,7 @@
   #
   # ---------------------------------------------------------------------------
   boot.kernelPackages = pkgs.linuxPackages_latest;
-  services.logind.lidSwitch = "suspend";
+  services.logind.settings.Login.HandleLidSwitch = "suspend";
 
   # ---------------------------------------------------------------------------
   #
