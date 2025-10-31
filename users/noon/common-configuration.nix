@@ -96,7 +96,7 @@
         jo # Create JSON
         jq # JSON explorer
         # k9s # Kubernetes cluster management
-        lychee # Markdown link checker
+        # lychee # Markdown link checker
         magic-wormhole-rs # magic-wormhole for sending files
         nix-prefetch-git # Get nix hashes
         nix-tree # Browse nix dependency graphs
@@ -321,7 +321,6 @@
   fonts = {
     packages = with pkgs; [
       nerd-fonts.im-writing
-      noto-fonts-emoji
       noto-fonts-color-emoji
       raleway
       recursive
