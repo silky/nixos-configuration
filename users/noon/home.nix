@@ -38,13 +38,11 @@ let
     ~/.fehbg
   '';
   climbing = pkgs.writeShellScriptBin "climbing" ''
-    xrandr \
-      --output eDP-1 --off \
-      --output HDMI-1 --off \
-      --output DP-1 --off \
-      --output DP-2 --off \
-      --output DP-3 --mode 3840x2160 --pos 0x0 --rotate normal \
-      --output DP-4 --off
+      xrandr \
+        --output DP-1 --primary --mode 3840x2160 --pos 0x0 --rotate normal \
+        --output eDP-1 --off \
+        --output HDMI-1 --off \
+        --output DP-2 --off
     ~/.fehbg
   '';
 in
