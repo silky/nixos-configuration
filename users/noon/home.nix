@@ -62,6 +62,7 @@ in
         (writers.writeDashBin "gh-browser" ''
           chromium-browser "$@" 1>/dev/null
         '')
+        brave
       ];
 
       dev = [
