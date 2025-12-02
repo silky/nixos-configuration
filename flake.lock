@@ -1034,7 +1034,8 @@
         "home-manager": "home-manager",
         "nix-formatter-pack": "nix-formatter-pack",
         "nixos-hardware": "nixos-hardware",
-        "nixpkgs": "nixpkgs_7"
+        "nixpkgs": "nixpkgs_7",
+        "zen-browser": "zen-browser"
       }
     },
     "rust-overlay": {
@@ -1155,6 +1156,29 @@
       "original": {
         "owner": "NorfairKing",
         "repo": "weeder-nix",
+        "type": "github"
+      }
+    },
+    "zen-browser": {
+      "inputs": {
+        "home-manager": [
+          "home-manager"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1764594064,
+        "narHash": "sha256-kuLFriVrRvbqAZ8YRRG9n/7d4Ih+lcCw5j9vBZdYxxs=",
+        "owner": "0xc000022070",
+        "repo": "zen-browser-flake",
+        "rev": "b339bc1684da201b0b929f77a20389884469f76b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "0xc000022070",
+        "repo": "zen-browser-flake",
         "type": "github"
       }
     }

@@ -63,6 +63,7 @@ in
           chromium-browser "$@" 1>/dev/null
         '')
         brave
+        zen-browser
       ];
 
       dev = [

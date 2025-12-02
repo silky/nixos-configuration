@@ -24,6 +24,7 @@
   environment.systemPackages = with pkgs;
     let
       sys = [
+        # isd # interactive systemd
         acpi # For power information
         alsa-utils # Music control
         arandr # Graphical xrandr
@@ -31,6 +32,7 @@
         automake # ???
         bashmount # Mount disks via TUI
         binutils # ???
+        bluetui
         brightnessctl # Useful to change brightness
         btop # Cool usage thing
         cachix # Nix Caching
@@ -44,7 +46,6 @@
         gmp # ??
         gnumake # ??
         htop # Process viewer
-        # isd # interactive systemd
         libnotify # Notifications
         libtool # ???
         lsof # ???
@@ -262,16 +263,16 @@
   hardware = {
     # https://nixos.wiki/wiki/Bluetooth
     bluetooth = {
-      enable = false;
-      # settings = {
-      #   General = {
-      #     Enable = "Source,Sink,Media,Socket";
-      #     Experimental = true;
-      #   };
-      #   Policy = {
-      #     AutoEnable = true;
-      #   };
-      # };
+      enable = true;
+      settings = {
+        General = {
+          Enable = "Source,Sink,Media,Socket";
+          Experimental = true;
+        };
+        Policy = {
+          AutoEnable = true;
+        };
+      };
     };
   };
 
