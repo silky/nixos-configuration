@@ -32,8 +32,7 @@
         automake # ???
         bashmount # Mount disks via TUI
         binutils # ???
-        bluetui
-        brightnessctl # Useful to change brightness
+        bluetui # Handy bluetooth TUI
         btop # Cool usage thing
         cachix # Nix Caching
         curl # No explanation needed
