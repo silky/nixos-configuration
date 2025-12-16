@@ -230,7 +230,9 @@
   networking = {
     hostName = "${name}";
     networkmanager.enable = true;
-    firewall.allowedTCPPorts = [];
+    firewall.allowedTCPPorts = [
+      # 5005
+    ];
     firewall.enable = true;
     # nftables.enable = true;
   };

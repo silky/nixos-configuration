@@ -118,6 +118,7 @@ in
     fzfWrapper
     gitsigns-nvim
     haskell-vim
+    unison
 
     {
       plugin = daily-notes-nvim;
