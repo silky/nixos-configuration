@@ -237,6 +237,8 @@
     # nftables.enable = true;
   };
 
+  programs.light.enable = true;
+
 
   # ---------------------------------------------------------------------------
   #
@@ -374,12 +376,12 @@
   users.users.noon = {
     isNormalUser = true;
     description = "noon";
-    extraGroups = [ "networkmanager" "wheel" "dialout" "audio" "docker" ];
+    extraGroups = [ "networkmanager" "wheel" "dialout" "audio" "docker" "video" ];
   };
 
   users.users.gala = {
     isNormalUser = true;
     description = "gala";
-    extraGroups = [ "networkmanager" "wheel" "dialout" "audio" "docker" ];
+    extraGroups = [ "networkmanager" "wheel" "dialout" "audio" "docker" "video" ];
   };
 }
