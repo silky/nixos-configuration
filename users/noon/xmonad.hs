@@ -94,8 +94,8 @@ myKeys conf =
   , ((layoutChangeModMask, xK_q), pure () )
   --
   -- Brightness: Alt-Shift +/-
-  , ((layoutChangeModMask, xK_equal), spawn "light -A 1")
-  , ((layoutChangeModMask, xK_minus), spawn "light -U 1")
+  , ((layoutChangeModMask, xK_equal), spawn "light -A 2")
+  , ((layoutChangeModMask, xK_minus), spawn "light -U 2")
   --
   -- Launch specific things
   , ((mod1Mask, xK_o), spawn "nautilus --no-desktop")
