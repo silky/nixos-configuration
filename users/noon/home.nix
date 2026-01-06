@@ -375,6 +375,8 @@ in
 
         # gh-dash
         GH_BROWSER = "gh-browser";
+
+        LESS = "-Ric -x4 --use-color -Dd+r$Du+b";
       };
 
     shellAliases = {
