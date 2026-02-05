@@ -383,8 +383,7 @@ in
     shellAliases = {
       # Nix
       rr = "direnv reload";
-      n = "nix-shell";
-      nix-shell-unstable = "nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
+      n = "nix";
       nu = "nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
       bb = "nom build";
 
