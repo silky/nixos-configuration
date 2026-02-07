@@ -2,9 +2,10 @@
 live_config_reload = true
 
 [font]
-normal = { family = "iMWritingMono Nerd Font" }
+# normal = { family = "iMWritingMono Nerd Font" }
 # normal = { family = "Fragment Mono" }
-size = 10
+# normal = { family = "Maple Mono Nerd Font" }
+size = 7
 
 [terminal]
 shell = "zsh"

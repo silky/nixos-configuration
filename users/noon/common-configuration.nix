@@ -325,6 +325,7 @@
   fonts = {
     packages = with pkgs; [
       nerd-fonts.im-writing
+      maple-mono.NF
       noto-fonts-color-emoji
       raleway
       recursive
@@ -342,6 +343,10 @@
     fontconfig = {
       defaultFonts = {
         monospace = [ "iMWritingMono Nerd Font" ];
+        #
+        # Maybe:
+        # monospace = [ "Maple Mono NF" ];
+        #
         emoji = [ "Noto Color Emoji" ];
       };
     };
