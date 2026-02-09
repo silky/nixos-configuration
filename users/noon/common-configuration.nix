@@ -42,7 +42,6 @@
         git
         git-crypt
         git-lfs
-        gmp # ??
         gnumake # ??
         htop # Process viewer
         libnotify # Notifications
@@ -107,7 +106,7 @@
         sd # Modern find and replace
         yq # jq for yaml
         kdePackages.kate # simple text editor
-        jujutsu
+        # jujutsu
         mergiraf
         miniserve # Simple HTTP server
       ];
@@ -122,8 +121,7 @@
         eog # Image viewer
         feh # Set background images
         ffmpeg_6-full # Video things
-        # gimp-with-plugins # For making memes
-        # glow # Terminal Markdown renderer
+        gimp-with-plugins # For making memes
         hunspell # Spelling
         hunspellDicts.en-gb-ise # Spelling
         imagemagick # Essential image tools
