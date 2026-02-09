@@ -550,6 +550,7 @@ in
     ".gitconfig".source = mkSym "gitconfig";
     ".editorconfig".source = mkSym "editorconfig";
     ".config/alacritty/alacritty.toml".source = mkSym "alacritty.toml";
+    ".config/ghostty/config".source = mkSym "ghost-config";
 
     # haskell-tools lsp madness
     # ".config/nvim/after/ftplugin/haskell.lua".source = mkSym "haskell.lua";

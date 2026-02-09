@@ -1,0 +1,27 @@
+foreground         = #2f2f2f
+background         = #fff7f1
+font-size          = 18
+command            = zsh
+window-decoration  = false
+resize-overlay     = never
+# bell-features    = no-audio no-system no-attention no-border no-title
+auto-update        = off
+cursor-style       = block
+cursor-style-blink = false
+cursor-color       = cell-foreground
+mouse-hide-while-typing = true
+
+# This doesn't seem to work perfectly.
+font-feature=cv63
+
+# Theme
+palette = 0=#2f2f2f
+palette = 1=#ff4485
+palette = 2=#56b356
+palette = 3=#f728c0
+palette = 4=#002aff
+palette = 5=#a600ff
+palette = 6=#a600ff
+palette = 7=#ffaaff
+selection-background = #fef2ff
+selection-foreground = #000000

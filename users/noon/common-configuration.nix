@@ -69,6 +69,7 @@
       ];
       dev = [
         alacritty # Terminal
+        ghostty # Maybe a new terminal
         csview # For viewing csv's
         delta # Delta git diff configuration
         difftastic # Modern diffing
@@ -325,7 +326,13 @@
   fonts = {
     packages = with pkgs; [
       nerd-fonts.im-writing
-      maple-mono.NF
+
+      maple-mono.opentype
+      maple-mono.truetype
+      maple-mono.truetype-autohint
+      maple-mono.variable
+      maple-mono.woff2
+
       noto-fonts-color-emoji
       raleway
       recursive
@@ -342,11 +349,8 @@
     enableDefaultPackages = true;
     fontconfig = {
       defaultFonts = {
-        monospace = [ "iMWritingMono Nerd Font" ];
-        #
-        # Maybe:
-        # monospace = [ "Maple Mono NF" ];
-        #
+        # monospace = [ "iMWritingMono Nerd Font" ];
+        monospace = [ "Maple Mono" ];
         emoji = [ "Noto Color Emoji" ];
       };
     };

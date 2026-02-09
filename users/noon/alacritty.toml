@@ -4,7 +4,7 @@ live_config_reload = true
 [font]
 # normal = { family = "iMWritingMono Nerd Font" }
 # normal = { family = "Fragment Mono" }
-# normal = { family = "Maple Mono Nerd Font" }
+# normal = { family = "Maple Mono" }
 size = 7
 
 [terminal]
@@ -21,6 +21,7 @@ background = "#fce3fc"
 [colors.primary]
 foreground = "#2f2f2f"
 background = "#fff7f1"
+
 
 [colors.normal]
 black = "#2f2f2f"
