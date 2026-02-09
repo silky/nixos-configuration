@@ -325,11 +325,11 @@
     packages = with pkgs; [
       nerd-fonts.im-writing
 
-      maple-mono.opentype
-      maple-mono.truetype
-      maple-mono.truetype-autohint
-      maple-mono.variable
-      maple-mono.woff2
+      # maple-mono.opentype
+      # maple-mono.truetype
+      # maple-mono.truetype-autohint
+      maple-mono.NF
+      # maple-mono.woff2
 
       noto-fonts-color-emoji
       raleway
@@ -348,7 +348,7 @@
     fontconfig = {
       defaultFonts = {
         # monospace = [ "iMWritingMono Nerd Font" ];
-        monospace = [ "Maple Mono" ];
+        monospace = [ "Maple Mono Nerd Font" ];
         emoji = [ "Noto Color Emoji" ];
       };
     };

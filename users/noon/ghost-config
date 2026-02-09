@@ -11,8 +11,9 @@ cursor-style-blink = false
 cursor-color       = cell-foreground
 mouse-hide-while-typing = true
 
-# This doesn't seem to work perfectly.
-font-feature=cv63
+# See:  https://font.subf.dev/en/playground/
+# Note: This requires using the nerd font variant.
+font-feature=cv63,cv66,cv05,cv65,ss08,ss11
 
 # Theme
 palette = 0=#2f2f2f
@@ -25,3 +26,7 @@ palette = 6=#a600ff
 palette = 7=#ffaaff
 selection-background = #fef2ff
 selection-foreground = #000000
+
+# Todo
+# - [ ] Search
+# - [ ] Cursor in the terminal
