@@ -27,6 +27,7 @@ palette = 7=#ffaaff
 selection-background = #fef2ff
 selection-foreground = #000000
 
+shell-integration-features = no-cursor
+
 # Todo
 # - [ ] Search
-# - [ ] Cursor in the terminal
