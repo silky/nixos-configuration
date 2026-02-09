@@ -95,12 +95,9 @@ let
 in
 {
   extraConfig = builtins.readFile ./init.vim;
-  extraLuaConfig = ''
-  '';
   enable = true;
   plugins = with pkgs.vimPlugins; [
     # lazy-nvim
-
     {
       plugin = haskell-tools-nvim;
       # Note: Config is done on filetypes
