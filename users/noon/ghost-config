@@ -1,15 +1,16 @@
-foreground         = #2f2f2f
-background         = #fff7f1
-font-size          = 18
-command            = zsh
-window-decoration  = false
-resize-overlay     = never
-# bell-features    = no-audio no-system no-attention no-border no-title
-auto-update        = off
-cursor-style       = block
-cursor-style-blink = false
-cursor-color       = cell-foreground
-mouse-hide-while-typing = true
+foreground                 = #2f2f2f
+background                 = #fff7f1
+font-size                  = 18
+command                    = zsh
+window-decoration          = false
+resize-overlay             = never
+# bell-features            = no-audio no-system no-attention no-border no-title
+auto-update                = off
+cursor-style               = block
+cursor-style-blink         = false
+cursor-color               = cell-foreground
+mouse-hide-while-typing    = true
+shell-integration-features = no-cursor
 
 # See:  https://font.subf.dev/en/playground/
 # Note: This requires using the nerd font variant.
@@ -26,8 +27,6 @@ palette = 6=#a600ff
 palette = 7=#ffaaff
 selection-background = #fef2ff
 selection-foreground = #000000
-
-shell-integration-features = no-cursor
 
 # Todo
 # - [ ] Search
