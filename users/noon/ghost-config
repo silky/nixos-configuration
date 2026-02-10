@@ -1,20 +1,21 @@
-foreground                 = #2f2f2f
-background                 = #fff7f1
-font-size                  = 18
-command                    = zsh
-window-decoration          = false
-resize-overlay             = never
-# bell-features            = no-audio no-system no-attention no-border no-title
 auto-update                = off
+background                 = #fff7f1
+bell-features              = no-audio,no-system,no-attention,no-border,no-title
+command                    = zsh
+cursor-color               = cell-foreground
 cursor-style               = block
 cursor-style-blink         = false
-cursor-color               = cell-foreground
+font-size                  = 18
+foreground                 = #2f2f2f
 mouse-hide-while-typing    = true
+resize-overlay             = never
 shell-integration-features = no-cursor
+window-decoration          = false
+link-url                   = true
 
 # See:  https://font.subf.dev/en/playground/
 # Note: This requires using the nerd font variant.
-font-feature=cv63,cv66,cv05,cv65,ss08,ss11
+font-feature=cv01,cv03,cv63,cv66,cv05,cv65,ss08,ss11
 
 # Theme
 palette = 0=#2f2f2f
