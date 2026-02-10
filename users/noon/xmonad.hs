@@ -99,9 +99,9 @@ myKeys conf =
   --
   -- Launch specific things
   , ((mod1Mask, xK_o), spawn "nautilus --no-desktop")
-  , ((mod1Mask, xK_m), spawn "alacritty -e alsamixer")
-  , ((mod1Mask, xK_e), spawn "alacritty -e nvim")
-  , ((mod1Mask, xK_d), spawn "alacritty -e nvim -c ':Daily'")
+  , ((mod1Mask, xK_m), spawn "ghostty -e alsamixer")
+  , ((mod1Mask, xK_e), spawn "ghostty -e nvim")
+  , ((mod1Mask, xK_d), spawn "ghostty -e nvim -c ':Daily'")
   , ((mod1Mask, xK_p), spawn "dmenu_run -nb '#d1f0ff' -sf '#b141e5' -nf '#333333' -sb '#d1f0ff'")
   , ((mod1Mask, xK_b), spawn "show-battery-state")
 
@@ -202,7 +202,7 @@ main = do
   let myConfig = ewmh def {
           borderWidth        = 1
         , workspaces         = withScreens nScreens myWorkspaces
-        , terminal           = "alacritty"
+        , terminal           = "ghostty"
         , normalBorderColor  = "#000000"
         , focusedBorderColor = "#b141f2"
         , layoutHook         = avoidStruts myLayout
