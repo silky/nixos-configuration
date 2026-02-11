@@ -73,23 +73,20 @@ xmap ga <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
 
-
-
 " Enable some tabular presets for Haskell
 let g:haskell_tabular = 1
+
+
+
 
 
 
 set mouse=a
 set shortmess=at  " Ensure we don't get hit-enter prompts
 set grepprg=grep\ -nH\ $*
-set t_Co=256
 set wildignore+=*.pyc,*.pdf,.git,.svn,*.png,*.jpg,*.ps,*.log,*.aux,*.out,*.dvi,*.fdb_latexmk,*.pyo
 set wildignore+=*.lib,*.exe,*.dll,*.pdb,*.exp
-set winheight=30  " Autosize window to this height.
-set encoding=utf-8
 set modelines=1
-
 set cpoptions+=I "do NOT revert tabbing I have specifically set.
 set cindent
 set smartcase     " Case insensitive searches become sensitive with capitals
@@ -97,20 +94,24 @@ set lazyredraw
 set showmode
 set showcmd
 set ruler
+set encoding=utf-8
+set t_Co=256
 set ttyfast
+set shell=zsh
 set laststatus=2
 set history=10000
 set undofile
 set undoreload=10000
 set nolist
-set shell=zsh
 set autoread
-set display=uhex
 set nofsync
+set display=uhex
 set shiftround
-set notimeout
-set nottimeout
 set autowrite
+
+" set nottimeout
+set notimeout
+
 
 "set guioptions=aegit
 set completeopt=longest,menuone,preview " TODO: Review
@@ -140,6 +141,9 @@ let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 0
 set guicursor=
 
 set clipboard+=unnamedplus
+
+
+
 
 " Lsp things
 set signcolumn=yes
