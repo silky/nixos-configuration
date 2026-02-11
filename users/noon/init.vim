@@ -109,6 +109,7 @@ set display=uhex
 set shiftround
 set autowrite
 
+" This kills ghostty atm. Can reinstate once the bug is solved.
 " set nottimeout
 set notimeout
 

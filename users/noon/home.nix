@@ -343,7 +343,7 @@ in
           + exitStatus
           + time
           # + userAndHost
-          + " φ "
+          + " 👀 "
           + envHint
           + path
           + gitStatus
@@ -351,7 +351,7 @@ in
         ;
       in
       {
-        AGKOZAK_PROMPT_CHAR = "φ φ# :";
+        AGKOZAK_PROMPT_CHAR = "👀 👀# :";
         AGKOZAK_LEFT_PROMPT_ONLY = 1;
         AGKOZAK_MULTILINE = 0;
         AGKOZAK_CUSTOM_SYMBOLS = "⇣⇡ ⇣ ⇡ + x ! > ? S";

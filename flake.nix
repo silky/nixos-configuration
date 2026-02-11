@@ -13,6 +13,9 @@
     cornelis.url = "github:isovector/cornelis";
     cornelis.inputs.nixpkgs.follows = "nixpkgs";
 
+    ghostty.url = "github:ghostty-org/ghostty";
+    ghostty.inputs.nixpkgs.follows = "nixpkgs";
+
     nix-formatter-pack.url = "github:Gerschtli/nix-formatter-pack";
     nix-formatter-pack.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -45,6 +48,7 @@
     , feedback
     , flake-parts
     , zen-browser
+    , ghostty
     , ...
     }@inputs:
     let
@@ -54,6 +58,7 @@
           gh-gfm-preview = inputs.gh-gfm-preview.packages.x86_64-linux.default;
           feedback = inputs.feedback.packages.x86_64-linux.default;
           zen-browser = inputs.zen-browser.packages.x86_64-linux.default;
+          ghostty = inputs.ghostty.packages.x86_64-linux.default;
           # This is how to get a new linux firmware
           # linux-firmware = super.linux-firmware.overrideAttrs (
           #   old: {
