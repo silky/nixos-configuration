@@ -9,9 +9,13 @@ font-size                  = 18
 foreground                 = #2f2f2f
 mouse-hide-while-typing    = true
 resize-overlay             = never
+# shell-integration          = auto
 shell-integration-features = no-cursor
 window-decoration          = false
 link-url                   = true
+mouse-scroll-multiplier    = 3
+copy-on-select             = true
+app-notifications          = false
 
 # See:  https://font.subf.dev/en/playground/
 # Note: This requires using the nerd font variant.
@@ -29,5 +33,8 @@ palette = 7=#ffaaff
 selection-background = #fef2ff
 selection-foreground = #000000
 
+
 # Todo
 # - [ ] Search
+#
+# vim: ft=ghostty
