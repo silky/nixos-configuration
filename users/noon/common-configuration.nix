@@ -119,28 +119,29 @@
         baobab # Disk space analyser
         chafa # Terminal image viewer
         eog # Image viewer
+        exiftool # Image Metadata
         feh # Set background images
         ffmpeg_6-full # Video things
+        flameshot # Take screenshots
         gimp-with-plugins # For making memes
         hunspell # Spelling
         hunspellDicts.en-gb-ise # Spelling
         imagemagick # Essential image tools
         inkscape # Meme creation
+        kdePackages.okular # PDF viewing
         lyx # For writing WYSIWYG TeX
         meld # Visual diff tool
         nautilus # File browser
         nix-output-monitor # Nicer build info when nixing
-        kdePackages.okular # PDF viewing
         optipng # Optimise pngs
         pandoc # Occasionally useful
         pkgs.gedit # When times get desperate
         rofimoji # Emoji picker
         texlive.combined.scheme-full # Full TeX environment
-        flameshot # Take screenshots
-        vokoscreen-ng # Screen recording for videos
+        viu # For viewing images in the terminal
         vlc # For videos
+        vokoscreen-ng # Screen recording for videos
         xournalpp # PDF writing
-        exiftool # Image Metadata
       ];
     in
     sys ++ dev ++ app
