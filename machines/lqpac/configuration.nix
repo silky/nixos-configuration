@@ -19,8 +19,8 @@
   #
   # ---------------------------------------------------------------------------
   boot = {
-     loader.systemd-boot.enable = true;
-     loader.efi.canTouchEfiVariables = true;
+    loader.systemd-boot.enable = true;
+    loader.efi.canTouchEfiVariables = true;
   };
 
   system.stateVersion = "25.05";

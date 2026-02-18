@@ -1,4 +1,4 @@
-{ name, config, pkgs, ... }:
+{ name, pkgs, ... }:
 {
   # See: https://nixos.wiki/wiki/Fwupd
   #
@@ -59,9 +59,9 @@
         unzip
         wget
         xclip # Copy things to clipboard
-        xorg.xev # See key codes
-        xorg.xkill # Kill windows
-        xorg.xmodmap # Key mappings
+        xev # See key codes
+        xkill # Kill windows
+        xmodmap # Key mappings
         xsel # Copy things to clipboard (used in init.vim)
         xxd
         zip

@@ -60,15 +60,6 @@ let
       sha256 = "sha256-TcA4jZIdnQd06V+JrXGiCMr0Yhm9gB6OMiTSdzMt/Qw=";
     };
   };
-  vim-cooklang = pkgs.vimUtils.buildVimPlugin {
-    name = "vim-cooklang";
-    src = pkgs.fetchFromGitHub {
-      owner = "silky";
-      repo = "vim-cooklang";
-      rev = "7f8c2190b5675ad4465e9719cd4b773c1db2ce6e";
-      sha256 = "sha256-vWlk7G1V4DLC0G0f3GLEG3JsvAwJ637CPocmMmFxQek=";
-    };
-  };
   vim-autoread = pkgs.vimUtils.buildVimPlugin {
     name = "vim-autoread";
     src = pkgs.fetchFromGitHub {
@@ -112,7 +103,7 @@ in
     editorconfig-vim
     elm-vim
     fzf-vim
-    fzfWrapper
+    fzf-wrapper
     gitsigns-nvim
     haskell-vim
     unison
@@ -121,10 +112,10 @@ in
       plugin = daily-notes-nvim;
       type = "lua";
       config = ''
-require "dailynotes".setup({
-    path = '~/dev/w/notes/'
-})
-        '';
+        require "dailynotes".setup({
+            path = '~/dev/w/notes/'
+        })
+      '';
     }
 
     # Kinda useful for interative colour scheming, but in the end more trouble
@@ -136,11 +127,11 @@ require "dailynotes".setup({
       plugin = neogit;
       type = "lua";
       config = ''
-local neogit = require('neogit')
-neogit.setup {
-  graph_style = "unicode",
-  integrations = { diffview = true },
-}
+        local neogit = require('neogit')
+        neogit.setup {
+          graph_style = "unicode",
+          integrations = { diffview = true },
+        }
       '';
     }
 
@@ -163,7 +154,7 @@ neogit.setup {
       config = ''
         let g:go_fmt_autosave = 0
         let g:go_mod_fmt_autosave = 0
-        '';
+      '';
     }
 
     # nvim-web-devicons
@@ -201,7 +192,7 @@ neogit.setup {
     vim-syntax-shakespeare
     vim-textobj-user
     vim-toml
-    xterm-color-table
+    xterm-color-table-vim
 
     # To investigate
     # vim-unimpaired # https://github.com/tpope/vim-unimpaired/

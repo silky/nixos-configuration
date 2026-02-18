@@ -6,6 +6,7 @@ vim.g.haskell_tools = {
         { "gd", vim.lsp.buf.definition, desc = "Goto definition" },
         { "gr", vim.lsp.buf.references, desc = "Show all references" },
         { "K",  vim.lsp.buf.hover, desc = "Hover info" },
+        { "D",  vim.diagnostic.open_float, desc = "Show line diagnostics" },
         -- Replace symbol
         -- { "cl", vim.lsp.codelens.run, desc = "code lens" },
         -- { "gD", vim.lsp.buf.declaration, desc = "goto declaration" },

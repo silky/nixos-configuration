@@ -1,7 +1,6 @@
 { config
 , pkgs
 , cooklang-chef
-, lib
 , ...
 }:
 let
@@ -435,7 +434,7 @@ in
       v = "nvim";
       vim = "nvim";
       # w = vim in pairing mode (vv)
-      w  = "nvim -c 'source ~/dev/nixos-configuration/users/noon/pairing.vim'";
+      w = "nvim -c 'source ~/dev/nixos-configuration/users/noon/pairing.vim'";
       vv = "nvim -c 'source ~/dev/nixos-configuration/users/noon/pairing.vim'";
     };
   };
@@ -450,18 +449,18 @@ in
   # Disabled presently due to home-manager zed config bug.
   # programs.zed-editor = {
   #   enable = true;
-    # extensions = [
-    #   "html"
-    #   "haskell"
-    #   "nix"
-    # ];
-    # userSettings = {
-    #   buffer_font_family = iMWritingMono Nerd Font";
-    #   them = {
-    #     mode = "system";
-    #     light = "Catppuccin Latte";
-    #   };
-    # };
+  # extensions = [
+  #   "html"
+  #   "haskell"
+  #   "nix"
+  # ];
+  # userSettings = {
+  #   buffer_font_family = iMWritingMono Nerd Font";
+  #   them = {
+  #     mode = "system";
+  #     light = "Catppuccin Latte";
+  #   };
+  # };
   # };
 
   services.dunst = {

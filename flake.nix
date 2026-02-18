@@ -44,16 +44,11 @@
     , haskell-hacking-notebook
     , cornelis
     , nix-formatter-pack
-    , gh-gfm-preview
-    , feedback
-    , flake-parts
-    , zen-browser
-    , ghostty
     , ...
     }@inputs:
     let
       overlays = [
-        (self: super: {
+        (self: _super: {
           fcitx-engines = self.fcitx5;
           gh-gfm-preview = inputs.gh-gfm-preview.packages.x86_64-linux.default;
           feedback = inputs.feedback.packages.x86_64-linux.default;
@@ -72,7 +67,6 @@
         })
         cornelis.overlays.cornelis
       ];
-      pkgs = import nixpkgs { system = "x86_64-linux"; };
 
       mkSystem = name:
         nixpkgs.lib.nixosSystem {
