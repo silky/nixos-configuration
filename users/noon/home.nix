@@ -403,6 +403,7 @@ in
       pp = "git push";
       st = "git status";
       gpo = "git push origin";
+      d = "git diff";
 
       # Fun
       shh = "ssh -q";
@@ -424,7 +425,7 @@ in
       p = "python";
       rg = "rg -M 1000 --.";
       # Open my main config by default
-      d = "gh-dash --config ~/dev/life/gh-dash-configs/config.yml";
+      gd = "gh-dash --config ~/dev/life/gh-dash-configs/config.yml";
       # For glow, always use the pager
       glow = "glow -p";
       lg = "lazygit";

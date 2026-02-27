@@ -1,6 +1,6 @@
 auto-update                = off
 background                 = #fff7f1
-bell-features              = no-audio,no-system,no-attention,no-border,no-title
+bell-features              = no-audio, no-system, no-attention, no-border, no-title
 command                    = zsh
 cursor-color               = cell-foreground
 cursor-style               = block
@@ -10,7 +10,7 @@ foreground                 = #2f2f2f
 mouse-hide-while-typing    = true
 resize-overlay             = never
 # shell-integration          = auto
-shell-integration-features = no-cursor
+shell-integration-features = no-cursor, ssh-terminfo, title, sudo, ssh-env
 window-decoration          = false
 link-url                   = true
 mouse-scroll-multiplier    = 3
