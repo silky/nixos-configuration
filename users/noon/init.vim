@@ -237,7 +237,16 @@ nnoremap N Nzzzv
 
 noremap <Home> <Esc>^
 
-
+" Todo: This is almost good; but we need to hard-code a branch name here, as
+" no-one wants to be writing it out every time. I can't think of a good way to
+" do that at the moment.
+command! -bang -nargs=* DiffBranch
+  \ call fzf#run(fzf#wrap({
+  \   'source': 'git diff --name-only '.<q-args>,
+  \   'sink': 'e',
+  \   'options': ['git diff '.<q-args>.' -- {}'],
+  \   'dir': systemlist('git rev-parse --show-toplevel')[0]
+  \ }, <bang>0))
 
 " Navigation keys
 inoremap <Up>    <nop>
@@ -261,7 +270,10 @@ set clipboard+=unnamed
 " Telescope is way too slow for this, so we will use fzf-vim instead.
 " Fuzzy-find files
 nmap <silent> <Tab>e :Files<cr>
-"
+
+" Reinstate if there's a good solution to the above.
+" nmap <silent> <Tab>p :DiffBranch master <cr>
+
 " Find-find only git-modified files
 nmap <silent> <Tab>s :GFiles?<cr>
 

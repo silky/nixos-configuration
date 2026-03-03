@@ -87,6 +87,8 @@ in
 {
   extraConfig = builtins.readFile ./init.vim;
   enable = true;
+
+
   plugins = with pkgs.vimPlugins; [
     # lazy-nvim
     {
@@ -102,7 +104,14 @@ in
     # diffview-nvim
     editorconfig-vim
     elm-vim
-    fzf-vim
+
+    {
+      plugin = fzf-vim;
+      # type = "lua";
+      # config = builtins.readFile ./fzf-vim.lua;
+    }
+
+    # fzf-vim
     fzf-wrapper
     gitsigns-nvim
     haskell-vim
