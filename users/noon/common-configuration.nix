@@ -262,8 +262,8 @@
   };
   services.pulseaudio.enable = false;
 
-  # Bluetooth
   hardware = {
+    # Bluetooth
     # https://nixos.wiki/wiki/Bluetooth
     bluetooth = {
       enable = true;
@@ -276,6 +276,10 @@
           AutoEnable = true;
         };
       };
+    };
+
+    acpilight = {
+      enable = true;
     };
   };
 
