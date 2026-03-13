@@ -77,7 +77,7 @@ in
         yazi # file browser
         gcc
         feedback # https://github.com/NorfairKing/feedback#readme
-        python3
+        python314
         # Random haskell hacking
         (ghc.withPackages (
           p: with p;
