@@ -61,8 +61,8 @@ in
         (writers.writeDashBin "gh-browser" ''
           chromium-browser "$@" 1>/dev/null
         '')
-        brave
-        # zen-browser
+        # brave
+        zen-browser
       ];
 
       dev = [
