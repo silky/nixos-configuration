@@ -137,7 +137,8 @@
         pandoc # Occasionally useful
         pkgs.gedit # When times get desperate
         rofimoji # Emoji picker
-        texlive.combined.scheme-full # Full TeX environment
+        typst # Writing
+        # texlive.combined.scheme-full # Full TeX environment
         viu # For viewing images in the terminal
         vlc # For videos
         vokoscreen-ng # Screen recording for videos

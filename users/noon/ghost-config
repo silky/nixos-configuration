@@ -17,6 +17,17 @@ mouse-scroll-multiplier    = 3
 copy-on-select             = true
 app-notifications          = false
 
+# Make directory-loading work sensibly.
+gtk-single-instance              = false
+working-directory                = home
+window-inherit-working-directory = true
+keybind                          = ctrl+shift+enter=new_window
+
+# Fresh launch / new windows always open at home
+# working-directory = home
+# New windows do NOT inherit the focused terminal's cwd
+# window-inherit-working-directory = false
+
 # See:  https://font.subf.dev/en/playground/
 # Note: This requires using the nerd font variant.
 font-feature=cv01,cv03,cv63,cv66,cv05,cv65,ss08,ss11
