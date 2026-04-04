@@ -28,8 +28,8 @@
         acpi # For power information
         alsa-utils # Music control
         arandr # Graphical xrandr
-        autoconf # ???
-        automake # ???
+        # autoconf # ???
+        # automake # ???
         bashmount # Mount disks via TUI
         binutils # ???
         bluetui # Handy bluetooth TUI
@@ -73,9 +73,9 @@
         delta # Delta git diff configuration
         difftastic # Modern diffing
         docker-compose
-        fd # Nicer find
-        fx # Json viewer
-        fq # jq for binary data
+        # fd # Nicer find
+        # fx # Json viewer
+        # fq # jq for binary data
         tcpdump # For working with/creating pcaps
         (google-cloud-sdk.withExtraComponents
           (with google-cloud-sdk.components; [
@@ -85,15 +85,15 @@
           ])
         )
         gh-gfm-preview # GitHub-format Markdown Preview
-        certbot # Generate SSL certs
-        hexyl # Hex viewer
-        httpie # Simpler curl
+        # certbot # Generate SSL certs
+        # hexyl # Hex viewer
+        # httpie # Simpler curl
         hyperfine # Benchmarking
-        ijq # Interactive JQ
-        jc # Convert many outputs to json for further investigation
-        jd-diff-patch # JSON diff
-        jless # Interactive json exploring
-        jo # Create JSON
+        # ijq # Interactive JQ
+        # jc # Convert many outputs to json for further investigation
+        # jd-diff-patch # JSON diff
+        # jless # Interactive json exploring
+        # jo # Create JSON
         jq # JSON explorer
         # k9s # Kubernetes cluster management
         # lychee # Markdown link checker
@@ -104,17 +104,18 @@
         openssl # Sometimes useful
         ripgrep # File searcher
         sd # Modern find and replace
-        yq # jq for yaml
+        # yq # jq for yaml
         kdePackages.kate # simple text editor
+        treesheets # Tree-like text editor: https://strlen.com/treesheets/
         # jujutsu
         mergiraf
         miniserve # Simple HTTP server
       ];
       app = [
         age # Encryption tools
-        asciicam # Terminal webcam
-        asciinema # Terminal recorder
-        asciinema-agg # Convert asciinema to .gif
+        # asciicam # Terminal webcam
+        # asciinema # Terminal recorder
+        # asciinema-agg # Convert asciinema to .gif
         bandwhich # Bandwidth monitor
         baobab # Disk space analyser
         chafa # Terminal image viewer
@@ -123,7 +124,7 @@
         feh # Set background images
         ffmpeg_6-full # Video things
         flameshot # Take screenshots
-        gimp-with-plugins # For making memes
+        # gimp-with-plugins # For making memes
         hunspell # Spelling
         hunspellDicts.en-gb-ise # Spelling
         imagemagick # Essential image tools
