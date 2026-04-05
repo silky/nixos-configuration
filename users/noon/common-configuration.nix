@@ -136,7 +136,6 @@
         nix-output-monitor # Nicer build info when nixing
         optipng # Optimise pngs
         pandoc # Occasionally useful
-        pkgs.gedit # When times get desperate
         rofimoji # Emoji picker
         typst # Writing
         # texlive.combined.scheme-full # Full TeX environment
