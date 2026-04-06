@@ -38,8 +38,8 @@ let
     src = pkgs.fetchFromGitHub {
       owner = "silky";
       repo = "noon-light-vim";
-      rev = "8628d599257b20dc46b94658ce54e8d3fef554e4";
-      sha256 = "sha256-kAdxiIGm3vBaI1WhmgalpA8sy94tofZsTLOCEE7v+Lk=";
+      rev = "114fa585600f932c1944747771db9b25d39d2861";
+      sha256 = "sha256-RrkGzu9UECPmjDdf73pF6v2FQ/ycnlAaioMiUuCmuAQ=";
     };
   };
   vim-syntax-shakespeare = pkgs.vimUtils.buildVimPlugin {
