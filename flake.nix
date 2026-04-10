@@ -25,6 +25,8 @@
     feedback.url = "github:NorfairKing/feedback";
     flake-parts.url = "github:hercules-ci/flake-parts";
 
+    # nix.url = "github:NixOS/nix/2.34.5";
+
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
       inputs = {
@@ -44,6 +46,7 @@
     , haskell-hacking-notebook
     , cornelis
     , nix-formatter-pack
+    # , nix
     , ...
     }@inputs:
     let
@@ -54,6 +57,7 @@
           feedback = inputs.feedback.packages.x86_64-linux.default;
           zen-browser = inputs.zen-browser.packages.x86_64-linux.default;
           ghostty = inputs.ghostty.packages.x86_64-linux.default;
+          # nix = nix.packages.x86_64-linux.default;
           # This is how to get a new linux firmware
           # linux-firmware = super.linux-firmware.overrideAttrs (
           #   old: {

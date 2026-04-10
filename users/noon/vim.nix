@@ -82,12 +82,15 @@ let
   cornelisPlugin = {
     plugin = pkgs.vimPlugins.cornelis;
     config = "let g:cornelis_use_global_binary = 1";
+    type = "viml";
   };
 in
 {
   extraConfig = builtins.readFile ./init.vim;
   enable = true;
 
+  withRuby = false;
+  withPython3 = false;
 
   plugins = with pkgs.vimPlugins; [
     # lazy-nvim
@@ -160,6 +163,7 @@ in
 
     {
       plugin = vim-go;
+      type = "viml";
       config = ''
         let g:go_fmt_autosave = 0
         let g:go_mod_fmt_autosave = 0
