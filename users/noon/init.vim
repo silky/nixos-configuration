@@ -1,5 +1,5 @@
-let g:ormolu_disable=1
-
+let g:ormolu_disable = 1
+let g:python_recommended_style = 0
 let $FZF_DEFAULT_COMMAND = 'rg --files -M 1000 --.'
 let g:fzf_preview_window = ''
 

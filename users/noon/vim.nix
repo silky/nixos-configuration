@@ -105,7 +105,6 @@ in
     cornelisPlugin
     dhall-vim
     # diffview-nvim
-    editorconfig-vim
     elm-vim
 
     {
