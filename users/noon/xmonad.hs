@@ -99,7 +99,7 @@ myKeys conf =
   --
   -- Launch specific things
   , ((mod1Mask, xK_o), spawn "nautilus --no-desktop")
-  , ((mod1Mask, xK_m), spawn "ghostty -e alsamixer")
+  , ((mod1Mask, xK_m), spawn "ghostty -e pulsemixer")
   , ((mod1Mask, xK_e), spawn "ghostty -e nvim")
   , ((mod1Mask, xK_d), spawn "ghostty -e nvim -c ':Daily'")
   , ((mod1Mask, xK_p), spawn "dmenu_run -nb '#d1f0ff' -sf '#b141e5' -nf '#333333' -sb '#d1f0ff'")

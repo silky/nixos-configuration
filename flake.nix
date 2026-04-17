@@ -46,7 +46,7 @@
     , haskell-hacking-notebook
     , cornelis
     , nix-formatter-pack
-    # , nix
+      # , nix
     , ...
     }@inputs:
     let

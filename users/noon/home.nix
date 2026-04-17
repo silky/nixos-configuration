@@ -1,12 +1,11 @@
 { config
 , pkgs
-, cooklang-chef
+# , cooklang-chef
 , ...
 }:
 let
   mkSym = file: config.lib.file.mkOutOfStoreSymlink
     "${config.home.homeDirectory}/dev/nixos-configuration/users/${config.home.username}/${file}";
-  recipesDir = "${config.home.homeDirectory}/dev/life/recipes";
 
   showBatteryState = pkgs.writeShellScriptBin "show-battery-state" ''
     mins=$(acpi | jc --acpi | jq '.[].charge_remaining_minutes')
@@ -107,7 +106,7 @@ in
       ];
 
       apps = [
-        cooklang-chef.packages.x86_64-linux.default
+        # cooklang-chef.packages.x86_64-linux.default
         # discord-ptb
         docbook5
         haskellPackages.hledger
@@ -143,32 +142,54 @@ in
   # ~ Custom services
   #
   # ---------------------------------------------------------------------------
-  # systemd.user.services.haskell-hacking-notebook = {
+  systemd.user.services."battery-low" = {
+    Unit = {
+      Enable = true;
+      Description = "Notify user if battery is below 10%";
+      PartOf = [ "graphical-session.target" ];
+      WantedBy = [ "graphical-session.target" ];
+    };
+    Service = {
+      Type = "simple";
+      ExecStart = pkgs.writeShellScript "battery-low-notification"
+        ''
+          if (( 10 >= $(${pkgs.lib.getExe pkgs.acpi} -b \
+            | head -n 1 \
+            | ${pkgs.lib.getExe pkgs.ripgrep} -o "\d+%" \
+            | ${pkgs.lib.getExe pkgs.ripgrep} -o "\d+")));
+          then \
+            ${pkgs.lib.getExe pkgs.pkgs.libnotify} \
+            --urgency=critical "low battery" \
+            "$(${pkgs.lib.getExe pkgs.acpi} -b \
+            | head -n 1 \
+            | ${pkgs.lib.getExe pkgs.ripgrep} -o "\d+%")";
+          else echo; fi;
+        '';
+    };
+  };
+
+  systemd.user.timers."battery-low" = {
+    timerConfig = {
+      wantedBy = [ "timers.target" ];
+      # Every Minute
+      OnCalendar = "*-*-* *:*:00";
+      Unit = "battery-low.service";
+    };
+  };
+
+  # systemd.user.services.cooklang-chef = {
   #   Unit = {
-  #     Description = "haskell-hacking-notebook";
+  #     Description = "cooklang-chef";
   #     After = [ "graphical-session-pre.target" ];
   #     PartOf = [ "graphical-session.target" ];
   #   };
   #   Install = { WantedBy = [ "graphical-session.target" ]; };
   #   Service = {
   #     Restart = "on-failure";
-  #     ExecStart = "${haskell-hacking-notebook.apps.x86_64-linux.default.program} --no-browser --port 5005 --IdentityProvider.token=abcd --notebook-dir /home/noon/tmp/haskell-hacking-notebooks";
-  #     };
+  #     ExecStart =
+  #       "${cooklang-chef.packages.x86_64-linux.default}/bin/chef --path ${recipesDir} serve --port 6006";
+  #   };
   # };
-
-  systemd.user.services.cooklang-chef = {
-    Unit = {
-      Description = "cooklang-chef";
-      After = [ "graphical-session-pre.target" ];
-      PartOf = [ "graphical-session.target" ];
-    };
-    Install = { WantedBy = [ "graphical-session.target" ]; };
-    Service = {
-      Restart = "on-failure";
-      ExecStart =
-        "${cooklang-chef.packages.x86_64-linux.default}/bin/chef --path ${recipesDir} serve --port 6006";
-    };
-  };
 
   programs.firefox = {
     enable = true;
