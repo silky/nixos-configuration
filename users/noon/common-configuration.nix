@@ -28,8 +28,6 @@
         acpi # For power information
         alsa-utils # Music control
         arandr # Graphical xrandr
-        # autoconf # ???
-        # automake # ???
         bashmount # Mount disks via TUI
         binutils # ???
         bluetui # Handy bluetooth TUI
@@ -53,6 +51,7 @@
         pavucontrol # Audio
         procs # Modern ps
         psmisc # ???
+        pulsemixer # instead of AlsaMixer
         qmk # ???
         systemctl-tui # tui for systemd glancing
         tree # Tree view of directory
@@ -90,7 +89,7 @@
         # httpie # Simpler curl
         hyperfine # Benchmarking
         # ijq # Interactive JQ
-        # jc # Convert many outputs to json for further investigation
+        jc # Convert many outputs to json for further investigation
         # jd-diff-patch # JSON diff
         # jless # Interactive json exploring
         # jo # Create JSON
@@ -114,8 +113,8 @@
       app = [
         age # Encryption tools
         # asciicam # Terminal webcam
-        # asciinema # Terminal recorder
-        # asciinema-agg # Convert asciinema to .gif
+        asciinema # Terminal recorder
+        asciinema-agg # Convert asciinema to .gif
         bandwhich # Bandwidth monitor
         baobab # Disk space analyser
         chafa # Terminal image viewer

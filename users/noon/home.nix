@@ -1,6 +1,6 @@
 { config
 , pkgs
-# , cooklang-chef
+  # , cooklang-chef
 , ...
 }:
 let
@@ -297,6 +297,9 @@ in
 
       export PATH=~/.local/bin:$PATH
 
+      # Allow comments in interactive mode
+      setopt INTERACTIVE_COMMENTS
+
       # https://lobste.rs/s/ahmi0i/quick_bits_realise_nix_symlinks
       function hijack() {
           local item
@@ -406,6 +409,10 @@ in
       n = "nix";
       nu = "nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
       bb = "nom build";
+
+      j = "just";
+      # A convenient  alias for "just test" or "just t"
+      jt = "just test";
 
       fb = "feedback";
 

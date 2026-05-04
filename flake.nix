@@ -16,6 +16,8 @@
     ghostty.url = "github:ghostty-org/ghostty";
     ghostty.inputs.nixpkgs.follows = "nixpkgs";
 
+    old-flameshot.url = "github:nixos/nixpkgs/1c1c9b3f5ec0421eaa0f22746295466ee6a8d48f";
+
     nix-formatter-pack.url = "github:Gerschtli/nix-formatter-pack";
     nix-formatter-pack.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -57,6 +59,11 @@
           feedback = inputs.feedback.packages.x86_64-linux.default;
           zen-browser = inputs.zen-browser.packages.x86_64-linux.default;
           ghostty = inputs.ghostty.packages.x86_64-linux.default;
+          flameshot =
+            let
+              p = import inputs.old-flameshot { system = "x86_64-linux"; };
+            in
+            p.flameshot;
           # nix = nix.packages.x86_64-linux.default;
           # This is how to get a new linux firmware
           # linux-firmware = super.linux-firmware.overrideAttrs (
