@@ -105,6 +105,9 @@ myKeys conf =
   , ((mod1Mask, xK_p), spawn "dmenu_run -nb '#d1f0ff' -sf '#b141e5' -nf '#333333' -sb '#d1f0ff'")
   , ((mod1Mask, xK_b), spawn "show-battery-state")
 
+  -- Locate the mouse pointer with an expanding-circle animation.
+  , ((mod1Mask, xK_a), spawn "find-cursor --size 320 --distance 50 --wait 550 --line-width 4 --repeat 1 --follow")
+
   -- Monitors
   , ((mod1Mask, xK_n), spawn "mobile")   -- "(N)o work"
   , ((mod1Mask, xK_w), spawn "work")     -- "(W)ork"

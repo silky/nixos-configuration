@@ -36,6 +36,7 @@
         curl # No explanation needed
         dmenu # Launcher; used in XMonad setup
         duf # Modern df
+        find-cursor # Highlight mouse position (used in XMonad keybinding)
         fuse # ???
         git
         git-crypt
