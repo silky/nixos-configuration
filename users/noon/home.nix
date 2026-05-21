@@ -336,6 +336,41 @@ in
 
           return $ret
       }
+
+      # rp <ripgrep args> -- ripgrep with normal grouped output, pick a match, open in $EDITOR.
+      function rp() {
+          if [[ $# -eq 0 ]]; then
+              echo "usage: rp <ripgrep args>" >&2
+              return 2
+          fi
+
+          local pick
+          pick=$(command rg --color=always --heading -n "$@" \
+              | awk 'function strip(s,   r) { r = s; gsub(/\033\[[0-9;]*m/, "", r); return r }
+                     { p = strip($0)
+                       if (p == "")        { print "\t"; next }
+                       if (p ~ /^[0-9]+:/) { print f "\t" $0; next }
+                       f = p; print f "\t" $0 }' \
+              | fzf --ansi --no-sort --layout=reverse \
+                    --delimiter=$'\t' --with-nth=2.. --nth=2.. \
+                    --color='fg+:-1:regular,bg+:#ffe0ec,gutter:-1' \
+                    --select-1 --exit-0)
+          local rc=$?
+          (( rc != 0 )) && return $rc
+          [[ -z "$pick" ]] && return 130
+
+          local file rest plain line
+          file=''${pick%%$'\t'*}
+          rest=''${pick#*$'\t'}
+          plain=$(printf '%s' "$rest" | sed $'s/\033\\[[0-9;]*m//g')
+          line=''${plain%%:*}
+          if [[ -z "$file" || ! "$line" =~ ^[0-9]+$ ]]; then
+              echo "rp: pick a match line, not a header or blank." >&2
+              return 1
+          fi
+
+          "''${EDITOR:-nvim}" "+''${line}" -- "$file"
+      }
     '';
 
     plugins = with pkgs; [
