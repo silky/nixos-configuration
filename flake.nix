@@ -43,10 +43,6 @@
 
   outputs =
     { nixpkgs
-    , home-manager
-    , cooklang-chef
-    , haskell-hacking-notebook
-    , cornelis
     , nix-formatter-pack
       # , nix
     , ...
@@ -76,42 +72,12 @@
           #   }
           # );
         })
-        cornelis.overlays.cornelis
+        inputs.cornelis.overlays.cornelis
       ];
 
-      mkSystem = name:
-        nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs = inputs // { inherit name; };
-          modules = [
-            { nixpkgs.overlays = overlays; }
-            # Common system configuration
-            ./users/noon/common-configuration.nix
-
-            # Specific machine configuration
-            ./machines/${name}/configuration.nix
-
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.noon = import ./users/noon/home.nix;
-              home-manager.users.gala = import ./users/gala/home.nix;
-              home-manager.extraSpecialArgs = {
-                inherit
-                  cooklang-chef
-                  haskell-hacking-notebook
-                  ;
-              };
-            }
-          ];
-        };
+      mkHost = import ./lib/mkHost.nix { inherit inputs overlays; };
     in
     {
-      imports = [
-        inputs.flake-parts.flakeModules.modules
-      ];
-
       formatter."x86_64-linux" =
         nix-formatter-pack.lib.mkFormatter {
           pkgs = nixpkgs.legacyPackages."x86_64-linux";
@@ -122,9 +88,8 @@
           };
         };
 
-
-      nixosConfigurations.eqpac = mkSystem "eqpac";
-      nixosConfigurations.nqpac = mkSystem "nqpac";
-      nixosConfigurations.lqpac = mkSystem "lqpac";
+      nixosConfigurations.eqpac = mkHost { name = "eqpac"; users = [ "noon" "gala" ]; };
+      nixosConfigurations.nqpac = mkHost { name = "nqpac"; users = [ "noon" "gala" ]; };
+      nixosConfigurations.lqpac = mkHost { name = "lqpac"; users = [ "noon" "gala" ]; };
     };
 }

@@ -8,9 +8,6 @@
   #
   services.fwupd.enable = true;
 
-  # Screen locking
-  programs.slock.enable = true;
-
   # ---------------------------------------------------------------------------
   #
   # ~ System Packages
@@ -182,48 +179,6 @@
 
   # ---------------------------------------------------------------------------
   #
-  # ~ Window Manager
-  #
-  # ---------------------------------------------------------------------------
-  services = {
-    displayManager = {
-      autoLogin = {
-        user = "noon";
-        enable = true;
-      };
-    };
-  };
-
-  services.xserver = {
-    enable = true;
-    xkb = {
-      layout = "us";
-      variant = "";
-      options = "caps:escape";
-    };
-    # https://mynixos.com/nixpkgs/option/services.xserver.xrandrHeads
-    displayManager = {
-      sessionCommands = ''
-        # Set a background.
-        ~/.fehbg || true
-
-        # No screen saving.
-        xset s off -dpms
-      '';
-    };
-    windowManager = {
-      xmonad = {
-        enable = true;
-        enableContribAndExtras = true;
-        extraPackages = p: [ p.split ];
-        config = ./xmonad.hs;
-      };
-    };
-  };
-
-
-  # ---------------------------------------------------------------------------
-  #
   # ~ Networking
   #
   # ---------------------------------------------------------------------------
@@ -383,17 +338,5 @@
   security = {
     rtkit.enable = true;
     pam.services.login.enableGnomeKeyring = true;
-  };
-
-  users.users.noon = {
-    isNormalUser = true;
-    description = "noon";
-    extraGroups = [ "networkmanager" "wheel" "dialout" "audio" "docker" "video" ];
-  };
-
-  users.users.gala = {
-    isNormalUser = true;
-    description = "gala";
-    extraGroups = [ "networkmanager" "wheel" "dialout" "audio" "docker" "video" ];
   };
 }
