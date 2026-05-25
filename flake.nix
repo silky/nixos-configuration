@@ -49,12 +49,17 @@
     }@inputs:
     let
       overlays = [
-        (self: _super: {
+        (self: super: {
           fcitx-engines = self.fcitx5;
           gh-gfm-preview = inputs.gh-gfm-preview.packages.x86_64-linux.default;
           feedback = inputs.feedback.packages.x86_64-linux.default;
           zen-browser = inputs.zen-browser.packages.x86_64-linux.default;
           ghostty = inputs.ghostty.packages.x86_64-linux.default;
+          pulsemixer = super.pulsemixer.overrideAttrs (old: {
+            patches = (old.patches or [ ]) ++ [
+              ./modules/nixos/pulsemixer-focus-default.patch
+            ];
+          });
           flameshot =
             let
               p = import inputs.old-flameshot { system = "x86_64-linux"; };

@@ -1,0 +1,38 @@
+Focus the default sink/source on startup.
+
+Pulsemixer normally starts with the cursor on the first row of the active
+tab. This patch moves focus, once per session, to the row whose PA name
+matches the server's default_sink_name (or default_source_name on the
+Input tab), scrolling the view so the row is on-screen.
+
+--- a/pulsemixer
++++ b/pulsemixer
+@@ -1096,6 +1096,7 @@
+         self.selected = None
+         self.action = None
+         self.server_info = None
++        self._initial_focus_set = False
+         self.ev = threading.Event()
+
+     def getch(self):
+@@ -1464,6 +1465,20 @@
+             self.data.append((Bar('no data'), Bar.NONE, 0))
+         if not self.data[self.top_line_num + self.focus_line_num][0]:
+             self.scroll(self.UP)
++        if not self._initial_focus_set and self.server_info is not None:
++            default_name = None
++            if self.mode[0]:
++                default_name = self.server_info.default_sink_name
++            elif self.mode[1]:
++                default_name = self.server_info.default_source_name
++            if default_name is not None:
++                for i, row in enumerate(self.data):
++                    bar = row[0]
++                    if bar and row[1] == Bar.LEFT and getattr(bar, 'pa', None) is not None and getattr(bar.pa, 'name', None) == default_name:
++                        self.top_line_num = max(0, min(i, max(0, self.n_lines - self.lines)))
++                        self.focus_line_num = i - self.top_line_num
++                        break
++                self._initial_focus_set = True
+
+     def display(self):
+         self.screen.erase()
