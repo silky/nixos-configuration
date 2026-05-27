@@ -24,7 +24,6 @@
     gh-gfm-preview.url = "github:thiagokokada/gh-gfm-preview";
     gh-gfm-preview.inputs.nixpkgs.follows = "nixpkgs";
 
-    feedback.url = "github:NorfairKing/feedback";
     flake-parts.url = "github:hercules-ci/flake-parts";
 
     # nix.url = "github:NixOS/nix/2.34.5";
@@ -52,7 +51,6 @@
         (self: super: {
           fcitx-engines = self.fcitx5;
           gh-gfm-preview = inputs.gh-gfm-preview.packages.x86_64-linux.default;
-          feedback = inputs.feedback.packages.x86_64-linux.default;
           zen-browser = inputs.zen-browser.packages.x86_64-linux.default;
           ghostty = inputs.ghostty.packages.x86_64-linux.default;
           pulsemixer = super.pulsemixer.overrideAttrs (old: {
@@ -93,8 +91,22 @@
           };
         };
 
-      nixosConfigurations.eqpac = mkHost { name = "eqpac"; users = [ "noon" "gala" ]; };
-      nixosConfigurations.nqpac = mkHost { name = "nqpac"; users = [ "noon" "gala" ]; };
-      nixosConfigurations.lqpac = mkHost { name = "lqpac"; users = [ "noon" "gala" ]; };
+      nixosConfigurations.eqpac = mkHost {
+        name = "eqpac";
+        users = [ "noon" "gala" ];
+        defaultUser = "noon";
+      };
+
+      nixosConfigurations.nqpac = mkHost {
+        name = "nqpac";
+        users = [ "noon" "gala" ];
+        defaultUser = "noon";
+      };
+
+      nixosConfigurations.lqpac = mkHost {
+        name = "lqpac";
+        users = [ "noon" "gala" ];
+        defaultUser = "noon";
+      };
     };
 }

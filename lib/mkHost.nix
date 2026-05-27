@@ -4,17 +4,31 @@
 #   overlays — list of nixpkgs overlays to apply
 #
 # The returned function takes a host attrset:
-#   { name, users ? [ "noon" "gala" ], modules ? [] }
+#   { name, users ? [ "noon" "gala" ], defaultUser ? "noon", modules ? [] }
 #
 # For each entry in `users` we import both the user's system declaration
 # (../users/<u>/system.nix) and their home-manager config
 # (../users/<u>/home.nix), so the user list is the single source of truth.
-{ inputs, overlays }: { name, users ? [ "noon" "gala" ], modules ? [ ] }:
+#
+# `defaultUser` exposes `myConfig.defaultUser`, currently used for
+# display-manager autologin.
+{ inputs, overlays }: { name, users ? [ "noon" "gala" ], defaultUser ? "noon", modules ? [ ] }:
 inputs.nixpkgs.lib.nixosSystem {
   system = "x86_64-linux";
   specialArgs = inputs // { inherit name; };
   modules = [
     { nixpkgs.overlays = overlays; }
+
+    ({ lib, ... }: {
+      options.myConfig.defaultUser = lib.mkOption {
+        type = lib.types.str;
+        description = ''
+          Default user for the host. Used for things like display-manager
+          autologin. Set via the `defaultUser` argument to `mkHost`.
+        '';
+      };
+      config.myConfig.defaultUser = defaultUser;
+    })
 
     ../modules/nixos/common.nix
     ../hosts/${name}/configuration.nix

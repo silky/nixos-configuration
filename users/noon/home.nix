@@ -1,50 +1,21 @@
 { config
 , pkgs
+, lib
   # , cooklang-chef
 , ...
 }:
 let
   mkSym = file: config.lib.file.mkOutOfStoreSymlink
     "${config.home.homeDirectory}/dev/nixos-configuration/users/${config.home.username}/${file}";
-
-  showBatteryState = pkgs.writeShellScriptBin "show-battery-state" ''
-    mins=$(acpi | jc --acpi | jq '.[].charge_remaining_minutes')
-    hrs=$(acpi | jc --acpi | jq '.[].charge_remaining_hours')
-    pct=$(acpi | jc --acpi | jq '.[].charge_percent')
-    ${pkgs.libnotify}/bin/notify-send "Battery" "Remaining: $hrs hr $mins m ($pct%)."
-  '';
-
-  # Hacky monitor things
-  work = pkgs.writeShellScriptBin "work" ''
-    xrandr \
-      --output HDMI-1 --mode 2560x1440 --pos 2560x0 --rotate right \
-      --output DP-3 --primary --mode 2560x1440 --pos 0x766 \
-      --output eDP-1 --off \
-      --output DP-1 --off \
-      --output DP-2 --off \
-      --rotate normal --output DP-4 --off
-     ~/.fehbg
-  '';
-  mobile = pkgs.writeShellScriptBin "mobile" ''
-    xrandr \
-      --output eDP-1 --primary --mode 2560x1600 --pos 0x0 --rotate normal \
-      --output HDMI-1 --off \
-      --output DP-1 --off \
-      --output DP-2 --off \
-      --output DP-3 --off \
-      --output DP-4 --off
-    ~/.fehbg
-  '';
-  climbing = pkgs.writeShellScriptBin "climbing" ''
-      xrandr \
-        --output DP-1 --primary --mode 3840x2160 --pos 0x0 --rotate normal \
-        --output eDP-1 --off \
-        --output HDMI-1 --off \
-        --output DP-2 --off
-    ~/.fehbg
-  '';
 in
 {
+  imports = [
+    ../../modules/home-manager/zsh-common.nix
+    ../../modules/home-manager/packages-common.nix
+    ../../modules/home-manager/scripts.nix
+    ../../modules/home-manager/monitors.nix
+  ];
+
   home.stateVersion = "22.11";
 
   # ---------------------------------------------------------------------------
@@ -60,23 +31,15 @@ in
         (writers.writeDashBin "gh-browser" ''
           chromium-browser "$@" 1>/dev/null
         '')
-        # brave
-        zen-browser
       ];
 
       dev = [
         (agda.withPackages (p: with p; [ standard-library cubical ]))
         dnsutils
-        html-tidy # HTML formatter/tidier
-        moreutils
         gron # Greppable JSON https://github.com/tomnomnom/gron
-        xh # http request thingy https://github.com/ducaale/xh
         duc # disk usage
         ncdu # disk usage
         yazi # file browser
-        gcc
-        feedback # https://github.com/NorfairKing/feedback#readme
-        python314
         # Random haskell hacking
         (ghc.withPackages (
           p: with p;
@@ -90,42 +53,21 @@ in
             vector
           ]
         ))
-        # haskellPackages.fast-tags # For haskell-tools-nvim
-        # haskellPackages.haskell-debug-adapter # For haskell-tools-nvim
-        csvlens # CSV file viewer
-        gh # For gh-dash auth; `gh auth login`
         gh-dash # GitHub dashboard https://dlvhdr.github.io/gh-dash/
-        vscode # Sometimes useful
         websocat # Websocket chatting
         pciutils # Device debugging
         qemu # Emulation
-        # j # J programming language
-        frink # Calculator
         picat # Logic programming
         wasmtime # wasm runtime
       ];
 
       apps = [
-        # cooklang-chef.packages.x86_64-linux.default
-        # discord-ptb
-        docbook5
-        haskellPackages.hledger
-        haskellPackages.hledger-ui
-        haskellPackages.hledger-web
         lorien # Whiteboardy thing
-        pass
         steam-run # Running dynamically-linked executables
         xmobar
       ];
-
-      scripts = [
-        mobile
-        showBatteryState
-        work
-        climbing
-      ];
     in
-    web ++ dev ++ apps ++ scripts;
+    web ++ dev ++ apps;
 
   programs.chromium = {
     package = pkgs.ungoogled-chromium;
@@ -223,286 +165,12 @@ in
     };
   };
 
-  # programs.fish = {
-  #   enable = true;
-  # };
-
   # ---------------------------------------------------------------------------
   #
-  # ~ Zsh
+  # ~ Zsh — noon-specific overrides on top of zsh-common
   #
   # ---------------------------------------------------------------------------
-  programs.zsh = {
-    enable = true;
-    autocd = true;
-    enableCompletion = true;
-    syntaxHighlighting = {
-      enable = true;
-      styles = {
-        # See: <https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters/main.md>
-        builtin = "none";
-        command = "none";
-        default = "none";
-        alias = "none";
-        global-alias = "none";
-        suffix-alias = "none";
-        function = "none";
-        path = "none";
-        autodirectory = "none";
-        # Don't highlight errors; it's okay.
-        unknown-token = "none";
-      };
-    };
-    defaultKeymap = "emacs";
-    history = {
-      size = 10000000;
-      ignoreAllDups = true;
-      ignoreDups = true;
-      ignorePatterns = [ "rm *" "cd *" "pwd" "exit" "pkill *" ];
-      ignoreSpace = true;
-      share = true;
-      extended = true;
-    };
-
-    initContent = ''
-      # History things
-      HIST_STAMPS="yyyy-mm-dd"
-
-      setopt INC_APPEND_HISTORY    # Write to the history file immediately, not when the shell exits.
-      setopt HIST_SAVE_NO_DUPS     # Do not write a duplicate event to the history file.
-      setopt HIST_VERIFY           # Do not execute immediately upon history expansion.
-      setopt APPEND_HISTORY        # append to history file (Default)
-      setopt HIST_NO_STORE         # Don't store history commands
-      setopt HIST_REDUCE_BLANKS    # Remove superfluous blanks from each command line being added to the history.
-
-      export FZF_DEFAULT_COMMAND='rg -M 1000 --.'
-
-      # Control-arrows
-      bindkey "^[[1;5C" forward-word
-      bindkey "^[[1;5D" backward-word
-
-      # Home/end
-      bindkey "^[[H" beginning-of-line
-      bindkey "^[[F" end-of-line
-
-      bindkey "^?" backward-delete-char
-      bindkey "^[[3~" delete-char
-
-      autoload -z edit-command-line
-      zle -N edit-command-line
-      bindkey "^X^E" edit-command-line
-
-      bindkey -e
-
-      source ~/.profile
-
-      export PATH=~/.local/bin:$PATH
-
-      # Allow comments in interactive mode
-      setopt INTERACTIVE_COMMENTS
-
-      # https://lobste.rs/s/ahmi0i/quick_bits_realise_nix_symlinks
-      function hijack() {
-          local item
-          for item; do
-              if [[ ! -L "$item" ]]; then
-                  continue
-              fi
-
-              local bak="$(dirname "$item")/.$(basename "$item").hijack.bak"
-              local tmp="''${bak%.bak}.tmp"
-
-              cp --no-dereference --remove-destination "$item" "$bak" || return $?
-
-              rm -rf "$tmp" || return $?
-              cp -r "$(readlink --canonicalize "$item")" "$tmp" || return $?
-              chmod -R u+w "$tmp" || return $?
-
-              rm "$item" || return $?
-              mv "$tmp" "$item" || return $?
-          done
-
-          $EDITOR -- "$@"
-          local ret=$?
-
-          for item; do
-              local bak="$(dirname "$item")/.$(basename "$item").hijack.bak"
-
-              if [[ ! -e "$bak" ]]; then
-                  continue
-              fi
-
-              mv "$bak" "$item" || return $?
-          done
-
-          return $ret
-      }
-
-      # rp <ripgrep args> -- ripgrep with normal grouped output, pick a match, open in $EDITOR.
-      function rp() {
-          if [[ $# -eq 0 ]]; then
-              echo "usage: rp <ripgrep args>" >&2
-              return 2
-          fi
-
-          local pick
-          pick=$(command rg --color=always --heading -n "$@" \
-              | awk 'function strip(s,   r) { r = s; gsub(/\033\[[0-9;]*m/, "", r); return r }
-                     { p = strip($0)
-                       if (p == "")        { print "\t"; next }
-                       if (p ~ /^[0-9]+:/) { print f "\t" $0; next }
-                       f = p; print f "\t" $0 }' \
-              | fzf --ansi --no-sort --layout=reverse \
-                    --delimiter=$'\t' --with-nth=2.. --nth=2.. \
-                    --color='fg+:-1:regular,bg+:#ffe0ec,gutter:-1' \
-                    --select-1 --exit-0)
-          local rc=$?
-          (( rc != 0 )) && return $rc
-          [[ -z "$pick" ]] && return 130
-
-          local file rest plain line
-          file=''${pick%%$'\t'*}
-          rest=''${pick#*$'\t'}
-          plain=$(printf '%s' "$rest" | sed $'s/\033\\[[0-9;]*m//g')
-          line=''${plain%%:*}
-          if [[ -z "$file" || ! "$line" =~ ^[0-9]+$ ]]; then
-              echo "rp: pick a match line, not a header or blank." >&2
-              return 1
-          fi
-
-          "''${EDITOR:-nvim}" "+''${line}" -- "$file"
-      }
-    '';
-
-    plugins = with pkgs; [
-      {
-        # https://github.com/agkozak/agkozak-zsh-prompt
-        name = "agkozak-zsh-prompt";
-        src = fetchFromGitHub {
-          owner = "agkozak";
-          repo = "agkozak-zsh-prompt";
-          rev = "v3.11.3";
-          sha256 = "sha256-TOfAWxw1uIV0hKV9o4EJjOlp+jmGWCONDex86ipegOY=";
-        };
-        file = "agkozak-zsh-prompt.plugin.zsh";
-      }
-    ];
-
-    sessionVariables =
-      let
-        # Build up prompt
-        executionTime = "%(9V.%F{247}%9v%f .)";
-        exitStatus = "%(?..%F{\${AGKOZAK_COLORS_EXIT_STATUS}}(%?%)%f )";
-        # userAndHost = "%(!.%S.%F{cyan})%n%1v%(!.%s.%f)";
-        envHint = "%(10V.%F{blue}[%10v]%f .)";
-        path = "%F{196}%c%f";
-        time = "%F{blue}%D{%I:%M %P}%f";
-        gitStatus = "%(3V.%F{\${AGKOZAK_COLORS_BRANCH_STATUS}}%3v%f.)";
-        prompt = executionTime
-          + exitStatus
-          + time
-          # + userAndHost
-          + " "
-          + envHint
-          + path
-          + gitStatus
-          + " "
-        ;
-      in
-      {
-        AGKOZAK_PROMPT_CHAR = " # :";
-        AGKOZAK_LEFT_PROMPT_ONLY = 1;
-        AGKOZAK_MULTILINE = 0;
-        AGKOZAK_CUSTOM_SYMBOLS = "⇣⇡ ⇣ ⇡ + x ! > ? S";
-
-        # Day in the right, e.g.: "Tue Sep 27"
-        AGKOZAK_CUSTOM_RPROMPT = "%F{247}%D{%a %b %d}%f";
-        AGKOZAK_CUSTOM_PROMPT = prompt;
-
-        LS_COLORS = "di=36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43";
-
-        LANG = "en_US.UTF-8";
-        LC_CTYPE = "en_US.UTF-8";
-        LC_ALL = "en_US.UTF-8";
-
-        # hledger
-        # LEDGER_FILE = hledgerFile;
-
-        # hunspell
-        DICTIONARY = "en_GB";
-        EDITOR = "nvim";
-
-        # gh-dash
-        GH_BROWSER = "gh-browser";
-
-        # Conflict with git diff at present
-        # LESS = "-Ric -x4 --use-color -Dd+r$Du+b";
-      };
-
-    shellAliases = {
-      # Nix
-      rr = "direnv reload";
-      n = "nix";
-      nu = "nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
-      bb = "nom build";
-
-      j = "just";
-      # A convenient  alias for "just test" or "just t"
-      jt = "just test";
-
-      fb = "feedback";
-
-      # Haskell
-      g = "ghci";
-      c = "cabal build";
-
-      # hledger
-      h = "hledger -s";
-
-      # Git-releated
-      ci = "git commit -m";
-      co = "git checkout";
-      gc = "git clone --recursive";
-      gpr = "git pull --rebase";
-      pp = "git push";
-      st = "git status";
-      gpo = "git push origin";
-      d = "git diff";
-
-      # Fun
-      shh = "ssh -q";
-
-      # Shell
-      ".." = "cd ..";
-      "..." = "cd ../..";
-      "cd.." = "cd ..";
-      l = "ls -lah --color=auto";
-      ll = "ls -lh --color=auto";
-      ls = "ls --color=auto";
-      md = "mkdir -p";
-
-      # Misc
-      dc = "docker compose";
-      df = "duf -only local -output mountpoint,size,used,usage,avail";
-      f = "format";
-      m = "make";
-      p = "python";
-      rg = "rg -M 1000 --.";
-      # Open my main config by default
-      gd = "gh-dash --config ~/dev/life/gh-dash-configs/config.yml";
-      # For glow, always use the pager
-      glow = "glow -p";
-      lg = "lazygit";
-      wormhole = "wormhole-rs";
-
-      # Text-editing
-      v = "nvim";
-      vim = "nvim";
-      # w = vim in pairing mode (vv)
-      w = "nvim -c 'source ~/dev/nixos-configuration/users/noon/pairing.vim'";
-      vv = "nvim -c 'source ~/dev/nixos-configuration/users/noon/pairing.vim'";
-    };
-  };
+  programs.zsh = import ./zsh.nix { inherit lib; };
 
 
   # ---------------------------------------------------------------------------
@@ -510,23 +178,6 @@ in
   # ~ Misc
   #
   # ---------------------------------------------------------------------------
-
-  # Disabled presently due to home-manager zed config bug.
-  # programs.zed-editor = {
-  #   enable = true;
-  # extensions = [
-  #   "html"
-  #   "haskell"
-  #   "nix"
-  # ];
-  # userSettings = {
-  #   buffer_font_family = iMWritingMono Nerd Font";
-  #   them = {
-  #     mode = "system";
-  #     light = "Catppuccin Latte";
-  #   };
-  # };
-  # };
 
   services.dunst = {
     enable = true;
@@ -561,12 +212,6 @@ in
       };
     };
   };
-
-  # services.gpg-agent = {
-  #   enable = true;
-  #   enableSshSupport = true;
-  #   pinentryPackage = pkgs.pinentry-qt;
-  # };
 
   services.gnome-keyring.enable = true;
 
@@ -609,7 +254,7 @@ in
     '';
 
     # Ones I prefer to modify in place
-    ".hspec".source = mkSym "hspec";
+    ".xmonad/xmonad.hs".source = mkSym "xmonad.hs";
     ".gitignore".source = mkSym "gitignore";
     ".gitconfig".source = mkSym "gitconfig";
     ".editorconfig".source = mkSym "editorconfig";
