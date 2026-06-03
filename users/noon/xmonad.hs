@@ -30,7 +30,7 @@ import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.FadeWindows
 import XMonad.Hooks.Place
 import XMonad.Hooks.SetWMName
-import XMonad.Layout.Circle
+import XMonad.Layout.CircleEx
 import XMonad.Layout.Fullscreen
 import XMonad.Layout.Grid
 import XMonad.Layout.Groups.Examples
@@ -38,7 +38,7 @@ import XMonad.Layout.LayoutCombinators
 import XMonad.Layout.LayoutHints
 import XMonad.Layout.MultiColumns
 import XMonad.Layout.ResizableTile
-import XMonad.Layout.Named (named)
+import XMonad.Layout.Renamed (named)
 import XMonad.Layout.NoBorders
 import XMonad.Layout.OneBig
 import XMonad.Layout.Spiral
@@ -59,7 +59,7 @@ myLayout = layoutHints $ smartBorders $
     ||| named "CenteredMaster" (zoomRow)
     ||| noBorders Full
     ||| named "TallCols"       (Mirror $ multiCol [1] nmaster delta (1/2))
-    ||| named "Circle"         Circle
+    ||| named "Circle"         (circleEx {cDelta = -3*pi/4})
     ||| named "Big"            (OneBig (3/4) (3/4))
     ||| named "Resizable"      (ResizableTall nmaster delta (1/2) [])
   where

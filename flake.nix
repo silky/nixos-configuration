@@ -3,7 +3,7 @@
     nixpkgs.url = "nixpkgs/nixos-unstable";
 
     # Home-manager also needs to be unstable.
-    home-manager.url = "github:nix-community/home-manager/master";
+    home-manager.url = "github:nix-community/home-manager/release-26.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
@@ -67,8 +67,31 @@
       ];
 
       mkHost = import ./lib/mkHost.nix { inherit inputs overlays; };
+
+      pkgs = import nixpkgs { system = "x86_64-linux"; inherit overlays; };
     in
     {
+      devShells."x86_64-linux".xmonad =
+        let
+          ghc = pkgs.haskellPackages.ghcWithPackages (p: with p; [
+            xmonad
+            xmonad-contrib
+            xmonad-extras
+            split
+          ]);
+        in
+        pkgs.mkShell {
+          name = "xmonad-build";
+          packages = [
+            ghc
+            pkgs.haskell-language-server
+          ];
+          shellHook = ''
+            echo "xmonad dev shell. Build with:"
+            echo "  ghc --make -threaded -O2 users/noon/xmonad.hs -o /tmp/xmonad-test"
+          '';
+        };
+
       formatter."x86_64-linux" =
         nix-formatter-pack.lib.mkFormatter {
           pkgs = nixpkgs.legacyPackages."x86_64-linux";
