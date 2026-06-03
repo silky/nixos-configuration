@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-unstable";
+    nixpkgs.url = "nixpkgs/nixos-26.05";
 
     # Home-manager also needs to be unstable.
     home-manager.url = "github:nix-community/home-manager/release-26.05";
@@ -13,7 +13,7 @@
     cornelis.url = "github:isovector/cornelis";
     cornelis.inputs.nixpkgs.follows = "nixpkgs";
 
-    ghostty.url = "github:ghostty-org/ghostty";
+    ghostty.url = "github:ghostty-org/ghostty/v1.3.1";
     ghostty.inputs.nixpkgs.follows = "nixpkgs";
 
     old-flameshot.url = "github:nixos/nixpkgs/1c1c9b3f5ec0421eaa0f22746295466ee6a8d48f";
@@ -39,7 +39,6 @@
         (self: super: {
           fcitx-engines = self.fcitx5;
           gh-gfm-preview = inputs.gh-gfm-preview.packages.x86_64-linux.default;
-          zen-browser = inputs.zen-browser.packages.x86_64-linux.default;
           ghostty = inputs.ghostty.packages.x86_64-linux.default;
           pulsemixer = super.pulsemixer.overrideAttrs (old: {
             patches = (old.patches or [ ]) ++ [
