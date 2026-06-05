@@ -124,5 +124,7 @@
     # Text-editing
     v = "nvim";
     vim = "nvim";
+
+    pclaude = "CLAUDE_CONFIG_DIR=~/.personal-claude claude";
   };
 }
