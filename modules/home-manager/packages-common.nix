@@ -15,5 +15,6 @@
     moreutils
     python314
     vscode
+    just
   ];
 }
