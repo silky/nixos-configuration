@@ -47,7 +47,9 @@ import XMonad.Layout.ZoomRow
 import XMonad.Util.EZConfig
 import XMonad.Util.Run (spawnPipe)
 import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.Rescreen (addAfterRescreenHook)
 import XMonad.Layout.IndependentScreens
+import Control.Monad (when)
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -192,6 +194,28 @@ nonEmptySpacesOnCurrentScreen p = WSIs $ do
     && (p $ unmarshallW (W.tag x)) -- Skip the "scratch" workspaces
 
 
+-- Move every window that lives on a non-screen-0 workspace ("1_N", "2_N", ...)
+-- back onto the matching workspace on screen 0 ("1_N" -> "0_N"). Batched into a
+-- single `windows` call so it triggers just one refresh.
+consolidateToScreen0 :: X ()
+consolidateToScreen0 = do
+  ws <- gets windowset
+  let moves = [ (marshall 0 (unmarshallW (W.tag w)), win)
+              | w   <- W.workspaces ws
+              , unmarshallS (W.tag w) /= 0
+              , win <- W.integrate' (W.stack w)
+              ]
+  windows $ \s -> foldr (\(t, win) acc -> W.shiftWin t win acc) s moves
+
+
+-- After any screen reconfiguration: if only one physical screen remains,
+-- rescue any windows stranded on the (now hidden) second-screen workspaces.
+consolidateWhenSingleScreen :: X ()
+consolidateWhenSingleScreen = do
+  n <- gets (length . W.screens . windowset)
+  when (n == 1) consolidateToScreen0
+
+
 myWorkspaces :: [WorkspaceId]
 myWorkspaces = map show [ 0, 1 .. 9 :: Int ]
 
@@ -222,7 +246,7 @@ main = do
         , logHook            = updatePointer (0.5, 0.5) (0, 0)
       } `additionalKeys'` myKeys
 
-  xmonad $ docks myConfig
+  xmonad $ addAfterRescreenHook consolidateWhenSingleScreen $ docks myConfig
 
 
 additionalKeys' :: XConfig a -> (XConfig a -> [((KeyMask, KeySym), X ())]) -> XConfig a
