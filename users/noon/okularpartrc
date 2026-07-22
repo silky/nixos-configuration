@@ -17,6 +17,7 @@ ttsVoice=Bishnupriya Manipuri
 ShowLeftPanel=false
 
 [PageView]
+MouseMode=Zoom
 ShowScrollBars=false
 ViewColumns=2
 
