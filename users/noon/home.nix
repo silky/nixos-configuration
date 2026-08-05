@@ -1,7 +1,7 @@
 { config
 , pkgs
 , lib
-  # , cooklang-chef
+, cooklang-chef
 , ...
 }:
 let
@@ -119,19 +119,20 @@ in
     };
   };
 
-  # systemd.user.services.cooklang-chef = {
-  #   Unit = {
-  #     Description = "cooklang-chef";
-  #     After = [ "graphical-session-pre.target" ];
-  #     PartOf = [ "graphical-session.target" ];
-  #   };
-  #   Install = { WantedBy = [ "graphical-session.target" ]; };
-  #   Service = {
-  #     Restart = "on-failure";
-  #     ExecStart =
-  #       "${cooklang-chef.packages.x86_64-linux.default}/bin/chef --path ${recipesDir} serve --port 6006";
-  #   };
-  # };
+  systemd.user.services.cooklang-chef = {
+    Unit = {
+      Description = "cooklang-chef";
+      After = [ "graphical-session-pre.target" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+    Install = { WantedBy = [ "graphical-session.target" ]; };
+    Service = {
+      Restart = "on-failure";
+      ExecStart =
+        let recipesDir = "/home/noon/dev/life/recipes";
+        in "${cooklang-chef.packages.x86_64-linux.default}/bin/chef --path ${recipesDir} serve --port 6006";
+    };
+  };
 
   programs.firefox = {
     enable = true;
