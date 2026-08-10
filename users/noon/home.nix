@@ -62,7 +62,7 @@ in
       ];
 
       apps = [
-        lorien # Whiteboardy thing
+        affine # Miro-style whiteboardy thing
         steam-run # Running dynamically-linked executables
         xmobar
       ];
@@ -72,7 +72,7 @@ in
   programs.chromium = {
     package = pkgs.ungoogled-chromium;
     enable = true;
-    # TODO: These aren't installed.
+    # TODO: These aren't installed, because it's the ungoogled version 🥲.
     extensions = [
       { id = "mdjildafknihdffpkfmmpnpoiajfjnjd"; } # Consent-O-Matic
       { id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"; } # uBlock Origin
