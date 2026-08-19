@@ -125,6 +125,7 @@
     v = "nvim";
     vim = "nvim";
 
-    pclaude = "CLAUDE_CONFIG_DIR=~/.personal-claude claude";
+    # Temporarily point at "bounded claude".
+    pclaude = "CLAUDE_CONFIG_DIR=~/.personal-claude bounded-claude";
   };
 }

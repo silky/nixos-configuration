@@ -31,6 +31,7 @@ inputs.nixpkgs.lib.nixosSystem {
     })
 
     ../modules/nixos/common.nix
+    ../modules/nixos/agents.nix
     ../hosts/${name}/configuration.nix
 
     inputs.home-manager.nixosModules.home-manager
