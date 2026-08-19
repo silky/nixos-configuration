@@ -23,6 +23,10 @@
 
     old-flameshot.url = "github:nixos/nixpkgs/1c1c9b3f5ec0421eaa0f22746295466ee6a8d48f";
 
+    # ungoogled-chromium 151.x broke clipboard copy/paste; pinned back to the
+    # last known-good nixpkgs revision (150.0.7871.186) until upstream fixes it.
+    old-chromium.url = "github:nixos/nixpkgs/8623c4c20aa4ca2f5fb81510d2944066c3fb0d96";
+
     nix-formatter-pack.url = "github:Gerschtli/nix-formatter-pack";
     nix-formatter-pack.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -58,6 +62,11 @@
               p = import inputs.old-flameshot { system = "x86_64-linux"; };
             in
             p.flameshot;
+          ungoogled-chromium =
+            let
+              p = import inputs.old-chromium { system = "x86_64-linux"; };
+            in
+            p.ungoogled-chromium;
           # nix = nix.packages.x86_64-linux.default;
           # This is how to get a new linux firmware
           # linux-firmware = super.linux-firmware.overrideAttrs (

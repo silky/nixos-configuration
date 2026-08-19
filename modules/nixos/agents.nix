@@ -17,6 +17,12 @@
 let
   jail = jail-nix.lib.init pkgs;
 
+  proxyPort = 8888; # tinyproxy, on the host's loopback
+  proxySocket = "/run/claude-jail/proxy.sock";
+  jailProxyPort = 3128; # forwarded proxy, on the jail's loopback
+  jailProxyUrl = "http://127.0.0.1:${toString jailProxyPort}";
+
+
   # fnmatch patterns, one per line in tinyproxy's filter file. Note
   # that `github.com` does not match `api.github.com`; wildcards only
   # via `*`.
@@ -28,26 +34,12 @@ let
     "console.anthropic.com"
   ];
 
-  proxyPort = 8888; # tinyproxy, on the host's loopback
-  proxySocket = "/run/claude-jail/proxy.sock";
-  jailProxyPort = 3128; # forwarded proxy, on the jail's loopback
-  jailProxyUrl = "http://127.0.0.1:${toString jailProxyPort}";
-
   # Tools the jailed agent should find on $PATH inside the sandbox.
   agentPackages = with pkgs; [
-    bash
-    coreutils
-    curl
-    direnv
-    fd
-    findutils
-    gitMinimal
-    gnugrep
-    gnused
-    jq
+    bash coreutils curl direnv fd findutils gitMinimal gnugrep gnused
+    jq ripgrep
     # LIVEHACKING
     # python3
-    ripgrep
   ];
 
   dangerousClaude = pkgs.writeShellScriptBin "bounded-claude" ''
