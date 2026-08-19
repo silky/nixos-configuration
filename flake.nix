@@ -18,8 +18,17 @@
     cornelis.url = "github:isovector/cornelis";
     cornelis.inputs.nixpkgs.follows = "nixpkgs";
 
+    # The terminal grid stopped reflowing on window resize after the 2026-08-18
+    # nixpkgs bump (26.05.7813 -> 26.05.7984). Ghostty itself is unchanged --
+    # v1.3.1 is the latest release, so there is no newer version to move to; what
+    # moved was its GTK stack. gtk4 4.22.4 is identical source and patches across
+    # both, so the suspects are glib 2.88.1 -> 2.88.3 and libadwaita 1.9.2 ->
+    # 1.9.3. Pin ghostty's nixpkgs to the last revision that built a working
+    # ghostty, which reproduces that exact binary and closure.
     ghostty.url = "github:ghostty-org/ghostty/v1.3.1";
-    ghostty.inputs.nixpkgs.follows = "nixpkgs";
+    ghostty.inputs.nixpkgs.follows = "ghostty-nixpkgs";
+
+    ghostty-nixpkgs.url = "https://releases.nixos.org/nixos/26.05/nixos-26.05.7813.0dd31db7e6db/nixexprs.tar.xz";
 
     old-flameshot.url = "github:nixos/nixpkgs/1c1c9b3f5ec0421eaa0f22746295466ee6a8d48f";
 

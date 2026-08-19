@@ -36,8 +36,17 @@ let
 
   # Tools the jailed agent should find on $PATH inside the sandbox.
   agentPackages = with pkgs; [
-    bash coreutils curl direnv fd findutils gitMinimal gnugrep gnused
-    jq ripgrep
+    bash
+    coreutils
+    curl
+    direnv
+    fd
+    findutils
+    gitMinimal
+    gnugrep
+    gnused
+    jq
+    ripgrep
     # LIVEHACKING
     # python3
   ];
@@ -64,7 +73,6 @@ let
       (set-env "https_proxy" jailProxyUrl)
       (set-env "NO_PROXY" "localhost,127.0.0.1")
       (set-env "no_proxy" "localhost,127.0.0.1")
-
       (wrap-entry (entry: ''
         ${pkgs.socat}/bin/socat \
           "TCP-LISTEN:${toString jailProxyPort},bind=127.0.0.1,fork,reuseaddr" \
@@ -77,6 +85,8 @@ let
         done
         ${entry}
       ''))
+      # LIVEHACKING
+      # network
 
 
       # Directories

@@ -264,7 +264,7 @@
         "flake-compat": "flake-compat_3",
         "home-manager": "home-manager",
         "nixpkgs": [
-          "nixpkgs"
+          "ghostty-nixpkgs"
         ],
         "zig": "zig",
         "zon2nix": "zon2nix"
@@ -282,6 +282,19 @@
         "ref": "v1.3.1",
         "repo": "ghostty",
         "type": "github"
+      }
+    },
+    "ghostty-nixpkgs": {
+      "locked": {
+        "lastModified": 1786943417,
+        "narHash": "sha256-eVWN0FVPJSK7wgm9SxzFwd6FNRWoJN2oAe3M6MbpZ8U=",
+        "rev": "0dd31db7e6dbf9ce05697c4545f6fe01accec994",
+        "type": "tarball",
+        "url": "https://releases.nixos.org/nixos/26.05/nixos-26.05.7813.0dd31db7e6db/nixexprs.tar.xz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://releases.nixos.org/nixos/26.05/nixos-26.05.7813.0dd31db7e6db/nixexprs.tar.xz"
       }
     },
     "gitignore": {
@@ -951,6 +964,7 @@
         "flake-parts": "flake-parts",
         "gh-gfm-preview": "gh-gfm-preview",
         "ghostty": "ghostty",
+        "ghostty-nixpkgs": "ghostty-nixpkgs",
         "haskell-hacking-notebook": "haskell-hacking-notebook",
         "home-manager": "home-manager_2",
         "jail-nix": "jail-nix",
