@@ -40,6 +40,5 @@
       EDITOR = "vscode";
     };
 
-  shellAliases = {
-  };
+  shellAliases = { };
 }

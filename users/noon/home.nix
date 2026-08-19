@@ -64,7 +64,8 @@ in
       apps = [
         affine # Miro-style whiteboardy thing
         steam-run # Running dynamically-linked executables
-        xmobar
+        xmobar # Bar for running programs
+        obs-studio # Video etc
       ];
     in
     web ++ dev ++ apps;

@@ -1,14 +1,19 @@
 {
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-unstable";
+    nixpkgs.url = "nixpkgs/nixos-26.05";
 
     # Home-manager also needs to be unstable.
-    home-manager.url = "github:nix-community/home-manager/master";
+    home-manager.url = "github:nix-community/home-manager/release-26.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    nixos-hardware.inputs.nixpkgs.follows = "nixpkgs";
+
     cooklang-chef.url = "github:silky/cooklang-chef/nix-hacking";
+    cooklang-chef.inputs.nixpkgs.follows = "nixpkgs";
+
     haskell-hacking-notebook.url = "github:silky/haskell-hacking-notebook/main";
+    haskell-hacking-notebook.inputs.nixpkgs.follows = "nixpkgs";
 
     cornelis.url = "github:isovector/cornelis";
     cornelis.inputs.nixpkgs.follows = "nixpkgs";
@@ -23,6 +28,9 @@
 
     gh-gfm-preview.url = "github:thiagokokada/gh-gfm-preview";
     gh-gfm-preview.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Bubblewrap jails for (agent) derivations.
+    jail-nix.url = "sourcehut:~alexdavid/jail.nix";
 
     flake-parts.url = "github:hercules-ci/flake-parts";
   };

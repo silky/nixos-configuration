@@ -1,7 +1,20 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 {
   # Screen locking
   programs.slock.enable = true;
+
+  # Flameshot registers a D-Bus single-instance service (org.flameshot.Flameshot)
+  # on first use and stays resident; later invocations just message that same
+  # process. A suspend/resume with a monitor-topology change (lid-close while
+  # docked) can leave that long-lived process wedged, so `flameshot gui` quietly
+  # does nothing. Kill it after resume so the next capture spawns a fresh one.
+  systemd.services.flameshot-restart-after-resume = {
+    description = "Kill flameshot after resume so it restarts cleanly";
+    after = [ "suspend.target" ];
+    wantedBy = [ "suspend.target" ];
+    serviceConfig.Type = "oneshot";
+    script = "${pkgs.procps}/bin/pkill -x flameshot || true";
+  };
 
   services = {
     displayManager = {
