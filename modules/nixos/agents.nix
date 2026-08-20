@@ -45,8 +45,10 @@ let
     gitMinimal
     gnugrep
     gnused
+    inetutils
     jq
     ripgrep
+    tree
     # LIVEHACKING
     # python3
   ];
@@ -54,6 +56,11 @@ let
   dangerousClaude = pkgs.writeShellScriptBin "bounded-claude" ''
     exec ${pkgs.claude-code}/bin/claude --dangerously-skip-permissions "$@"
   '';
+
+  # LIVEHACKING
+  # dangerousClaude = pkgs.writeShellScriptBin "bounded-claude" ''
+  #   exec ${pkgs.bash}/bin/bash
+  # '';
 
   bounded-claude = jail "bounded-claude" dangerousClaude (
     with jail.combinators;
@@ -97,7 +104,7 @@ let
       (try-readwrite (noescape "~/.claude.json"))
       (try-readonly (noescape "~/.gitignore"))
       # LIVEHACKING
-      # (try-readonly (noescape "~/tmp/bb"))
+      (try-readonly (noescape "~/tmp/talk/bb"))
 
 
       # Packages
