@@ -66,6 +66,7 @@ in
         steam-run # Running dynamically-linked executables
         xmobar # Bar for running programs
         obs-studio # Video etc
+        vulnix # CVE scanner
       ];
     in
     web ++ dev ++ apps;

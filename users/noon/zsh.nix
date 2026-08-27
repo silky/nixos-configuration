@@ -91,6 +91,7 @@
     # Nix
     rr = "direnv reload";
     nu = "nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
+    n = "nix";
 
     # Git-related
     ci = "git commit -m";
@@ -100,9 +101,6 @@
     pp = "git push";
     st = "git status";
     gpo = "git push origin";
-
-    # Nix
-    n = "nix";
 
     j = "just";
     # A convenient  alias for "just test" or "just t"
@@ -125,7 +123,7 @@
     v = "nvim";
     vim = "nvim";
 
-    # Temporarily point at "bounded claude".
-    pclaude = "CLAUDE_CONFIG_DIR=~/.personal-claude bounded-claude";
+    pclaude = "CLAUDE_CONFIG_DIR=~/.personal-claude claude";
+    cc = "claude";
   };
 }
