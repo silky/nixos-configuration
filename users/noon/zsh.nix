@@ -11,6 +11,49 @@
   initContent = lib.mkAfter ''
     export FZF_DEFAULT_COMMAND='rg -M 1000 --.'
 
+    # Completion for the `git wt` alias (see users/noon/gitconfig). Zsh's
+    # native _git dispatches to `_git-<name>` functions before expanding
+    # aliases, so defining this is enough to hook in.
+    _git-wt() {
+      local curcontext=$curcontext state line ret=1
+      declare -A opt_args
+
+      _arguments -C \
+        ': :->command' \
+        '*:: :->option-or-argument' && ret=0
+
+      case $state in
+        (command)
+          local -a subcommands
+          subcommands=(
+            'add:add a worktree in wts/ for a new, local, or origin branch'
+            'ls:list worktrees'
+            'rm:remove a worktree'
+            'path:print the path of a worktree'
+            'prune:prune stale worktree information'
+          )
+          _describe -t commands 'git wt subcommand' subcommands && ret=0
+          ;;
+        (option-or-argument)
+          case $line[1] in
+            (add)
+              _alternative \
+                'branch-names::__git_branch_names' \
+                'remote-branch-names-noprefix::__git_remote_branch_names_noprefix' && ret=0
+              ;;
+            (rm|remove|path)
+              local base expl
+              base="$(cd "$(git rev-parse --git-common-dir 2>/dev/null)/../.." 2>/dev/null && pwd)/wts"
+              local -a wts
+              wts=($base/*(N/:t))
+              _wanted worktrees expl 'worktree' compadd -a wts && ret=0
+              ;;
+          esac
+          ;;
+      esac
+      return ret
+    }
+
     # Allow comments in interactive mode
     setopt INTERACTIVE_COMMENTS
 
