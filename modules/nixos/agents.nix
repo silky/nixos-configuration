@@ -13,7 +13,7 @@
 # an HTTP proxy on the jail's private loopback, and HTTP(S)_PROXY
 # points the tools at it. No resolv.conf is bound: DNS happens on the
 # host, in tinyproxy, only for allowed names.
-{ pkgs, jail-nix, ... }:
+_:
 {
   # Disable this for now.
   # environment.systemPackages = [ bounded-claude ];

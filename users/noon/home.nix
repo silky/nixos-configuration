@@ -34,7 +34,7 @@ in
       ];
 
       dev = [
-        (agda.withPackages (p: with p; [ standard-library cubical ]))
+        (agda.withPackages (p: with p; [ standard-library cubical ])) # One can dream
         dnsutils
         gron # Greppable JSON https://github.com/tomnomnom/gron
         duc # disk usage
@@ -66,7 +66,6 @@ in
         steam-run # Running dynamically-linked executables
         xmobar # Bar for running programs
         obs-studio # Video etc
-        vulnix # CVE scanner
       ];
     in
     web ++ dev ++ apps;

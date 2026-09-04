@@ -10,11 +10,11 @@
   # ---------------------------------------------------------------------------
   home.packages = with pkgs; [
     csvlens # CSV file viewer
-    gcc
+    gcc # You never know
+    gedit # Last-resort text editing
     gh # For gh-dash auth; `gh auth login`
+    just # Build tool
     moreutils
-    python314
-    vscode
-    just
+    python314 # Last-resort programming
   ];
 }
