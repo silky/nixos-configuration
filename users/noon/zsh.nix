@@ -165,6 +165,7 @@
     # Text-editing
     v = "nvim";
     vim = "nvim";
+    e = "emacsclient -t";
 
     pclaude = "CLAUDE_CONFIG_DIR=~/.personal-claude claude";
     cc = "claude";

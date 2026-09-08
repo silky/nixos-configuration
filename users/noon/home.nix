@@ -14,6 +14,7 @@ in
     ../../modules/home-manager/packages-common.nix
     ../../modules/home-manager/scripts.nix
     ../../modules/home-manager/monitors.nix
+    ./emacs.nix
   ];
 
   home.stateVersion = "22.11";
