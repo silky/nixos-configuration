@@ -36,6 +36,17 @@
 ;; emacs 30.2 -- declare it, or every file prompts about unsafe
 ;; local variables.
 (put 'smie-indent-basic 'safe-local-variable #'integerp)
+;; Same story for haskell-mode's indentation knobs, which editorconfig
+;; sets from indent_size on *.hs: none of them carry a :safe predicate,
+;; so opening any file in a project with an .editorconfig (hydra, for
+;; one) stops on "Please type y, n, !, ..." before the mode -- and hence
+;; eglot -- finishes loading.
+(dolist (v '(haskell-indentation-layout-offset
+             haskell-indentation-left-offset
+             haskell-indentation-starter-offset
+             haskell-indentation-where-post-offset
+             haskell-indentation-where-pre-offset))
+  (put v 'safe-local-variable #'integerp))
 (which-key-mode 1)
 (xterm-mouse-mode 1)               ; mouse=a
 ;; mwheel only auto-enables in GUI sessions; in a tty daemon it
@@ -43,6 +54,17 @@
 (setq mouse-wheel-scroll-amount '(3 ((shift) . 1))
       mouse-wheel-progressive-speed nil)
 (mouse-wheel-mode 1)
+
+;; Window separator: emacs draws the tty vertical border with ASCII `|',
+;; which leaves a gap between rows and reads as a dashed line. nvim's
+;; default `fillchars' vert is U+2502 BOX DRAWINGS LIGHT VERTICAL, which
+;; joins up; the display table is how a tty frame picks the glyph. The
+;; colour already matches -- `vertical-border' sets no attributes, so it
+;; falls through to `default' (#444444), exactly like nvim's
+;; WinSeparator here.
+(unless standard-display-table
+  (setq standard-display-table (make-display-table)))
+(set-display-table-slot standard-display-table 'vertical-border ?│)
 
 ;; Strip trailing whitespace on every save, all filetypes.
 (add-hook 'before-save-hook #'delete-trailing-whitespace)
@@ -58,7 +80,45 @@
 (show-paren-mode 1)
 (blink-cursor-mode -1)
 
-;; -- Modeline: path [+] ... (fmt/enc/ft) (line N/M, col C) ---------------
+;; -- Modeline: path [+] [lsp] ... (fmt/enc/ft) (line N/M, col C) ---------
+
+;; eglot publishes its status through `mode-line-misc-info', which this
+;; mode line does not include, so none of it was visible -- including the
+;; "Setting up"/"Processing" progress HLS reports while it loads a
+;; component, which is the slow part worth watching. Kept to a handful of
+;; characters so the line cannot wrap onto a second row: the progress
+;; title only appears while HLS is actually working, and collapses to a
+;; bare [hls] once it is idle. Full detail is in the tooltip.
+(defun noon/eglot-mode-line ()
+  "Compact LSP status: server progress, in-flight requests, or nothing."
+  (when (bound-and-true-p eglot--managed-mode)
+    (let* ((server (eglot-current-server))
+           (pending (and server (jsonrpc-continuation-count server)))
+           (report (and server
+                        (catch 'found
+                          (maphash (lambda (_k p)
+                                     (when (eq (car p) 'eglot--mode-line-reporter)
+                                       (throw 'found p)))
+                                   (eglot--progress-reporters server))
+                          nil)))
+           (title (and report (nth 2 report)))
+           (pct   (and report (nth 4 report)))
+           ;; HLS's titles are "Setting up hydra (for <file>)" and
+           ;; "Processing"; the first word is the informative part and
+           ;; keeps this to a couple of characters. A literal % must be
+           ;; doubled -- this string is itself a mode-line construct, and
+           ;; a bare %] is read as the recursive-edit spec and eaten.
+           (text (cond
+                  (report (format "hls %s%s"
+                                  (truncate-string-to-width
+                                   (car (split-string (or title "?"))) 10 nil nil t)
+                                  (if pct (format " %s%%%%" pct) "")))
+                  ((and pending (> pending 0)) (format "hls ~%d" pending))
+                  (t "hls"))))
+      (propertize (concat " [" text "]")
+                  'help-echo (if report
+                                 (format "HLS: %s %s" title (or (nth 3 report) ""))
+                               "HLS: connected")))))
 
 (setq-default
  mode-line-format
@@ -67,6 +127,7 @@
             (buffer-name)))
    (:eval (when (buffer-modified-p) " [+]"))
    (:eval (when buffer-read-only " [RO]"))
+   (:eval (noon/eglot-mode-line))
    mode-line-format-right-align
    "("
    (:eval (pcase (coding-system-eol-type buffer-file-coding-system)
@@ -303,6 +364,74 @@ repo-root-relative, so run from the repo root."
 (add-to-list 'auto-mode-alist
              '("/cabal\\.project\\(\\.local\\)?\\'" . haskell-cabal-mode))
 
+;; haskell: match vim's classification (haskell-vim + noon-light).
+;; haskell-mode paints every keyword with haskell-keyword-face, so the
+;; lot arrives as Statement grey; haskell-vim splits them three ways.
+;; The gap is loudest on `deriving stock (Generic)', violet end to end
+;; in vim but half grey here:
+;;   data type family class instance newtype module where let in,
+;;   deriving + anyclass/newtype/stock/via/instance  Structure -> Type
+;;   import qualified as hiding safe                 Include -> PreProc
+;;   do case of, if then else, infix{,l,r}, default  Keyword -> Statement
+;; Only the first two groups move; the third is already grey. Every
+;; matcher skips strings and comments, which the override flag these
+;; rules need would otherwise repaint.
+
+(defun noon/haskell-search (regexp limit)
+  "Search forward for REGEXP before LIMIT, skipping strings and comments.
+`syntax-ppss' leaves point at its argument and can run
+`syntax-propertize' over the match data, so both are saved: without the
+`save-excursion' point slides back to the start of the match and the
+anchored rules below spin on it forever."
+  (catch 'hit
+    (while (re-search-forward regexp limit t)
+      (let ((data (match-data)))
+        (unless (save-excursion
+                  (save-match-data (nth 8 (syntax-ppss (car data)))))
+          (set-match-data data)
+          (throw 'hit t))))
+    nil))
+
+(defconst noon/haskell-structure-re
+  (concat "\\_<" (regexp-opt '("class" "data" "deriving" "in" "instance"
+                               "let" "module" "newtype" "type" "where"))
+          "\\_>"))
+(defconst noon/haskell-strategy-re
+  (concat "\\_<" (regexp-opt '("anyclass" "instance" "newtype" "stock" "via"))
+          "\\_>"))
+(defconst noon/haskell-import-word-re
+  (concat "\\_<" (regexp-opt '("as" "hiding" "qualified" "safe")) "\\_>"))
+
+(defun noon/haskell-structure (limit)
+  (noon/haskell-search noon/haskell-structure-re limit))
+(defun noon/haskell-deriving (limit)
+  (noon/haskell-search "\\_<deriving\\_>" limit))
+(defun noon/haskell-strategy (limit)
+  (noon/haskell-search noon/haskell-strategy-re limit))
+(defun noon/haskell-import (limit)
+  (noon/haskell-search "^[ \t]*\\(import\\)\\_>" limit))
+(defun noon/haskell-import-word (limit)
+  (noon/haskell-search noon/haskell-import-word-re limit))
+;; `family' is a keyword only in `type family' / `data family'; elsewhere
+;; it is an ordinary name (a record field, say). Same for the strategy
+;; words, which only count on a `deriving' line -- hence the anchored
+;; rules rather than one flat keyword list.
+(defun noon/haskell-family (limit)
+  (noon/haskell-search "\\_<\\(?:type\\|data\\)\\_>[ \t]+\\(family\\)\\_>" limit))
+
+(font-lock-add-keywords
+ 'haskell-mode
+ '((noon/haskell-structure 0 'font-lock-type-face t)
+   (noon/haskell-family    1 'font-lock-type-face t)
+   (noon/haskell-deriving
+    (noon/haskell-strategy (line-end-position) nil
+                           (0 'font-lock-type-face t)))
+   (noon/haskell-import
+    (1 'font-lock-preprocessor-face t)
+    (noon/haskell-import-word (line-end-position) nil
+                              (0 'font-lock-preprocessor-face t))))
+ 'append)
+
 ;; python: match vim's classification (python.vim + noon-light):
 ;;   from/import        Include -> PreProc          (emacs: keyword grey)
 ;;   builtins (print..) Function -> black           (emacs: builtin violet)
@@ -324,20 +453,147 @@ repo-root-relative, so run from the repo root."
 
 (setq eglot-autoshutdown t)
 
+;; No inlay hints. Eglot switches `eglot-inlay-hints-mode' on by itself
+;; whenever the server advertises :inlayHintProvider, and HLS's
+;; explicit-fields plugin then splices record-field names into the
+;; buffer as overlays -- "$sel:notApplicableReason:WaitOnNotApplicableTx="
+;; and friends. It is not real text (no file on disk changes), but it
+;; reflows the line and nvim shows none of it.
+(setq eglot-ignored-server-capabilities '(:inlayHintProvider))
+
+;; eglot's built-in entry is ("haskell-language-server-wrapper" "--lsp"),
+;; but a nix devshell puts the plain `haskell-language-server' on PATH and
+;; no wrapper at all (the wrapper only exists to pick a GHC-matched binary,
+;; which nix has already done). Resolve at connect time so both layouts
+;; work; without this, eglot dies with "Searching for program: No such
+;; file or directory, haskell-language-server-wrapper".
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+               `((haskell-mode haskell-literate-mode)
+                 . ,(lambda (&rest _)
+                      (list (or (executable-find "haskell-language-server-wrapper")
+                                (executable-find "haskell-language-server")
+                                "haskell-language-server-wrapper")
+                            "--lsp")))))
+
 (defun noon/maybe-start-hls ()
-  ;; Only attach when the project shell provides HLS.
-  (when (or (executable-find "haskell-language-server-wrapper")
-            (executable-find "haskell-language-server"))
+  "Attach eglot when this is Haskell and the project shell provides HLS.
+On `find-file-hook', NOT `haskell-mode-hook': envrc is a globalized
+minor mode, so it switches itself on from `after-change-major-mode-hook'
+-- which runs after the major mode's own hook. At haskell-mode-hook time
+the direnv PATH is therefore not in place yet, `executable-find' returns
+nil, and eglot never starts at all. `find-file-hook' runs after both."
+  (when (and (derived-mode-p 'haskell-mode)
+             (or (executable-find "haskell-language-server-wrapper")
+                 (executable-find "haskell-language-server")))
     (eglot-ensure)))
-(add-hook 'haskell-mode-hook #'noon/maybe-start-hls)
+(add-hook 'find-file-hook #'noon/maybe-start-hls)
+
+;; -- Non-blocking jump-to-definition / references --------------------------
+;;
+;; eglot's xref backend calls `jsonrpc-request', which blocks redisplay and
+;; input for `jsonrpc-default-request-timeout' (10s) and passes no
+;; :cancel-on-input -- so a slow server freezes the editor outright, and
+;; then the request is dropped and nothing happens. On a project the size
+;; of hydra that is the normal case, not the exception. These send the same
+;; requests with `jsonrpc-async-request' and act on the reply when it turns
+;; up; the cursor keeps moving in the meantime.
+
+(defvar noon/eglot-async-timeout 120
+  "Seconds to wait for an async LSP xref reply before giving up.
+Generous on purpose: nothing is blocked while we wait.")
+
+(defun noon/eglot--xrefs (response sym)
+  "Convert a Location/LocationLink RESPONSE for SYM into xref items."
+  (eglot--collecting-xrefs (collect)
+    (mapc (lambda (loc)
+            (eglot--dcase loc
+              (((LocationLink) targetUri targetSelectionRange)
+               (collect (eglot--xref-make-match sym targetUri targetSelectionRange)))
+              (((Location) uri range)
+               (collect (eglot--xref-make-match sym uri range)))))
+          (if (vectorp response) response (and response (list response))))))
+
+(defun noon/eglot-xref-async (method capability what show)
+  "Ask the server for METHOD at point without blocking.
+CAPABILITY is checked first, WHAT names the query for messages, and SHOW
+is the xref display function to hand the results to."
+  (eglot-server-capable-or-lose capability)
+  (let* ((server (eglot--current-server-or-lose))
+         (sym (symbol-name (or (symbol-at-point) '\?)))
+         (params (append (eglot--TextDocumentPositionParams)
+                         (when (eq method :textDocument/references)
+                           '(:context (:includeDeclaration t)))))
+         (buf (current-buffer))
+         (t0 (float-time)))
+    (message "%s: %s..." what sym)
+    (force-mode-line-update)
+    (jsonrpc-async-request
+     server method params
+     :success-fn
+     (lambda (response)
+       ;; This runs from a process filter, where `current-buffer' is
+       ;; whatever Emacs happened to have current -- never the buffer we
+       ;; asked from. "Is the user still here?" is a question about the
+       ;; selected window, so ask it that way and re-establish the
+       ;; buffer/window ourselves before handing over to xref (which
+       ;; records them for the jump-back marker).
+       (let ((secs (- (float-time) t0))
+             (win (selected-window)))
+         (cond
+          ((not (buffer-live-p buf)) nil)
+          ;; Wandering off mid-flight is the whole point of being async;
+          ;; do not yank the user back to where they started.
+          ((not (eq (window-buffer win) buf))
+           (message "%s for `%s' ready after %.1fs (you moved on; run it again)"
+                    what sym secs))
+          (t
+           (with-selected-window win
+             (with-current-buffer buf
+               (let ((xrefs (noon/eglot--xrefs response sym)))
+                 (if (null xrefs)
+                     (message "No %s for `%s' (%.1fs)" what sym secs)
+                   (funcall show (lambda () xrefs) nil)))))))
+         (force-mode-line-update)))
+     :error-fn
+     (lambda (err)
+       (message "%s for `%s' failed: %s" what sym (plist-get err :message))
+       (force-mode-line-update))
+     :timeout noon/eglot-async-timeout
+     :timeout-fn
+     (lambda ()
+       (message "%s for `%s': no answer from the server in %ss"
+                what sym noon/eglot-async-timeout)
+       (force-mode-line-update)))))
+
+(defun noon/eglot-find-definitions ()
+  "Jump to the definition at point, without blocking Emacs."
+  (interactive)
+  (noon/eglot-xref-async :textDocument/definition :definitionProvider
+                         "definition" #'xref--show-defs))
+
+(defun noon/eglot-find-references ()
+  "List references to the symbol at point, without blocking Emacs."
+  (interactive)
+  (noon/eglot-xref-async :textDocument/references :referencesProvider
+                         "references" #'xref--show-xrefs))
 
 (with-eval-after-load 'eglot       ; = haskell.lua's on_attach bindings
+  ;; D and C used to be here, which cost `evil-delete-line' and
+  ;; `evil-change-line' in every managed buffer. A bare `hd'/`hc' would
+  ;; be worse still: it turns `h' into a prefix, so plain left-motion
+  ;; stalls waiting for a second key. `,' is the leader everywhere else
+  ;; here (,gs magit, ,o* org, ,h* diff-hl hunks), so LSP takes ,l*.
   (evil-define-key 'normal eglot-mode-map
-    "gd" #'xref-find-definitions
-    "gr" #'xref-find-references
-    "K"  #'eldoc-doc-buffer
-    "D"  #'flymake-show-buffer-diagnostics
-    "C"  #'eglot-code-actions))
+    "gd"  #'noon/eglot-find-definitions
+    "gr"  #'noon/eglot-find-references
+    "K"   #'eldoc-doc-buffer
+    ",ld" #'flymake-show-buffer-diagnostics
+    ",lc" #'eglot-code-actions
+    ",ln" #'flymake-goto-next-error
+    ",lp" #'flymake-goto-prev-error
+    ",lr" #'eglot-rename
+    ",lf" #'eglot-format))
 
 ;; -- Agda ------------------------------------------------------------------
 
@@ -436,5 +692,10 @@ repo-root-relative, so run from the repo root."
 ;; find-file hook must run before eglot looks for HLS) ----------------------
 
 (use-package envrc
-  :init (setq envrc-direnv-executable "direnv")
+  :init (setq envrc-direnv-executable "direnv"
+              ;; A nix devshell exports hundreds of vars, and envrc echoes
+              ;; the whole +VAR/~VAR/-VAR diff into the echo area on every
+              ;; visit. The mode-line lighter (envrc[on]) already says
+              ;; whether direnv took; `envrc-reload' reports failures.
+              envrc-show-summary-in-minibuffer nil)
   :config (envrc-global-mode 1))

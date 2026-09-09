@@ -11,7 +11,10 @@
    ;; syntax
    '(font-lock-comment-face ((t (:foreground "#004cff"))))
    '(font-lock-comment-delimiter-face ((t (:foreground "#004cff"))))
-   '(font-lock-doc-face ((t (:foreground "#004cff" :slant italic))))
+   ;; vim has no doc-comment group: haddock (-- |), elisp docstrings and
+   ;; friends all land on Comment, which is not italic. String is (see
+   ;; below), so the italic here was a mis-port, not a choice.
+   '(font-lock-doc-face ((t (:foreground "#004cff"))))
    '(font-lock-string-face ((t (:foreground "#ff00ff" :slant italic))))
    '(font-lock-constant-face ((t (:foreground "#d700ff"))))
    '(font-lock-number-face ((t (:foreground "#d700ff"))))
@@ -34,6 +37,13 @@
    '(hl-line ((t (:background "#ffeee3"))))
    `(mode-line ((t (:background "#ffebb5" :foreground ,fg :box nil))))
    `(mode-line-inactive ((t (:background ,bg :foreground "#9a9a9a" :underline t :box nil))))
+   ;; On a tty `vertical-border' has no colours of its own -- its default
+   ;; spec is (((type tty)) :inherit mode-line-inactive), so it picked up
+   ;; that :underline and drew a dash in every cell of the window
+   ;; separator. State it outright instead: nvim's WinSeparator here is
+   ;; plain fg-on-bg, no attributes.
+   `(vertical-border ((t (:foreground ,fg :background ,bg
+                          :underline nil :inherit unspecified))))
    '(show-paren-match ((t (:background "#ffffaf" :underline t))))
    `(fringe ((t (:background ,bg))))
    '(error ((t (:foreground "#ff6075"))))
