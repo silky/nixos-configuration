@@ -2,6 +2,10 @@
 
 set -e
 
+# Regenerate the emacs keybinding cheat-sheet from init.el, so the
+# checked-in EMACS-KEYS.md describes the config about to be deployed.
+./users/noon/emacs-cheatsheet.el
+
 export NIXPKGS_ALLOW_UNFREE=1
 
 nixos-rebuild build --flake ".#${HOST}" --impure "$@" --show-trace
