@@ -163,9 +163,9 @@
     wormhole = "wormhole-rs";
 
     # Text-editing
-    v = "nvim";
-    vim = "nvim";
     e = "emacsclient -t";
+    v = "emacsclient -t"; # vmacs
+    vim = "nvim";
 
     pclaude = "CLAUDE_CONFIG_DIR=~/.personal-claude claude";
     cc = "claude";

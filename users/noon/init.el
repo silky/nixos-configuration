@@ -194,9 +194,14 @@
 
 (use-package evil-lion :after evil) ; vim-easy-align; ga/gA bound below
 
-(use-package evil-quickscope       ; quick-scope (always-on, as in nvim)
+;; quick-scope. init.vim sets `g:qs_highlight_on_keys = ['f','F','t','T']',
+;; i.e. the targets light up only once you reach for one of those keys --
+;; so this is `-mode', not `-always-mode'. Always-mode underlines a
+;; scattering of letters on the cursor's line the whole time, which is
+;; what nvim deliberately avoids.
+(use-package evil-quickscope
   :after evil
-  :config (global-evil-quickscope-always-mode 1))
+  :config (global-evil-quickscope-mode 1))
 
 (use-package evil-easymotion       ; vim-easymotion, leader `.`
   :after evil

@@ -53,7 +53,7 @@ in
             text
             vector
           ]
-          ))
+        ))
         go-grip # GitHub-style markdown viewer
         gh-dash # GitHub dashboard https://dlvhdr.github.io/gh-dash/
         websocat # Websocket chatting
