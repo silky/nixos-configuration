@@ -427,16 +427,57 @@ save in:\" prompt -- worth a deliberate keystroke, not a stray one."
 ;; overlay reimplementation.
 (use-package corfu
   :init
-  (setq corfu-auto t
-        corfu-auto-delay 0.15
-        corfu-auto-prefix 2
+  (setq corfu-auto nil                      ; ask for it; see C-n/C-p below
         corfu-cycle t
         ;; Preselect the prompt (what was typed) rather than the first
-        ;; candidate, so RET in insert state still means newline unless a
-        ;; candidate was deliberately selected with C-n/C-p first.
+        ;; candidate: completeopt=longest,menuone from init.vim -- a menu,
+        ;; and no free guess at which entry you meant. With nothing
+        ;; selected RET dismisses the menu rather than inserting anything
+        ;; (`corfu-insert' quits when the index is -1), so the newline
+        ;; takes a second RET.
         corfu-preselect 'prompt)
   :config
-  (global-corfu-mode 1))
+  (global-corfu-mode 1)
+  ;; Completion is asked for, never offered. The ask is vim's own C-n/C-p:
+  ;; init.vim never ran nvim-cmp (it is commented out in vim.nix), just
+  ;; native insert-mode completion on those two keys.
+  ;;
+  ;; One command has to do both jobs -- open the menu, then walk it --
+  ;; because corfu cannot have the keys once the menu is up: it registers
+  ;; `corfu-map' in `minor-mode-overriding-map-alist', and evil's insert
+  ;; state map outranks that, so C-n/C-p would stay on evil's own dabbrev
+  ;; completion the whole time. Which is also what vim's C-n does: first
+  ;; press offers, further presses cycle. RET and TAB need no such help --
+  ;; `newline' and `indent-for-tab-command' come from maps that do sit
+  ;; below corfu's, so they turn into insert/complete on their own.
+  ;; `(and corfu-mode completion-in-region-mode)' is corfu's own test for
+  ;; "the menu is mine" (see `corfu--eldoc-advice'): the mode alone is on
+  ;; in buffers where plain *Completions* is doing the work, and there
+  ;; `corfu-next' would move an index nobody is showing.
+  (defun noon/complete-next ()
+    "Ask for completion, or move to the next candidate (vim's insert C-n)."
+    (interactive)
+    (if (and corfu-mode completion-in-region-mode)
+        (corfu-next)
+      (completion-at-point)))
+  (defun noon/complete-previous ()
+    "Ask for completion, or move to the previous candidate (vim's C-p)."
+    (interactive)
+    (if (and corfu-mode completion-in-region-mode)
+        (corfu-previous)
+      (completion-at-point)))
+  ;; Walking the menu has to be declared as such. `corfu--prepare' runs on
+  ;; pre-command-hook and, for any command not matched by this list,
+  ;; commits the previewed candidate and quits -- that is what lets you
+  ;; type on after selecting one. Corfu's own commands match it by name;
+  ;; these two have to say so, or the third C-n would insert candidate one
+  ;; and reopen the menu on it instead of moving to candidate two.
+  (dolist (cmd '(noon/complete-next noon/complete-previous))
+    (add-to-list 'corfu-continue-commands cmd))
+  (with-eval-after-load 'evil
+    (evil-define-key 'insert 'global
+      (kbd "C-n") #'noon/complete-next
+      (kbd "C-p") #'noon/complete-previous)))
 
 ;; Vim-like cwd for the pickers: server.el binds default-directory to
 ;; the emacsclient's invocation directory, but only while its internal
@@ -700,12 +741,35 @@ is the xref display function to hand the results to."
            (message "%s for `%s' ready after %.1fs (you moved on; run it again)"
                     what sym secs))
           (t
-           (with-selected-window win
-             (with-current-buffer buf
-               (let ((xrefs (noon/eglot--xrefs response sym)))
-                 (if (null xrefs)
-                     (message "No %s for `%s' (%.1fs)" what sym secs)
-                   (funcall show (lambda () xrefs) nil)))))))
+           (let ((xrefs (with-current-buffer buf
+                          (noon/eglot--xrefs response sym))))
+             (if (null xrefs)
+                 (message "No %s for `%s' (%.1fs)" what sym secs)
+               ;; Display from the main loop, not from here. The display
+               ;; functions read the minibuffer now, and entering it from
+               ;; a process filter runs Emacs's input loop underneath the
+               ;; jsonrpc connection whose output is still being read.
+               ;; The window test is repeated there because the answer to
+               ;; "is the user still here?" can change in between.
+               ;;
+               ;; A timer body runs under `inhibit-quit', so the read has
+               ;; to be wrapped for C-g to leave it; and a minibuffer that
+               ;; is already open cannot be entered a second time (this
+               ;; config leaves `enable-recursive-minibuffers' nil), which
+               ;; from inside a timer would surface as nothing more than
+               ;; "Error running timer".
+               (run-at-time
+                0 nil
+                (lambda ()
+                  (when (and (window-live-p win)
+                             (eq (window-buffer win) buf))
+                    (if (active-minibuffer-window)
+                        (message "%s for `%s' ready -- ask again from here"
+                                 what sym)
+                      (with-local-quit
+                        (with-selected-window win
+                          (with-current-buffer buf
+                            (funcall show (lambda () xrefs) nil))))))))))))
          (force-mode-line-update)))
      :error-fn
      (lambda (err)
@@ -717,6 +781,23 @@ is the xref display function to hand the results to."
        (message "%s for `%s': no answer from the server in %ss"
                 what sym noon/eglot-async-timeout)
        (force-mode-line-update)))))
+
+;; gd/gr answer in the minibuffer instead of splitting off an xref window
+;; that then has to be closed. These are xref's own display hooks, so this
+;; covers every xref caller here, not just the two commands below:
+;;
+;;   definitions  `xref-show-definitions-completing-read' goes straight
+;;                there when the server names one place (gd's usual case)
+;;                and only asks when there are several.
+;;   references   `consult-xref' lists the usages through vertico -- 15
+;;                rows like every other picker here -- previewing the one
+;;                at point as you move. RET jumps, escape leaves you put.
+;;
+;; Both read the minibuffer, which is why the reply below is handed to
+;; them from a timer rather than from the jsonrpc filter it arrives in.
+(with-eval-after-load 'xref
+  (setq xref-show-definitions-function #'xref-show-definitions-completing-read
+        xref-show-xrefs-function #'consult-xref))
 
 (defun noon/eglot-find-definitions ()
   "Jump to the definition at point, without blocking Emacs."
@@ -892,37 +973,22 @@ Returns whether one was found."
   (with-eval-after-load 'magit
     (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh))
   ;; S-SPC (a real key -- see kkp) asks "what changed on this line?" and
-  ;; asks again to dismiss. Three things stand between that and a plain
-  ;; call to `diff-hl-show-hunk', all of them things this wrapper broke
-  ;; before it accounted for them:
+  ;; asks again to dismiss. Three details of the popup shape this:
   ;;
-  ;; The popup lives on a `post-command-hook' that hides it after any
-  ;; command outside `diff-hl-show-hunk-ignorable-commands' (or named
-  ;; diff-hl-*), and that hook runs for the very command that opened it
-  ;; -- so a wrapper missing from the list shows the popup and dismisses
-  ;; it again in one keystroke. Hence the `add-to-list' below; the mouse
-  ;; mode above has already pulled diff-hl-show-hunk.el in, so the
-  ;; variable is there to add to.
+  ;; - It hides on any command outside `diff-hl-show-hunk-ignorable-
+  ;;   commands', and that hook runs for the command that opened it too,
+  ;;   so this one has to be on the list or it dismisses its own popup.
+  ;; - "Is a popup showing?" is the transient mode. It is not
+  ;;   `diff-hl-show-hunk--hide-function', which dismissal by an
+  ;;   unrelated key leaves set -- and `diff-hl-show-hunk-hide' ends by
+  ;;   restoring the window it recorded, so acting on that stale flag
+  ;;   jumps into whichever file the last popup was opened in.
+  ;; - `diff-hl-show-hunk' walks point to the nearest hunk above when
+  ;;   this line has no change of its own. Say so and stay put instead;
+  ;;   ]c is right there for going to a hunk.
   ;;
-  ;; Whether a popup is showing is the transient mode, NOT
-  ;; `diff-hl-show-hunk--hide-function'. Dismissal by an unrelated key
-  ;; goes through `diff-hl-show-hunk--posframe-hide', which leaves that
-  ;; variable set, while `diff-hl-show-hunk-hide' ends by restoring the
-  ;; window and buffer it recorded when it opened -- so reading the stale
-  ;; flag turns the next press into a teleport into whichever file the
-  ;; last popup was opened in.
-  ;;
-  ;; And `diff-hl-show-hunk' opens with `diff-hl-find-current-hunk',
-  ;; which walks point to the nearest hunk above when this line has no
-  ;; change of its own. For a key that asks about *this* line, say so and
-  ;; stay put; ]c is right there for going to a hunk.
-  ;;
-  ;; Closing still moves point, to the hunk that was on show: that is
-  ;; diff-hl's own placement (`diff-hl-show-hunk--goto-hunk-overlay',
-  ;; which anchors the popup below the hunk) and it is left alone here.
-  ;; Restoring the line the key was pressed on does not survive the trip
-  ;; -- something after the command puts point back at the hunk -- and a
-  ;; marker that loses the race is worse than no marker.
+  ;; Closing leaves point on the hunk that was shown, which is diff-hl's
+  ;; placement (it anchors the popup below the hunk), not a choice here.
   (defun noon/toggle-hunk ()
     "Show the diff hunk at point, or hide the hunk popup already showing."
     (interactive)

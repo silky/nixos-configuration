@@ -89,6 +89,8 @@ evil-collection are not.
 | Key | Command | Does |
 |---|---|---|
 | `C-z` | *unbound* | removed, so the key falls through |
+| `C-n` | `noon/complete-next` | Ask for completion, or move to the next candidate (vim's insert C-n). |
+| `C-p` | `noon/complete-previous` | Ask for completion, or move to the previous candidate (vim's C-p). |
 
 ## Global (Emacs state)
 
@@ -178,3 +180,4 @@ evil-collection are not.
 | `:pwd` | `noon/pwd` | Vim-like :pwd -- show this frame's working directory. |
 
 ---
+
