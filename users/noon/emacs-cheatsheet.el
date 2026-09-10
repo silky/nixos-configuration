@@ -361,7 +361,7 @@ easymotion; the informative row is the one worth printing."
                             (if (= ra rb) (string< a b) (< ra rb))))))
       (with-temp-file out-file
         (insert "# Emacs keybindings\n\n")
-        (insert (format "Generated from `%s` by `emacs-cheatsheet.el`. Do not edit by hand.\n\n"
+        (insert (format "Generated from `%s` by `emacs-cheatsheet.el`.\n\n"
                         (file-name-nondirectory init-file)))
         (insert "Only keys this configuration binds itself are listed. Evil's own\n"
                 "motions and the defaults that ship with magit, dired and\n"
