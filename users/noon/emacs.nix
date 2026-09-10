@@ -19,7 +19,9 @@
 {
   programs.emacs = {
     enable = true;
-    package = pkgs.emacs-nox;
+    # emacs 31 (pinned in flake.nix, not in nixos-26.05): child frames on
+    # TTY frames, which corfu and tty-tip-mode below need.
+    package = pkgs.emacs31-nox;
     extraPackages = epkgs: with epkgs; [
       # evil
       evil
@@ -31,13 +33,18 @@
       evil-quickscope
       # editing
       envrc # per-buffer direnv (HLS comes from project shells)
+      kkp # kitty keyboard protocol: real modifier reporting in a tty
       undo-fu-session
       xclip
       # completion ui
       consult
+      corfu # in-buffer popup; needs child frames, hence emacs 31
       marginalia
       orderless
       vertico
+      # child frames -- emacs 31 draws these on tty frames too
+      eldoc-box # K -> hover doc float, in place of a split window
+      posframe # backend for diff-hl's hunk popup
       # project navigation
       projectile
       # git

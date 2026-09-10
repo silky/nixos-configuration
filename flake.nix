@@ -36,6 +36,15 @@
     # last known-good nixpkgs revision (150.0.7871.186) until upstream fixes it.
     old-chromium.url = "github:nixos/nixpkgs/8623c4c20aa4ca2f5fb81510d2944066c3fb0d96";
 
+    # nixos-26.05 carries only emacs 30.2, and there is no emacs31 attribute
+    # in it at all. 31.1 brings the two things the terminal-only emacs in
+    # users/noon/emacs.nix has been missing: child frames on TTY frames (what
+    # corfu and tty-tip-mode need to draw popups in a terminal) and 24-bit
+    # colour via the setrgbf/setrgbb terminfo capabilities. Pinned to a
+    # revision verified to carry 31.1 rather than tracking unstable, so a
+    # `nix flake update` cannot quietly move the editor.
+    emacs31-nixpkgs.url = "github:nixos/nixpkgs/d5dfd8e6716dde34398bc14bc87c10dece9c8c68";
+
     nix-formatter-pack.url = "github:Gerschtli/nix-formatter-pack";
     nix-formatter-pack.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -88,6 +97,19 @@
           #   }
           # );
         })
+        # Emacs 31, kept in its own overlay because it has to travel with its
+        # elisp package set: home-manager derives that set with
+        # `pkgs.emacsPackagesFor cfg.package`, so leaving `emacsPackagesFor`
+        # behind would build 26.05's elisp against a 31.1 emacs. Both come
+        # from the pinned nixpkgs above; nothing else in the config uses
+        # emacsPackagesFor.
+        (_self: _super:
+          let
+            emacsPkgs = import inputs.emacs31-nixpkgs { system = "x86_64-linux"; };
+          in
+          {
+            inherit (emacsPkgs) emacs31-nox emacsPackagesFor;
+          })
         inputs.cornelis.overlays.cornelis
       ];
 

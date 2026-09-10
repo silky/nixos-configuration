@@ -18,7 +18,7 @@ evil-collection are not.
 | Key | Command | Does |
 |---|---|---|
 | `.` | *evil-easymotion* | prefix: follow with a motion (w, e, j, f, ...) to jump to a target |
-| `SPC` | `save-buffer` | Save current buffer in visited file if modified. |
+| `SPC` | `noon/save-buffer` | Save the current buffer; in *scratch*, hint at C-x C-s instead. |
 | `r` | `evil-repeat` | Repeat the last editing command with count replaced by COUNT. |
 | `j` | `evil-next-visual-line` | Move the cursor COUNT screen lines down. |
 | `k` | `evil-previous-visual-line` | Move the cursor COUNT screen lines up. |
@@ -37,11 +37,12 @@ evil-collection are not.
 | `,oo` | `noon/open-notes` | Open the default org notes file. |
 | `]c` | `diff-hl-next-hunk` | Go to the beginning of the next hunk in the current buffer. |
 | `[c` | `diff-hl-previous-hunk` | Go to the beginning of the previous hunk in the current buffer. |
-| `,hh` | `diff-hl-show-hunk` | Show the VC diff hunk at point. |
+| `S-SPC` | `noon/toggle-hunk` | Show the diff hunk at point, or hide the hunk popup already showing. |
+| `,hh` | `noon/toggle-hunk` | Show the diff hunk at point, or hide the hunk popup already showing. |
 | `,hr` | `diff-hl-revert-hunk` | Revert the diff hunk with changes at or above the point. |
 | `,hs` | `diff-hl-stage-dwim` | Stage the current hunk or choose the hunks to stage. |
 
-> Space saves (S-Space is invisible to a tty; dropped)
+> Space saves; in *scratch* it only names the key that does (nothing there is worth a save prompt). S-SPC used to be that key; it shows the hunk at point now (see diff-hl), which leaves plain C-x C-s for the one buffer that wants a deliberate save.
 >
 > r repeats; visual r replaces selection without clobbering the register
 >
@@ -133,7 +134,7 @@ evil-collection are not.
 |---|---|---|
 | `gd` | `noon/eglot-find-definitions` | Jump to the definition at point, without blocking Emacs. |
 | `gr` | `noon/eglot-find-references` | List references to the symbol at point, without blocking Emacs. |
-| `K` | `eldoc-doc-buffer` | Get or display ElDoc documentation buffer. |
+| `K` | `eldoc-box-help-at-point` | Display documentation of the symbol at point. |
 | `,ld` | `flymake-show-buffer-diagnostics` | Show listing of Flymake diagnostics for current buffer. |
 | `,lc` | `eglot-code-actions` | Find LSP code actions of type ACTION-KIND between BEG and END. |
 | `,ln` | `flymake-goto-next-error` | Go to Nth next Flymake diagnostic that matches FILTER. |
@@ -142,6 +143,13 @@ evil-collection are not.
 | `,lf` | `eglot-format` | Format region BEG END. |
 
 > D and C used to be here, which cost `evil-delete-line' and `evil-change-line' in every managed buffer. A bare `hd'/`hc' would be worse still: it turns `h' into a prefix, so plain left-motion stalls waiting for a second key. `,' is the leader everywhere else here (,gs magit, ,o* org, ,h* diff-hl hunks), so LSP takes ,l*.
+
+## magit-mode-map (normal state)
+
+| Key | Command | Does |
+|---|---|---|
+| `n` | `noon/magit-next-hunk` | Go to the next hunk, or to the next section if no hunk follows. |
+| `p` | `noon/magit-previous-hunk` | Go to the previous hunk, or to the previous section if none precedes. |
 
 ## noon-tab-map (the `TAB` prefix)
 
@@ -170,4 +178,3 @@ evil-collection are not.
 | `:pwd` | `noon/pwd` | Vim-like :pwd -- show this frame's working directory. |
 
 ---
-

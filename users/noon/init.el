@@ -55,6 +55,17 @@
       mouse-wheel-progressive-speed nil)
 (mouse-wheel-mode 1)
 
+;; A plain tty collapses shifted keys onto their bare byte, so S-SPC
+;; arrives indistinguishable from SPC. ghostty reports modifiers
+;; properly once asked, via the kitty keyboard protocol -- which is what
+;; kkp does: it queries each new terminal, pushes the enhancement flags,
+;; and pops them again on teardown, so nothing outside emacs is
+;; affected, and a terminal that doesn't answer is left as it was.
+;; kkp reparents `local-function-key-map' rather than replacing it, so
+;; the tab key (now reported as <tab>) still falls back to TAB and the
+;; noon-tab-map prefix below is unaffected.
+(global-kkp-mode 1)
+
 ;; Window separator: emacs draws the tty vertical border with ASCII `|',
 ;; which leaves a gap between rows and reads as a dashed line. nvim's
 ;; default `fillchars' vert is U+2502 BOX DRAWINGS LIGHT VERTICAL, which
@@ -62,9 +73,21 @@
 ;; colour already matches -- `vertical-border' sets no attributes, so it
 ;; falls through to `default' (#444444), exactly like nvim's
 ;; WinSeparator here.
+;;
+;; This used to set the vertical-border slot to U+2502 by hand. The emacs
+;; 31 builtin puts that very character in that very slot, and also fills
+;; the box-drawing slots (U+2500/250C/2510/2514/2518 and the double-line
+;; variants) that tty child frames draw their borders from -- without
+;; them the corfu and eldoc-box popups below get boxes of blanks.
 (unless standard-display-table
   (setq standard-display-table (make-display-table)))
-(set-display-table-slot standard-display-table 'vertical-border ?│)
+(standard-display-unicode-special-glyphs)
+
+;; Tooltips on tty frames (emacs 31). `help-echo' text -- flymake and
+;; eglot diagnostics, diff-hl's margin markers -- hovers in a child
+;; frame instead of going to the echo area, or nowhere. xterm-mouse-mode
+;; above is what makes hovering register at all.
+(tty-tip-mode 1)
 
 ;; Strip trailing whitespace on every save, all filetypes.
 (add-hook 'before-save-hook #'delete-trailing-whitespace)
@@ -183,6 +206,92 @@
   :init (setq xclip-program "xclip")
   :config (xclip-mode 1))
 
+;; Copy-on-select, matching ghostty's own `copy-on-select'. Ghostty only
+;; ever sees selections the terminal itself makes, and xterm-mouse-mode
+;; hands emacs the mouse, so nothing selected inside emacs -- by `v' or
+;; by dragging -- reached the clipboard without an explicit ,y.
+;;
+;; Evil already has the machinery for this and it is already switched on
+;; (`evil-visual-update-x-selection-p'): a 0.1s idle timer, so extending
+;; a selection with j/j/j does not spawn an xclip per keystroke. It is
+;; inert here for two independent reasons -- it writes PRIMARY (this
+;; config is unnamedplus/CLIPBOARD throughout: ,y ,p YY), and it bails on
+;; `display-selections-p', which on a tty demands `tty-select-active-
+;; regions' plus the OSC 52 terminal parameter that xclip-mode
+;; deliberately clears to win the gui-backend-set-selection dispatch.
+;;
+;; Evil's timer alone is not enough to hang this on. It only fires after
+;; a 0.1s pause *while still in visual state*, and the next command
+;; cancels it, so `v3w<escape>' in one flow copies nothing -- and a
+;; command that ends the selection never routes through it at all. So
+;; note the selection as it changes (a substring, no subprocess) and
+;; flush it to the CLIPBOARD when the selection ends, from whichever
+;; hook gets there first:
+;;
+;;   post-command-hook            remember, while a selection exists
+;;   evil-visual-state-exit-hook  v ... <escape>, or an operator
+;;   deactivate-mark-hook         a mouse drag, or any plain region
+;;
+;; Evil's timer advice stays as well, so a lingering selection lands in
+;; the clipboard before you leave it -- that is what copy-on-select does
+;; in the terminal, where the text is available the moment you let go.
+(with-eval-after-load 'evil
+  (defvar noon--pending-selection nil
+    "Text of the selection in progress, awaiting the clipboard.")
+
+  (defun noon/remember-selection (&optional buffer)
+    "Note the current selection in BUFFER for `noon/flush-selection'.
+Cheap enough for `post-command-hook': it copies a string and spawns
+nothing. Also serves as evil's idle-timer callback, whence BUFFER."
+    (let ((buf (or buffer (current-buffer))))
+      (when (buffer-live-p buf)
+        ;; Every variable read here is buffer-local, so read them with BUF
+        ;; current -- evil's own version tests the state outside this and
+        ;; consults whatever buffer the idle timer happened to land in.
+        (with-current-buffer buf
+          (let ((bounds
+                 (cond
+                  ;; A block selection is disjoint ranges; visual
+                  ;; beginning/end is only its bounding box, so the text
+                  ;; between them is not what is highlighted. Evil skips
+                  ;; block for PRIMARY too.
+                  ((eq evil-visual-selection 'block) nil)
+                  ((and (evil-visual-state-p)
+                        ;; Markers, per evil's docstrings; this also
+                        ;; covers the nil they hold before a selection.
+                        (number-or-marker-p evil-visual-beginning)
+                        (number-or-marker-p evil-visual-end))
+                   (cons evil-visual-beginning evil-visual-end))
+                  ;; Not every selection is an evil one: a mouse drag
+                  ;; under xterm-mouse-mode just activates the region.
+                  ((region-active-p) (cons (region-beginning) (region-end))))))
+            (if (null bounds)
+                ;; No selection here any more. Drop anything noted
+                ;; earlier: a selection that ended without either flush
+                ;; hook firing must not resurface in the clipboard later,
+                ;; long after its text stopped being what was selected.
+                (setq noon--pending-selection nil)
+              (let ((text (buffer-substring-no-properties (car bounds) (cdr bounds))))
+                (unless (string-empty-p text)
+                  (setq noon--pending-selection text)))))))))
+
+  (defun noon/flush-selection ()
+    "Put the noted selection in the system CLIPBOARD."
+    (when-let* ((text noon--pending-selection))
+      (setq noon--pending-selection nil)
+      ;; `gui-set-selection', not `kill-new': merely looking at a region
+      ;; should not push it onto the kill-ring.
+      (gui-set-selection 'CLIPBOARD text)))
+
+  (add-hook 'post-command-hook #'noon/remember-selection)
+  (add-hook 'evil-visual-state-exit-hook #'noon/flush-selection)
+  (add-hook 'deactivate-mark-hook #'noon/flush-selection)
+  ;; Evil's own idle timer, for the still-selecting case.
+  (advice-add 'evil-visual-update-x-selection :after #'noon/remember-selection)
+  (advice-add 'evil-visual-update-x-selection :after
+              (lambda (&rest _) (noon/flush-selection))
+              '((name . noon/flush-after-evil-timer))))
+
 (use-package undo-fu-session       ; undofile
   :config (undo-fu-session-global-mode 1))
 
@@ -222,8 +331,21 @@
 (with-eval-after-load 'evil
   ;; `;` -> ex command line
   (define-key evil-motion-state-map ";" #'evil-ex)
-  ;; Space saves (S-Space is invisible to a tty; dropped)
-  (define-key evil-normal-state-map (kbd "SPC") #'save-buffer)
+  (defun noon/save-buffer ()
+    "Save the current buffer; in *scratch*, hint at C-x C-s instead.
+*scratch* visits no file, so saving it only ever reaches a \"File to
+save in:\" prompt -- worth a deliberate keystroke, not a stray one."
+    (interactive)
+    (if (string= (buffer-name) "*scratch*")
+        ;; Transient hint; keep it out of *Messages*.
+        (let ((message-log-max nil))
+          (message "C-x C-s saves *scratch*"))
+      (save-buffer)))
+  ;; Space saves; in *scratch* it only names the key that does (nothing
+  ;; there is worth a save prompt). S-SPC used to be that key; it shows
+  ;; the hunk at point now (see diff-hl), which leaves plain C-x C-s for
+  ;; the one buffer that wants a deliberate save.
+  (define-key evil-normal-state-map (kbd "SPC") #'noon/save-buffer)
   ;; r repeats; visual r replaces selection without clobbering the register
   (define-key evil-normal-state-map "r" #'evil-repeat)
   (evil-define-key 'visual 'global "r" "P")
@@ -296,6 +418,25 @@
   :config (marginalia-mode 1))
 
 (use-package consult :defer t)
+
+;; -- In-buffer completion (nvim-cmp's counterpart) ------------------------
+
+;; vertico handles the minibuffer; this is the popup at point, which is
+;; where HLS completions land. It draws into a child frame, so on a tty
+;; it needs emacs 31 -- before that the only option was corfu-terminal's
+;; overlay reimplementation.
+(use-package corfu
+  :init
+  (setq corfu-auto t
+        corfu-auto-delay 0.15
+        corfu-auto-prefix 2
+        corfu-cycle t
+        ;; Preselect the prompt (what was typed) rather than the first
+        ;; candidate, so RET in insert state still means newline unless a
+        ;; candidate was deliberately selected with C-n/C-p first.
+        corfu-preselect 'prompt)
+  :config
+  (global-corfu-mode 1))
 
 ;; Vim-like cwd for the pickers: server.el binds default-directory to
 ;; the emacsclient's invocation directory, but only while its internal
@@ -598,7 +739,12 @@ is the xref display function to hand the results to."
   (evil-define-key 'normal eglot-mode-map
     "gd"  #'noon/eglot-find-definitions
     "gr"  #'noon/eglot-find-references
-    "K"   #'eldoc-doc-buffer
+    ;; nvim's K is a hover float, not a split. `eldoc-doc-buffer' stole
+    ;; half the frame for a type signature; eldoc-box puts it in a child
+    ;; frame at point, which emacs 31 can draw on a tty. Press it again
+    ;; to focus the frame (to scroll a long HLS doc); any other key
+    ;; dismisses it.
+    "K"   #'eldoc-box-help-at-point
     ",ld" #'flymake-show-buffer-diagnostics
     ",lc" #'eglot-code-actions
     ",ln" #'flymake-goto-next-error
@@ -674,13 +820,67 @@ is the xref display function to hand the results to."
 
 (use-package magit :defer t)
 
+;; Browsing a diff is walking hunks, so n/p walk hunks -- magit's own
+;; keys for that, which evil-collection moves out from under you: the
+;; section motions land on `C-j'/`C-k' (`]'/`[' between siblings), `n'
+;; keeps evil's search-repeat, and `p' becomes `magit-push', which is one
+;; keystroke away from a push transient where a motion was meant. Push
+;; goes back to magit's own `P', which evil-collection leaves bound;
+;; search-repeat backwards is still `N'.
+;;
+;; A hunk is just a section, so step until we land on one; where no hunk
+;; follows -- a collapsed status buffer, the last file of a diff -- fall
+;; back to a single plain section move, magit's own `n'/`p' behaviour, so
+;; the key always goes somewhere. From inside a hunk, p goes to its
+;; heading first (`magit-section-backward' moves to the beginning of the
+;; current section), then to the hunk before it.
+;;
+;; This has to be registered after `evil-collection-init' above: both
+;; hang off `with-eval-after-load 'magit' and those run in the order
+;; they were registered, so the later one wins the auxiliary keymap.
+(with-eval-after-load 'magit
+  (defun noon/magit--goto-hunk (step)
+    "Call STEP until point is on a hunk; stay put if no hunk is that way.
+Returns whether one was found."
+    (let ((start (point)) (found nil) (moved t))
+      (while (and moved (not found))
+        (let ((from (point)))
+          ;; The section motions signal at the first/last section.
+          (setq moved (and (ignore-errors (funcall step) t)
+                           (/= (point) from)))
+          (when (and moved (magit-section-match 'hunk))
+            (setq found t))))
+      (unless found (goto-char start))
+      found))
+
+  (defun noon/magit-next-hunk ()
+    "Go to the next hunk, or to the next section if no hunk follows."
+    (interactive)
+    (unless (noon/magit--goto-hunk #'magit-section-forward)
+      (magit-section-forward)))
+
+  (defun noon/magit-previous-hunk ()
+    "Go to the previous hunk, or to the previous section if none precedes."
+    (interactive)
+    (unless (noon/magit--goto-hunk #'magit-section-backward)
+      (magit-section-backward)))
+
+  (evil-define-key 'normal magit-mode-map
+    "n" #'noon/magit-next-hunk
+    "p" #'noon/magit-previous-hunk))
+
 ;; -- Git gutter (diff-hl) --------------------------------------------------
 
 ;; gitsigns-nvim's counterpart. A tty has no fringes, so the +/-/!
-;; markers go in the left margin; the hunk popup is an overlay
-;; (diff-hl-show-hunk-function defaults to the tty-safe
-;; `diff-hl-show-hunk-inline'; the posframe backend is GUI-only).
+;; markers go in the left margin. The hunk popup defaults to the
+;; tty-safe `diff-hl-show-hunk-inline', which splices the hunk into the
+;; buffer and pushes the surrounding lines around; the posframe backend
+;; floats it instead. That backend used to be GUI-only -- it gates on
+;; `posframe-workable-p', which as of emacs 31 also accepts a tty with
+;; `tty-child-frames'.
 (use-package diff-hl
+  :init
+  (setq diff-hl-show-hunk-function #'diff-hl-show-hunk-posframe)
   :config
   (global-diff-hl-mode 1)
   (diff-hl-margin-mode 1)                 ; fringe -> margin
@@ -691,11 +891,81 @@ is the xref display function to hand the results to."
   ;; pre-refresh hook any more -- it is an obsolete alias for `ignore'.)
   (with-eval-after-load 'magit
     (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh))
+  ;; S-SPC (a real key -- see kkp) asks "what changed on this line?" and
+  ;; asks again to dismiss. Three things stand between that and a plain
+  ;; call to `diff-hl-show-hunk', all of them things this wrapper broke
+  ;; before it accounted for them:
+  ;;
+  ;; The popup lives on a `post-command-hook' that hides it after any
+  ;; command outside `diff-hl-show-hunk-ignorable-commands' (or named
+  ;; diff-hl-*), and that hook runs for the very command that opened it
+  ;; -- so a wrapper missing from the list shows the popup and dismisses
+  ;; it again in one keystroke. Hence the `add-to-list' below; the mouse
+  ;; mode above has already pulled diff-hl-show-hunk.el in, so the
+  ;; variable is there to add to.
+  ;;
+  ;; Whether a popup is showing is the transient mode, NOT
+  ;; `diff-hl-show-hunk--hide-function'. Dismissal by an unrelated key
+  ;; goes through `diff-hl-show-hunk--posframe-hide', which leaves that
+  ;; variable set, while `diff-hl-show-hunk-hide' ends by restoring the
+  ;; window and buffer it recorded when it opened -- so reading the stale
+  ;; flag turns the next press into a teleport into whichever file the
+  ;; last popup was opened in.
+  ;;
+  ;; And `diff-hl-show-hunk' opens with `diff-hl-find-current-hunk',
+  ;; which walks point to the nearest hunk above when this line has no
+  ;; change of its own. For a key that asks about *this* line, say so and
+  ;; stay put; ]c is right there for going to a hunk.
+  ;;
+  ;; Closing still moves point, to the hunk that was on show: that is
+  ;; diff-hl's own placement (`diff-hl-show-hunk--goto-hunk-overlay',
+  ;; which anchors the popup below the hunk) and it is left alone here.
+  ;; Restoring the line the key was pressed on does not survive the trip
+  ;; -- something after the command puts point back at the hunk -- and a
+  ;; marker that loses the race is worse than no marker.
+  (defun noon/toggle-hunk ()
+    "Show the diff hunk at point, or hide the hunk popup already showing."
+    (interactive)
+    (cond
+     ((bound-and-true-p diff-hl-show-hunk-posframe--transient-mode)
+      (diff-hl-show-hunk-hide))
+     ((diff-hl-hunk-overlay-at (point))
+      (diff-hl-show-hunk))
+     (t (message "No change on this line"))))
+  (add-to-list 'diff-hl-show-hunk-ignorable-commands #'noon/toggle-hunk)
+  ;; The popup does not take the cursor with it -- posframe's
+  ;; `select-window' sits inside a `with-selected-frame', which puts the
+  ;; selection back -- so its own keys (n/p between changes, q to close,
+  ;; c/e/r/S) are read in the file buffer, where evil's state maps
+  ;; outrank the minor-mode map they live in. n searched and p pasted
+  ;; instead, and being unrelated commands they dismissed the popup on
+  ;; the way. (The overlay keymap posframe also installs would win, but
+  ;; it covers the popup buffer, which nothing ever selects.)
+  ;;
+  ;; `substitute-command-keys' finds no unshadowed key either, so the
+  ;; header line's hints fall back to the one map that still has these
+  ;; commands -- `diff-hl-command-map', on the `C-x v' prefix -- whence
+  ;; "Previous change in hunk (C-x v {)".
+  ;;
+  ;; So tell evil the map overrides it, and re-normalize on both edges of
+  ;; the transient mode, in the file buffer as much as the popup's own.
+  (defun noon--hunk-popup-sync ()
+    "Recompute evil's keymaps wherever the popup's keys have to work."
+    (evil-normalize-keymaps)                ; the popup buffer, on the way in
+    (when (buffer-live-p diff-hl-show-hunk--original-buffer)
+      (with-current-buffer diff-hl-show-hunk--original-buffer
+        (evil-normalize-keymaps))))         ; where the keys are actually read
+  (with-eval-after-load 'diff-hl-show-hunk-posframe
+    (evil-make-overriding-map diff-hl-show-hunk-posframe--transient-mode-map
+                              'normal)
+    (add-hook 'diff-hl-show-hunk-posframe--transient-mode-hook
+              #'noon--hunk-popup-sync))
   (with-eval-after-load 'evil
     (evil-define-key 'normal 'global
       "]c"  #'diff-hl-next-hunk           ; vim's diff motions; evil leaves
       "[c"  #'diff-hl-previous-hunk       ; ]c/[c free (it binds ]f ]F ]s)
-      ",hh" #'diff-hl-show-hunk
+      (kbd "S-SPC") #'noon/toggle-hunk
+      ",hh" #'noon/toggle-hunk
       ",hr" #'diff-hl-revert-hunk
       ",hs" #'diff-hl-stage-dwim)))
 
