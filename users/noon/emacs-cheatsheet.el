@@ -26,8 +26,11 @@
 ;;;; ---------------------------------------------------------------- config
 
 (defconst cheat/binding-heads
-  '(define-key evil-define-key evil-ex-define-cmd evilem-default-keybindings)
-  "Forms that introduce a binding.")
+  '(define-key evil-define-key evil-ex-define-cmd evilem-default-keybindings
+     keymap-global-unset)
+  "Forms that introduce, move or remove a binding.
+Note that `keymap-global-set' is absent: init.el does not use it. Add it
+here, with a branch in `cheat/collect', if that changes.")
 
 (defconst cheat/doc-packages
   '(evil evil-commentary evil-lion evil-easymotion evil-quickscope
@@ -238,6 +241,17 @@ elsewhere are not guaranteed to."
                           :def (cadr ps) :note note :pos pos)
                          rows)
                    (setq ps (cddr ps))))))
+            ;; the trailing _ is the optional REMOVE argument
+            (`(keymap-global-unset ,key . ,_)
+             (push (cheat/bind-make
+                    :map "Global" :state nil
+                    ;; `keymap-*' take `key-valid-p' syntax ("M-f"), which
+                    ;; is not a literal key sequence -- parse, do not pass
+                    ;; the string through as if it were one.
+                    :key (cheat/key-label
+                          (and (stringp key) (ignore-errors (key-parse key))))
+                    :def nil :note note :pos pos)
+                   rows))
             (`(evil-ex-define-cmd ,name ,def)
              (push (cheat/bind-make
                     :map "Ex commands" :state nil :key (format ":%s" name)
@@ -310,6 +324,8 @@ easymotion; the informative row is the one worth printing."
          (as-state (cdr (assoc map cheat/state-map-names))))
     (when as-state (setq map "Global" state as-state))
     (cond ((and (string= map "Global") state) (format "Global (%s state)" state))
+          ;; a global map entry with no evil state applies everywhere
+          ((string= map "Global") "Global (all states)")
           (state (format "%s (%s state)" map state))
           (t map))))
 
@@ -395,7 +411,6 @@ easymotion; the informative row is the one worth printing."
                          (string-join (nreverse notes) "\n>\n> "))
                         "\n\n")))))
         (insert "---\n\n")
-        (insert (format "%d bindings across %d groups.\n" (length rows) (length order)))
         ;; ASCII punctuation only; fail loudly rather than quietly emit one
         (goto-char (point-min))
         (when (re-search-forward "[—–]" nil t)

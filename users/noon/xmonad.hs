@@ -88,8 +88,8 @@ myKeys conf =
   , ((layoutChangeModMask, xK_p), sendMessage $ JumpToLayout "Resizable")
   , ((layoutChangeModMask, xK_l), spawn "slock")
   --
-  -- Expand sub-sections in Resizable-Tall
-  , ((mod1Mask, xK_a), sendMessage MirrorShrink)
+  -- Expand sub-sections in Resizable-Tall. (There is no MirrorShrink
+  -- counterpart: Alt-a is find-cursor, below.)
   , ((mod1Mask, xK_z), sendMessage MirrorExpand)
 
   -- Stop Alt-Shift-Q logging out
@@ -102,8 +102,7 @@ myKeys conf =
   -- Launch specific things
   , ((mod1Mask, xK_o), spawn "nautilus --no-desktop")
   , ((mod1Mask, xK_m), spawn "ghostty -e pulsemixer")
-  , ((mod1Mask, xK_e), spawn "ghostty -e nvim")
-  , ((mod1Mask, xK_d), spawn "ghostty -e nvim -c ':Daily'")
+  , ((mod1Mask, xK_e), spawn "ghostty -e emacsclient -t")
   , ((mod1Mask, xK_p), spawn "dmenu_run -nb '#d1f0ff' -sf '#b141e5' -nf '#333333' -sb '#d1f0ff'")
   , ((mod1Mask, xK_b), spawn "show-battery-state")
 
@@ -111,8 +110,11 @@ myKeys conf =
   , ((mod1Mask, xK_a), spawn "find-cursor --size 320 --distance 50 --wait 550 --line-width 4 --repeat 1 --follow")
 
   -- Monitors
-  , ((mod1Mask, xK_n), spawn "mobile")   -- "(N)o work"
-  , ((mod1Mask, xK_w), spawn "work")     -- "(W)ork"
+  -- Alt-Shift, not Alt: Alt-n and Alt-w are wanted by emacs (minibuffer
+  -- history), and a key only reaches the terminal if xmonad has no
+  -- binding for it at all -- see the removeKeys at the bottom.
+  , ((layoutChangeModMask, xK_m), spawn "mobile")   -- "(M)obile"
+  , ((layoutChangeModMask, xK_w), spawn "work")     -- "(W)ork"
   , ((mod1Mask, xK_c), spawn "climbing") -- "(C)limbing"
   --
   --
@@ -125,7 +127,8 @@ myKeys conf =
   --
   , ((layoutChangeModMask, xK_s), swapScreen)
   --
-  , ((mod1Mask, xK_g), bringMenu) -- "Grab"
+  -- Alt-Shift again: emacs uses Alt-g as a prefix (M-g g goto-line).
+  , ((layoutChangeModMask, xK_g), bringMenu) -- "Grab"
   ]
   -- Normal-mode open screens
   ++
@@ -245,6 +248,19 @@ main = do
         -- there, just comment it out (or fix it and tell me!).
         , logHook            = updatePointer (0.5, 0.5) (0, 0)
       } `additionalKeys'` myKeys
+        -- Hand these back to the terminal, for emacs. Binding them to
+        -- `pure ()' would not do: xmonad grabs every key that is in its
+        -- map, so the keystroke would still never reach the application.
+        -- They have to leave the map entirely.
+        --
+        -- Alt-Tab and Alt-n/Alt-w are xmonad *defaults* (focusDown,
+        -- refresh, and view-screen-0), so dropping our own bindings
+        -- above is not enough on its own -- the default would surface
+        -- again and keep the grab.
+        `removeKeys` [ (mod1Mask, xK_Tab)  -- completion-at-point
+                     , (mod1Mask, xK_n)    -- next-history-element
+                     , (mod1Mask, xK_w)    -- kill-ring-save
+                     ]
 
   xmonad $ addAfterRescreenHook consolidateWhenSingleScreen $ docks myConfig
 

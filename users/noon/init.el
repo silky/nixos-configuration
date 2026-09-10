@@ -213,6 +213,12 @@
 
 ;; -- Keybindings (port of init.vim) ---------------------------------------
 
+;; xmonad's modMask is mod1 (Alt), which a terminal delivers as Meta, so
+;; anything xmonad binds never reaches here. Alt-b is one of those, and a
+;; working M-f next to a dead M-b is worse than neither: editing is vim's
+;; job in this configuration anyway.
+(keymap-global-unset "M-f")
+
 (with-eval-after-load 'evil
   ;; `;` -> ex command line
   (define-key evil-motion-state-map ";" #'evil-ex)

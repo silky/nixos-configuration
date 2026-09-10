@@ -95,6 +95,14 @@ evil-collection are not.
 |---|---|---|
 | `C-z` | *unbound* | removed, so the key falls through |
 
+## Global (all states)
+
+| Key | Command | Does |
+|---|---|---|
+| `M-f` | *unbound* | removed, so the key falls through |
+
+> xmonad's modMask is mod1 (Alt), which a terminal delivers as Meta, so anything xmonad binds never reaches here. Alt-b is one of those, and a working M-f next to a dead M-b is worse than neither: editing is vim's job in this configuration anyway.
+
 ## agda2-mode-map (normal state)
 
 | Key | Command | Does |
@@ -163,4 +171,3 @@ evil-collection are not.
 
 ---
 
-67 bindings across 11 groups.
