@@ -1,6 +1,6 @@
 # Emacs keybindings
 
-Generated from `init.el` by `emacs-cheatsheet.el`. Do not edit by hand.
+Generated from `init.el` by `emacs-cheatsheet.el`.
 
 Only keys this configuration binds itself are listed. Evil's own
 motions and the defaults that ship with magit, dired and
