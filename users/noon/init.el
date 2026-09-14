@@ -553,9 +553,13 @@ repo-root-relative, so run from the repo root."
 
 ;; The nix-installed modes register their extensions via autoloads
 ;; (haskell, nix, dhall, elm, purescript, typescript, go, yaml, ledger,
-;; markdown, shakespeare); toml is the built-in conf-toml-mode.
+;; markdown, shakespeare, just); toml is the built-in conf-toml-mode.
 (add-to-list 'auto-mode-alist
              '("/cabal\\.project\\(\\.local\\)?\\'" . haskell-cabal-mode))
+
+;; just-mode's autoload only claims `justfile' / `.justfile' / `Justfile';
+;; `just' modules live in `foo.just', so claim that extension too.
+(add-to-list 'auto-mode-alist '("\\.just\\'" . just-mode))
 
 ;; haskell: match vim's classification (haskell-vim + noon-light).
 ;; haskell-mode paints every keyword with haskell-keyword-face, so the

@@ -55,6 +55,7 @@
       elm-mode
       go-mode
       haskell-mode
+      just-mode
       ledger-mode
       markdown-mode
       nix-mode
