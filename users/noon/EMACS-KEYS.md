@@ -160,7 +160,6 @@ evil-collection are not.
 | `,mp` | `noon/go-grip` | Preview the current file with go-grip, in a browser tab. |
 | `,mq` | `noon/go-grip-quit` | Stop the running go-grip preview server. |
 | `,mh` | `markdown-toggle-markup-hiding` | Toggle the display or hiding of markup. |
-| `,mo` | `olivetti-mode` |  |
 
 > localleader, as in agda2-mode above and org below.
 

@@ -35,7 +35,6 @@
       edit-indirect # markdown-mode soft-requires it for `C-c '`
       envrc # per-buffer direnv (HLS comes from project shells)
       kkp # kitty keyboard protocol: real modifier reporting in a tty
-      olivetti # centred prose column; margin-based, so tty-safe
       undo-fu-session
       xclip
       # completion ui

@@ -891,11 +891,8 @@ is the xref display function to hand the results to."
   :defer t
   ;; Off by default, which leaves fenced blocks a flat wall of string face.
   :init (setq markdown-fontify-code-blocks-natively t)
-  ;; Prose, not code: soft-wrap (`j'/`k' are already visual-line motions)
-  ;; and a centred body. olivetti's width defaults to `fill-column' + 2,
-  ;; i.e. the 80 that textwidth=78 implies -- nothing to set.
-  :hook ((markdown-mode . visual-line-mode)
-         (markdown-mode . olivetti-mode)))
+  ;; Prose, not code: soft-wrap (`j'/`k' are already visual-line motions).
+  :hook (markdown-mode . visual-line-mode))
 
 ;; One server at a time: go-grip binds a fixed port (6419), so a second
 ;; one exits rather than sharing it.
@@ -930,8 +927,7 @@ emacs.nix), so DISPLAY is set and go-grip can find a browser."
   (evil-define-key 'normal markdown-mode-map
     ",mp" #'noon/go-grip
     ",mq" #'noon/go-grip-quit
-    ",mh" #'markdown-toggle-markup-hiding
-    ",mo" #'olivetti-mode))
+    ",mh" #'markdown-toggle-markup-hiding))
 
 ;; -- Org (simple entryway; replaces the dailynotes workflow) ----------------
 
