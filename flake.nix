@@ -51,6 +51,10 @@
     gh-gfm-preview.url = "github:thiagokokada/gh-gfm-preview";
     gh-gfm-preview.inputs.nixpkgs.follows = "nixpkgs";
 
+    # Interactive TUI viewer for nix dependency graphs.
+    nix-graph.url = "github:AlexAntonik/nix-graph";
+    nix-graph.inputs.nixpkgs.follows = "nixpkgs";
+
     # Bubblewrap jails for (agent) derivations.
     jail-nix.url = "sourcehut:~alexdavid/jail.nix";
 
@@ -69,6 +73,7 @@
         (self: super: {
           fcitx-engines = self.fcitx5;
           gh-gfm-preview = inputs.gh-gfm-preview.packages.x86_64-linux.default;
+          nix-graph = inputs.nix-graph.packages.x86_64-linux.default;
           ghostty = inputs.ghostty.packages.x86_64-linux.default;
           pulsemixer = super.pulsemixer.overrideAttrs (old: {
             patches = (old.patches or [ ]) ++ [

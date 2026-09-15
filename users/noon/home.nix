@@ -56,6 +56,7 @@ in
         ))
         go-grip # GitHub-style markdown viewer
         gh-dash # GitHub dashboard https://dlvhdr.github.io/gh-dash/
+        nix-graph # TUI viewer for nix dependency graphs
         websocat # Websocket chatting
         pciutils # Device debugging
         qemu # Emulation

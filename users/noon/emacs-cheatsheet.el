@@ -35,7 +35,7 @@ here, with a branch in `cheat/collect', if that changes.")
 (defconst cheat/doc-packages
   '(evil evil-commentary evil-lion evil-easymotion evil-quickscope
          magit projectile diff-hl diff-hl-show-hunk eglot xref flymake
-         eldoc eldoc-box org dired)
+         eldoc eldoc-box org dired markdown-mode olivetti)
   "Loaded, best-effort, only so `documentation' can be consulted.")
 
 (defconst cheat/state-map-names

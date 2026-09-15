@@ -582,6 +582,26 @@
         "type": "github"
       }
     },
+    "nix-graph": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1789243028,
+        "narHash": "sha256-pA58g/nGZuuOS3Los4Kh0kJaqHd3G7QnzxfOaUdkjwQ=",
+        "owner": "AlexAntonik",
+        "repo": "nix-graph",
+        "rev": "65a77c03cd8c72bca1cc303b8bee16dc94d79106",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AlexAntonik",
+        "repo": "nix-graph",
+        "type": "github"
+      }
+    },
     "nixos-hardware": {
       "inputs": {
         "nixpkgs": [
@@ -986,6 +1006,7 @@
         "home-manager": "home-manager_2",
         "jail-nix": "jail-nix",
         "nix-formatter-pack": "nix-formatter-pack",
+        "nix-graph": "nix-graph",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_3",
         "old-chromium": "old-chromium",

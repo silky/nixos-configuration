@@ -873,6 +873,66 @@ is the xref display function to hand the results to."
     ",g" #'agda2-give
     "gd" #'agda2-goto-definition-keyboard))
 
+;; -- Markdown --------------------------------------------------------------
+
+;; A nox build, so nothing in-frame renders markdown properly: inline
+;; images and the xwidget preview both want a GUI, and the built-in
+;; `markdown-live-preview-mode' only gets as far as eww, which flattens
+;; the result. Previewing is therefore go-grip's job (installed in
+;; home.nix) -- GitHub styling in a real browser tab, and it watches the
+;; file, so the tab follows every save. What stays in the buffer is
+;; markup hiding (`,mh'): `**bold**' drops its asterisks and goes bold,
+;; links show only their text, and it is still editable.
+;;
+;; edit-indirect needs no config -- markdown-mode soft-requires it, and
+;; having it installed is what makes `C-c '' open a fenced code block in
+;; a buffer running its own major mode (haskell-mode, nix-mode, ...).
+(use-package markdown-mode
+  :defer t
+  ;; Off by default, which leaves fenced blocks a flat wall of string face.
+  :init (setq markdown-fontify-code-blocks-natively t)
+  ;; Prose, not code: soft-wrap (`j'/`k' are already visual-line motions)
+  ;; and a centred body. olivetti's width defaults to `fill-column' + 2,
+  ;; i.e. the 80 that textwidth=78 implies -- nothing to set.
+  :hook ((markdown-mode . visual-line-mode)
+         (markdown-mode . olivetti-mode)))
+
+;; One server at a time: go-grip binds a fixed port (6419), so a second
+;; one exits rather than sharing it.
+(defvar noon/go-grip-process nil
+  "The running go-grip preview server, if any.")
+
+(defun noon/go-grip-quit ()
+  "Stop the running go-grip preview server."
+  (interactive)
+  (when (process-live-p noon/go-grip-process)
+    (kill-process noon/go-grip-process))
+  (setq noon/go-grip-process nil))
+
+(defun noon/go-grip ()
+  "Preview the current file with go-grip, in a browser tab.
+go-grip reads from disk rather than from the buffer, but reloads the
+tab whenever the file changes -- so the preview tracks saves, not
+edits. The daemon starts after graphical-session.target (see
+emacs.nix), so DISPLAY is set and go-grip can find a browser."
+  (interactive)
+  (unless buffer-file-name
+    (user-error "Buffer %s does not visit a file" (buffer-name)))
+  (noon/go-grip-quit)
+  (setq noon/go-grip-process
+        (start-process "go-grip" "*go-grip*" "go-grip" buffer-file-name))
+  ;; Don't hold up `kill-emacs' asking about it.
+  (set-process-query-on-exit-flag noon/go-grip-process nil)
+  (message "go-grip: serving %s" (file-name-nondirectory buffer-file-name)))
+
+(with-eval-after-load 'markdown-mode
+  ;; localleader, as in agda2-mode above and org below.
+  (evil-define-key 'normal markdown-mode-map
+    ",mp" #'noon/go-grip
+    ",mq" #'noon/go-grip-quit
+    ",mh" #'markdown-toggle-markup-hiding
+    ",mo" #'olivetti-mode))
+
 ;; -- Org (simple entryway; replaces the dailynotes workflow) ----------------
 
 (use-package org
