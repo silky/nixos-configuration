@@ -61,8 +61,14 @@
       markdown-mode
       nix-mode
       shakespeare-mode
-      typescript-mode
       yaml-mode
+      # Grammars for the built-in ts modes (see init.el's .tsx entry).
+      # emacs finds these through the wrapper's load-path, so
+      # `treesit-extra-load-path' needs nothing.
+      (treesit-grammars.with-grammars (g: [
+        g.tree-sitter-tsx
+        g.tree-sitter-typescript
+      ]))
     ];
   };
 

@@ -552,14 +552,25 @@ repo-root-relative, so run from the repo root."
 ;; -- Languages -------------------------------------------------------------
 
 ;; The nix-installed modes register their extensions via autoloads
-;; (haskell, nix, dhall, elm, purescript, typescript, go, yaml, ledger,
-;; markdown, shakespeare, just); toml is the built-in conf-toml-mode.
+;; (haskell, nix, dhall, elm, purescript, go, yaml, ledger, markdown,
+;; shakespeare, just); toml is the built-in conf-toml-mode.
 (add-to-list 'auto-mode-alist
              '("/cabal\\.project\\(\\.local\\)?\\'" . haskell-cabal-mode))
 
 ;; just-mode's autoload only claims `justfile' / `.justfile' / `Justfile';
 ;; `just' modules live in `foo.just', so claim that extension too.
 (add-to-list 'auto-mode-alist '("\\.just\\'" . just-mode))
+
+;; typescript: the built-in tree-sitter modes, and *not* ELPA
+;; typescript-mode (dropped from emacs.nix), whose indenter predates JSX
+;; and has no grammar for it. On a .tsx it reads `<p className={...}>' as
+;; a comparison and puts the line one level left of where it belongs --
+;; which `electric-indent-mode' applies to the current line on every RET,
+;; and which TAB cannot undo, because `indent-for-tab-command' asks the
+;; same engine and gets the same wrong column back. The grammars are
+;; installed alongside emacs, so these modes are always ready.
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
 
 ;; haskell: match vim's classification (haskell-vim + noon-light).
 ;; haskell-mode paints every keyword with haskell-keyword-face, so the
@@ -892,7 +903,19 @@ is the xref display function to hand the results to."
   ;; Off by default, which leaves fenced blocks a flat wall of string face.
   :init (setq markdown-fontify-code-blocks-natively t)
   ;; Prose, not code: soft-wrap (`j'/`k' are already visual-line motions).
-  :hook (markdown-mode . visual-line-mode))
+  :hook ((markdown-mode . visual-line-mode)
+         (markdown-mode . noon/markdown-tab-setup)))
+
+(defun noon/markdown-tab-setup ()
+  "Make TAB insert indentation in prose, at the 2 columns used elsewhere.
+markdown-mode sets `tab-width' to 4, and the default `tab-always-indent'
+only ever *re-indents* the line -- which on a prose line, where there is
+no indentation to compute, means doing nothing at all.  With it nil, TAB
+in the leading whitespace still runs markdown's own list-aware
+`markdown-indent-line', and anywhere else inserts to the next stop (as
+spaces, `indent-tabs-mode' being nil) -- vim's expandtab/sts=2."
+  (setq-local tab-width 2
+              tab-always-indent nil))
 
 ;; One server at a time: go-grip binds a fixed port (6419), so a second
 ;; one exits rather than sharing it.
@@ -923,11 +946,24 @@ emacs.nix), so DISPLAY is set and go-grip can find a browser."
   (message "go-grip: serving %s" (file-name-nondirectory buffer-file-name)))
 
 (with-eval-after-load 'markdown-mode
+  ;; markdown-mode puts TAB on `markdown-cycle' -- heading visibility
+  ;; cycling, which on a prose line does nothing whatsoever -- and
+  ;; evil-collection puts the same command on `<tab>' in its normal-state
+  ;; auxiliary map for the mode. kkp has ghostty reporting the tab key as
+  ;; `<tab>' (see `global-kkp-mode' above) and an aux map outranks the
+  ;; plain mode map, so in a markdown buffer the key reached neither the
+  ;; indent nor the `noon-tab-map' prefix. Clearing both layers leaves
+  ;; `<tab>' to fall back to TAB, as it does in every other mode.
+  ;;
+  ;; TAB indents again; `markdown-cycle' moves to `,mc'.
+  (define-key markdown-mode-map (kbd "TAB") nil)
+  (evil-define-key 'normal markdown-mode-map (kbd "<tab>") nil)
   ;; localleader, as in agda2-mode above and org below.
   (evil-define-key 'normal markdown-mode-map
     ",mp" #'noon/go-grip
     ",mq" #'noon/go-grip-quit
-    ",mh" #'markdown-toggle-markup-hiding))
+    ",mh" #'markdown-toggle-markup-hiding
+    ",mc" #'markdown-cycle))
 
 ;; -- Org (simple entryway; replaces the dailynotes workflow) ----------------
 

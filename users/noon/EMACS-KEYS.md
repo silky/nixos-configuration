@@ -153,13 +153,23 @@ evil-collection are not.
 | `n` | `noon/magit-next-hunk` | Go to the next hunk, or to the next section if no hunk follows. |
 | `p` | `noon/magit-previous-hunk` | Go to the previous hunk, or to the previous section if none precedes. |
 
+## markdown-mode-map
+
+| Key | Command | Does |
+|---|---|---|
+| `TAB` | *unbound* | removed, so the key falls through |
+
+> TAB indents again; `markdown-cycle' moves to `,mc'.
+
 ## markdown-mode-map (normal state)
 
 | Key | Command | Does |
 |---|---|---|
+| `<tab>` | *unbound* | removed, so the key falls through |
 | `,mp` | `noon/go-grip` | Preview the current file with go-grip, in a browser tab. |
 | `,mq` | `noon/go-grip-quit` | Stop the running go-grip preview server. |
 | `,mh` | `markdown-toggle-markup-hiding` | Toggle the display or hiding of markup. |
+| `,mc` | `markdown-cycle` | Visibility cycling for Markdown mode. |
 
 > localleader, as in agda2-mode above and org below.
 
