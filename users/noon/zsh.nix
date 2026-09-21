@@ -139,6 +139,8 @@
     # Git-related
     ci = "git commit -m";
     co = "git checkout";
+    gd = "git diff"; # Non-committed changes
+    gds = "git diff --cached"; # Staged changes
     gc = "git clone --recursive";
     gpr = "git pull --rebase";
     pp = "git push";
@@ -159,7 +161,7 @@
     shh = "ssh -q";
 
     # Open my main config by default
-    gd = "gh-dash --config ~/dev/life/gh-dash-configs/config.yml";
+    # gd = "gh-dash --config ~/dev/life/gh-dash-configs/config.yml";
     wormhole = "wormhole-rs";
 
     # Text-editing

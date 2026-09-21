@@ -22,6 +22,7 @@ import Control.Monad.Trans.Maybe (MaybeT)
 import XMonad hiding ( (|||) )
 import XMonad.Actions.CopyWindow
 import XMonad.Actions.CycleWS
+import XMonad.Actions.Submap (visualSubmapSorted)
 import XMonad.Actions.UpdatePointer
 import XMonad.Actions.WindowBringer
 import XMonad.Actions.WindowGo
@@ -46,6 +47,7 @@ import XMonad.Layout.ToggleLayouts
 import XMonad.Layout.ZoomRow
 import XMonad.Util.EZConfig
 import XMonad.Util.Run (spawnPipe)
+import XMonad.Util.XUtils (WindowConfig (..))
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.Rescreen (addAfterRescreenHook)
 import XMonad.Layout.IndependentScreens
@@ -109,13 +111,11 @@ myKeys conf =
   -- Locate the mouse pointer with an expanding-circle animation.
   , ((mod1Mask, xK_a), spawn "find-cursor --size 320 --distance 50 --wait 550 --line-width 4 --repeat 1 --follow")
 
-  -- Monitors
+  -- Monitors: Alt-Shift-D, then a letter. See `displayMenu' below.
   -- Alt-Shift, not Alt: Alt-n and Alt-w are wanted by emacs (minibuffer
   -- history), and a key only reaches the terminal if xmonad has no
   -- binding for it at all -- see the removeKeys at the bottom.
-  , ((layoutChangeModMask, xK_m), spawn "mobile")   -- "(M)obile"
-  , ((layoutChangeModMask, xK_w), spawn "work")     -- "(W)ork"
-  , ((mod1Mask, xK_c), spawn "climbing") -- "(C)limbing"
+  , ((layoutChangeModMask, xK_d), displayMenu) -- "(D)isplay"
   --
   --
   -- Move mouse focus to the other screen; useful for more a setup with more
@@ -168,6 +168,41 @@ swapScreen =  do
       toggle _     = error "Un-toggleable!"
 
   windows $ W.shift (toggle left ++ "_" ++ right)
+
+
+-- The xrandr wrappers from modules/home-manager/monitors.nix, behind the
+-- Alt-Shift-D prefix. A submap costs each new layout one letter inside the
+-- map rather than one of the handful of Alt/Alt-Shift combinations still
+-- free; the names here must match the attribute names over there.
+displayLayouts :: [(KeySym, String)]
+displayLayouts =
+  [ (xK_c, "climbing")      -- 4K external only
+  , (xK_d, "climbing-dual") -- 4K external + laptop
+  , (xK_m, "mobile")        -- laptop only
+  , (xK_s, "summer-house")  -- two 1440p externals
+  ]
+
+
+displayMenu :: X ()
+displayMenu = visualSubmapSorted onlyBare menuStyle . M.fromList $
+    [ ((m, k), (name, spawn name))
+    | (k, name) <- displayLayouts
+    -- Bind each letter bare *and* under the prefix's own modifiers, so it
+    -- fires whether or not Alt-Shift is still held down: submap looks the
+    -- key up under whatever mask happened to be down at the time.
+    , m <- [0, mod1Mask, layoutChangeModMask]
+    ]
+  where
+    -- ...but list only the bare ones, or the popup shows every layout three
+    -- times over. The sorter is applied to the displayed descriptions alone
+    -- and not to the lookup map, so dropping rows here is safe.
+    onlyBare = filter (\((m, _), _) -> m == 0)
+
+    menuStyle = def
+      { winFont = "xft:iMWritingMono Nerd Font-12"
+      , winBg   = "#e6e6fa"  -- Same palette as the dunst theme in home.nix.
+      , winFg   = "#111111"
+      }
 
 
 -- Toggle the active workspace with the 'Forward/Back' mouse buttons.
