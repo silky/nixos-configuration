@@ -151,6 +151,12 @@
    (:eval (when (buffer-modified-p) " [+]"))
    (:eval (when buffer-read-only " [RO]"))
    (:eval (noon/eglot-mode-line))
+   ;; flymake's diagnostic counters are its minor-mode *lighter*, and
+   ;; this mode line carries no `mode-line-modes', so "[0 1]" was never
+   ;; drawn anywhere -- a buffer with errors looked exactly like a clean
+   ;; one. Guarded on `flymake-mode' so non-LSP buffers stay bare.
+   (:eval (when (bound-and-true-p flymake-mode)
+            (list " " flymake-mode-line-counters)))
    mode-line-format-right-align
    "("
    (:eval (pcase (coding-system-eol-type buffer-file-coding-system)
@@ -826,6 +832,32 @@ is the xref display function to hand the results to."
   (noon/eglot-xref-async :textDocument/references :referencesProvider
                          "references" #'xref--show-xrefs))
 
+(defun noon/flymake-diagnostic-at-point ()
+  "Pop the diagnostics under point into an eldoc-box child frame.
+`K' reaches them too, but only as whatever eldoc last composed at this
+position -- HLS's hover doc first, the diagnostic appended. This is the
+diagnostic alone, computed now. Deliberately not inline: HLS reports
+cradle failures as one 300-character line, and flymake's end-of-line
+overlay wraps it across four rows of the buffer."
+  (interactive)
+  (require 'eldoc-box)
+  (if-let* ((diags (flymake-diagnostics (point))))
+      (let ((eldoc-box-position-function eldoc-box-at-point-position-function))
+        ;; visual-line-mode in the box buffer wraps the long ones.
+        (eldoc-box--display
+         (mapconcat
+          (lambda (d)
+            (propertize (flymake-diagnostic-text d)
+                        'face (flymake--lookup-type-property
+                               (flymake-diagnostic-type d)
+                               'echo-face 'flymake-error)))
+          diags "\n\n"))
+        ;; Same dismissal as `eldoc-box-help-at-point': the frame goes
+        ;; away as soon as point moves off.
+        (setq eldoc-box--help-at-point-last-point (point))
+        (run-with-timer 0.1 nil #'eldoc-box--help-at-point-cleanup))
+    (message "no diagnostics at point")))
+
 (with-eval-after-load 'eglot       ; = haskell.lua's on_attach bindings
   ;; D and C used to be here, which cost `evil-delete-line' and
   ;; `evil-change-line' in every managed buffer. A bare `hd'/`hc' would
@@ -842,6 +874,7 @@ is the xref display function to hand the results to."
     ;; dismisses it.
     "K"   #'eldoc-box-help-at-point
     ",ld" #'flymake-show-buffer-diagnostics
+    ",le" #'noon/flymake-diagnostic-at-point
     ",lc" #'eglot-code-actions
     ",ln" #'flymake-goto-next-error
     ",lp" #'flymake-goto-prev-error

@@ -138,6 +138,7 @@ evil-collection are not.
 | `gr` | `noon/eglot-find-references` | List references to the symbol at point, without blocking Emacs. |
 | `K` | `eldoc-box-help-at-point` | Display documentation of the symbol at point. |
 | `,ld` | `flymake-show-buffer-diagnostics` | Show listing of Flymake diagnostics for current buffer. |
+| `,le` | `noon/flymake-diagnostic-at-point` | Pop the diagnostics under point into an eldoc-box child frame. |
 | `,lc` | `eglot-code-actions` | Find LSP code actions of type ACTION-KIND between BEG and END. |
 | `,ln` | `flymake-goto-next-error` | Go to Nth next Flymake diagnostic that matches FILTER. |
 | `,lp` | `flymake-goto-prev-error` | Go to Nth previous Flymake diagnostic that matches FILTER. |
