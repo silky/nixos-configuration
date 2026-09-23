@@ -53,7 +53,9 @@
    '(link ((t (:foreground "#005fff" :underline t))))
    '(dired-directory ((t (:foreground "#5f00ff"))))
    ;; flymake / eglot
-   '(flymake-error ((t (:background "#ff8a9a"))))
+   ;; A wrong line should be findable, not shouted at: this is barely a
+   ;; tint off `bg' (#fff7f1), a shade pinker than `hl-line' (#ffeee3).
+   '(flymake-error ((t (:background "#ffe4e4"))))
    '(flymake-warning ((t (:underline (:style wave :color "#b56bfa")))))
    '(flymake-note ((t (:underline (:style wave :color "#87ffaf")))))
    '(eglot-highlight-symbol-face ((t (:background "#ffd7d7"))))
