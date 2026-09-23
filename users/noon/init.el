@@ -832,6 +832,26 @@ is the xref display function to hand the results to."
   (noon/eglot-xref-async :textDocument/references :referencesProvider
                          "references" #'xref--show-xrefs))
 
+;; eldoc-box caches its popup child frame in the global `eldoc-box--frame'
+;; and, if that frame is still `frame-live-p', reuses it by reparenting it
+;; onto whatever frame is current -- rather than checking the parent
+;; actually matches and recreating otherwise, the way corfu does. Emacs 31's
+;; tty child frames don't reliably cascade-delete when their parent tty
+;; frame goes away, so reconnecting `emacsclient -t' to the daemon leaves
+;; the old popup frame dangling; the next `K' or `,le' then tries to
+;; reparent that dangling frame onto the new session's frame, which Emacs
+;; rejects with "invalid parent-frame parameter" since the two live on
+;; different terminals. Dropping the cache when its parent dies makes
+;; eldoc-box build a fresh popup next time instead.
+(with-eval-after-load 'eldoc-box
+  (add-hook 'delete-frame-functions
+            (lambda (frame)
+              (when (and eldoc-box--frame
+                         (eq (frame-parent eldoc-box--frame) frame))
+                (when (frame-live-p eldoc-box--frame)
+                  (delete-frame eldoc-box--frame))
+                (setq eldoc-box--frame nil)))))
+
 (defun noon/flymake-diagnostic-at-point ()
   "Pop the diagnostics under point into an eldoc-box child frame.
 `K' reaches them too, but only as whatever eldoc last composed at this
