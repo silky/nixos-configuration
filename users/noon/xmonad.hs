@@ -116,6 +116,7 @@ myKeys conf =
   -- history), and a key only reaches the terminal if xmonad has no
   -- binding for it at all -- see the removeKeys at the bottom.
   , ((layoutChangeModMask, xK_d), displayMenu) -- "(D)isplay"
+  , ((layoutChangeModMask, xK_m), spawn "mobile")
   --
   --
   -- Move mouse focus to the other screen; useful for more a setup with more
