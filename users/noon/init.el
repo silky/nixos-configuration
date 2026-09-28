@@ -1043,6 +1043,7 @@ overlay wraps it across four rows of the buffer."
     ",ln" #'flymake-goto-next-error
     ",lp" #'flymake-goto-prev-error
     ",lr" #'eglot-rename
+    ",r"  #'eglot-reconnect
     ",f" #'noon/treefmt-buffer))
 
 ;; -- Agda ------------------------------------------------------------------
