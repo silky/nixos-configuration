@@ -633,6 +633,37 @@ anchored rules below spin on it forever."
 (defun noon/haskell-family (limit)
   (noon/haskell-search "\\_<\\(?:type\\|data\\)\\_>[ \t]+\\(family\\)\\_>" limit))
 
+;; Type signatures: haskell-vim's haskellTypeSig and haskellRecordField put
+;; the names in `foo, bar :: ...' and `{ field :: ...' on Identifier
+;; (blue), which is what makes a definition stand out in vim.
+;; haskell-mode gives them `haskell-definition-face', i.e. the black of
+;; Function, a hair off the #444444 body text. Same scope as vim: a
+;; signature starts its line (or follows where/let/default), a field sits
+;; directly inside `{ }', and `(x :: Int)' annotations stay plain.
+(defconst noon/haskell-name-re "[_a-z][A-Za-z0-9_']*#?")
+(defconst noon/haskell-signature-re
+  (concat "\\(?:^[ \t]*\\(?:\\(?:where\\|let\\|default\\)[ \t]+\\)?"
+          "\\|\\([{,]\\)[ \t]*\\)"
+          "\\(" noon/haskell-name-re
+          "\\(?:[ \t]*,[ \t]*" noon/haskell-name-re "\\)*\\)"
+          "[ \t\n]+::\\(?:[ \t\n]\\|\\'\\)"))
+
+(defun noon/haskell-signature (limit)
+  "Find a type signature or record field before LIMIT.
+Group 2 spans the declared names."
+  (catch 'hit
+    (while (noon/haskell-search noon/haskell-signature-re limit)
+      (when (or (not (match-beginning 1))
+                (let ((open (save-excursion
+                              (save-match-data
+                                (nth 1 (syntax-ppss (match-beginning 2)))))))
+                  (and open (eq (char-after open) ?{))))
+        (throw 'hit t)))
+    nil))
+
+(defun noon/haskell-name (limit)
+  (re-search-forward noon/haskell-name-re limit t))
+
 (font-lock-add-keywords
  'haskell-mode
  '((noon/haskell-structure 0 'font-lock-type-face t)
@@ -643,7 +674,11 @@ anchored rules below spin on it forever."
    (noon/haskell-import
     (1 'font-lock-preprocessor-face t)
     (noon/haskell-import-word (line-end-position) nil
-                              (0 'font-lock-preprocessor-face t))))
+                              (0 'font-lock-preprocessor-face t)))
+   (noon/haskell-signature
+    (noon/haskell-name (progn (goto-char (match-beginning 2)) (match-end 2))
+                       (goto-char (match-end 0))
+                       (0 'font-lock-variable-name-face t))))
  'append)
 
 ;; cabal: match vim's classification (runtime syntax/cabal.vim +
@@ -739,7 +774,12 @@ anchored rules below spin on it forever."
 ;; buffer as overlays -- "$sel:notApplicableReason:WaitOnNotApplicableTx="
 ;; and friends. It is not real text (no file on disk changes), but it
 ;; reflows the line and nvim shows none of it.
-(setq eglot-ignored-server-capabilities '(:inlayHintProvider))
+;;
+;; No symbol highlighting either. With :documentHighlightProvider, eglot
+;; asks HLS on every cursor pause for the other occurrences of the symbol
+;; at point and paints them in `eglot-highlight-symbol-face'.
+(setq eglot-ignored-server-capabilities
+      '(:inlayHintProvider :documentHighlightProvider))
 
 ;; eglot's built-in entry is ("haskell-language-server-wrapper" "--lsp"),
 ;; but a nix devshell puts the plain `haskell-language-server' on PATH and
@@ -1021,6 +1061,25 @@ overlay wraps it across four rows of the buffer."
         (setq eldoc-box--help-at-point-last-point (point))
         (run-with-timer 0.1 nil #'eldoc-box--help-at-point-cleanup))
     (message "no diagnostics at point")))
+
+;; `,ld' listing: close it once the last diagnostic is fixed, as a
+;; quickfix list you're working through would. Flymake re-reverts every
+;; listing after each backend report (and on flymake-mode on/off), so
+;; hang off that and check the table it just rebuilt. `quit-window'
+;; honours the quit-restore that display-buffer recorded: the window
+;; `display-buffer-at-bottom' split off is deleted, not left showing
+;; some other buffer. The buffer is only buried, so `,ld' brings it back.
+(defun noon/flymake-close-empty-listings (&rest _)
+  (dolist (buf (buffer-list))
+    (with-current-buffer buf
+      (when (and (derived-mode-p 'flymake-diagnostics-buffer-mode
+                                 'flymake-project-diagnostics-mode)
+                 (null tabulated-list-entries))
+        (dolist (win (get-buffer-window-list buf nil t))
+          (quit-window nil win))))))
+(with-eval-after-load 'flymake
+  (advice-add 'flymake--update-diagnostics-listings
+              :after #'noon/flymake-close-empty-listings))
 
 (with-eval-after-load 'eglot       ; = haskell.lua's on_attach bindings
   ;; D and C used to be here, which cost `evil-delete-line' and
