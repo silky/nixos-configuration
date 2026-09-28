@@ -143,9 +143,15 @@ evil-collection are not.
 | `,ln` | `flymake-goto-next-error` | Go to Nth next Flymake diagnostic that matches FILTER. |
 | `,lp` | `flymake-goto-prev-error` | Go to Nth previous Flymake diagnostic that matches FILTER. |
 | `,lr` | `eglot-rename` | Rename the current symbol to NEWNAME. |
-| `,lf` | `eglot-format` | Format region BEG END. |
+| `,f` | `noon/treefmt-buffer` | Format the current file with the project's treefmt, asynchronously. |
 
 > D and C used to be here, which cost `evil-delete-line' and `evil-change-line' in every managed buffer. A bare `hd'/`hc' would be worse still: it turns `h' into a prefix, so plain left-motion stalls waiting for a second key. `,' is the leader everywhere else here (,gs magit, ,o* org, ,h* diff-hl hunks), so LSP takes ,l*.
+
+## haskell-mode-map (insert state)
+
+| Key | Command | Does |
+|---|---|---|
+| `TAB` | `noon/haskell-tab` | Indent in the leading whitespace, else insert to the next tab stop. |
 
 ## magit-mode-map (normal state)
 

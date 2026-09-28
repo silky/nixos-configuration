@@ -646,6 +646,62 @@ anchored rules below spin on it forever."
                               (0 'font-lock-preprocessor-face t))))
  'append)
 
+;; cabal: match vim's classification (runtime syntax/cabal.vim +
+;; noon-light). haskell-cabal-mode paints field names and stanza words
+;; alike in keyword grey and leaves every value plain, so a .cabal file
+;; arrives nearly monochrome:
+;;   library executable test-suite ...    Category -> Type
+;;   versions, true/false, tested-with ghc Number/Boolean/Constant
+;;   os() arch() impl() flag()             Function -> black
+;;   == >= ^>= && || !                     Operator -> grey
+;;   Haskell2010 GHC2021 ...               Type
+;; Field names and if/else stay grey (Statement / Conditional). Comments
+;; are font-lock keywords here, not syntax, so the value rules use `keep'
+;; and never repaint them; only the stanza rule has to override.
+(defconst noon/cabal-compiler-re
+  (concat "\\<" (regexp-opt '("ghc" "ghcjs" "nhc" "yhc" "hugs" "hbc"
+                              "helium" "jhc" "lhc" "uhc" "eta")
+                            t)
+          "\\>"))
+
+(defun noon/cabal-tested-with (limit)
+  "Match a compiler name inside a (possibly multi-line) `tested-with'."
+  (catch 'hit
+    (while (re-search-forward noon/cabal-compiler-re limit t)
+      (when (save-excursion
+              (save-match-data
+                (and (re-search-backward "^[ \t]*\\([^ \t\n:]+\\):" nil t)
+                     (string-equal-ignore-case (match-string 1)
+                                               "tested-with"))))
+        (throw 'hit t)))
+    nil))
+
+(font-lock-add-keywords
+ 'haskell-cabal-mode
+ `((,(concat "^[ \t]*"
+             (regexp-opt '("benchmark" "common" "custom-setup" "executable"
+                           "flag" "foreign-library" "library" "package"
+                           "repository" "source-repository"
+                           "source-repository-package" "test-suite")
+                         t)
+             "\\(?:[ \t]\\|$\\)")
+    1 'font-lock-type-face t)
+   ("^[ \t]*\\(?:cabal-\\)?version[ \t]*:[ \t]*\\([0-9][0-9.]*\\)"
+    1 'font-lock-number-face keep)
+   ("\\(\\^?>=\\|<=\\|==\\|<\\|>\\)[ \t]*\\([0-9]+\\(?:\\.[0-9]+\\)*\\(?:\\.\\*\\)?\\)"
+    (1 'font-lock-operator-face keep)
+    (2 'font-lock-number-face keep))
+   ("&&\\|||\\|!" 0 'font-lock-operator-face keep)
+   ("\\<\\(os\\|arch\\|impl\\|flag\\)[ \t]*(" 1 'font-lock-function-name-face keep)
+   (,(concat "\\<impl[ \t]*([ \t]*" noon/cabal-compiler-re)
+    1 'font-lock-constant-face keep)
+   (noon/cabal-tested-with 1 'font-lock-constant-face keep)
+   ("\\<\\(?:true\\|false\\)\\>" 0 'font-lock-constant-face keep)
+   (,(concat "\\<" (regexp-opt '("Haskell98" "Haskell2010" "GHC2021" "GHC2024"))
+             "\\>")
+    0 'font-lock-type-face keep))
+ 'append)
+
 ;; python: match vim's classification (python.vim + noon-light):
 ;;   from/import        Include -> PreProc          (emacs: keyword grey)
 ;;   builtins (print..) Function -> black           (emacs: builtin violet)
@@ -666,6 +722,16 @@ anchored rules below spin on it forever."
 ;; -- LSP: eglot + HLS from the project's direnv shell ----------------------
 
 (setq eglot-autoshutdown t)
+
+;; Keep eglot off the main thread where it can be. By default every JSON
+;; message is pretty-printed into the events buffer -- on the main
+;; thread, and HLS is chatty; tangbuild's had reached 681 KB. Size 0
+;; turns the log off; raise it temporarily to debug with
+;; `eglot-events-buffer'. And `eglot-sync-connect' 3 froze each file visit
+;; for up to 3s waiting on HLS's initialize; nil connects in the
+;; background.
+(setq eglot-events-buffer-config '(:size 0 :format full)
+      eglot-sync-connect nil)
 
 ;; No inlay hints. Eglot switches `eglot-inlay-hints-mode' on by itself
 ;; whenever the server advertises :inlayHintProvider, and HLS's
@@ -702,6 +768,84 @@ nil, and eglot never starts at all. `find-file-hook' runs after both."
                  (executable-find "haskell-language-server")))
     (eglot-ensure)))
 (add-hook 'find-file-hook #'noon/maybe-start-hls)
+
+;; TAB in a Haskell buffer: `indent-for-tab-command' hands the line to
+;; haskell-indentation, which never inserts anything -- from anywhere on
+;; the line it shifts the whole line to the next column the layout rule
+;; allows, and where there is only one, already taken, it does nothing.
+;; With `tab-always-indent' nil (as for markdown) TAB past the
+;; indentation inserts instead, but in the leading whitespace it still
+;; asks haskell-indentation, so fall back to the next 2-column stop when
+;; that changes nothing. Net effect is vim's: TAB always moves. A second
+;; TAB in a row inserts rather than cycling (`indent-for-tab-command'
+;; does that itself when `tab-always-indent' is nil). haskell-mode sets
+;; `tab-width' to 8 (the Report's meaning of a literal tab); the stops
+;; here are the 2 columns used everywhere else.
+(defun noon/haskell-tab ()
+  "Indent in the leading whitespace, else insert to the next tab stop.
+If re-indenting is a no-op, insert to the next tab stop anyway."
+  (interactive)
+  (let ((tick (buffer-chars-modified-tick))
+        (pos (point))
+        (tab-always-indent nil)
+        (tab-width 2))
+    (indent-for-tab-command)
+    (when (and (= tick (buffer-chars-modified-tick))
+               (= pos (point)))
+      (tab-to-tab-stop))))
+(with-eval-after-load 'haskell-mode
+  (evil-define-key 'insert haskell-mode-map (kbd "TAB") #'noon/haskell-tab))
+
+;; -- Format with the project's treefmt, in the background ------------------
+;;
+;; `eglot-format' asks HLS, which formats with its own `formattingProvider'
+;; (ormolu by default, at HLS's compiled-in version) -- not what the
+;; project's treefmt-nix config runs, so ,lf and `nix fmt' disagreed. It is
+;; also a synchronous request, so a busy HLS froze the editor. This saves,
+;; runs the project's own formatter on just this file as a subprocess, and
+;; reverts when it finishes. `treefmt' when the devshell provides it,
+;; else `nix fmt' (treefmt-nix's flake-parts module wires it there).
+(defun noon/treefmt-buffer ()
+  "Format the current file with the project's treefmt, asynchronously."
+  (interactive)
+  (unless buffer-file-name
+    (user-error "Buffer is not visiting a file"))
+  (save-buffer)
+  (let* ((buf (current-buffer))
+         (file buffer-file-name)
+         (tick (buffer-chars-modified-tick))
+         (default-directory (if-let* ((pr (project-current)))
+                                (project-root pr)
+                              default-directory))
+         (cmd (if (executable-find "treefmt")
+                  (list "treefmt" file)
+                (list "nix" "fmt" "--" file)))
+         (out (get-buffer-create " *treefmt*")))
+    (with-current-buffer out (erase-buffer))
+    (message "treefmt: formatting %s..." (file-name-nondirectory file))
+    (make-process
+     :name "treefmt" :buffer out :command cmd :noquery t
+     :sentinel
+     (lambda (proc _event)
+       (when (memq (process-status proc) '(exit signal))
+         (cond
+          ((/= (process-exit-status proc) 0)
+           (message "treefmt failed (%d): %s" (process-exit-status proc)
+                    (with-current-buffer out
+                      (string-trim (buffer-substring
+                                    (save-excursion (goto-char (point-max))
+                                                    (forward-line -3)
+                                                    (point))
+                                    (point-max))))))
+          ((not (buffer-live-p buf)))
+          ;; Edited while treefmt ran: reverting would lose that work.
+          ((/= tick (buffer-chars-modified-tick buf))
+           (message "treefmt: buffer changed meanwhile; not reverting"))
+          (t
+           (with-current-buffer buf
+             (revert-buffer :ignore-auto :noconfirm :preserve-modes))
+           (message "treefmt: formatted %s"
+                    (file-name-nondirectory file)))))))))
 
 ;; -- Non-blocking jump-to-definition / references --------------------------
 ;;
@@ -899,7 +1043,7 @@ overlay wraps it across four rows of the buffer."
     ",ln" #'flymake-goto-next-error
     ",lp" #'flymake-goto-prev-error
     ",lr" #'eglot-rename
-    ",lf" #'eglot-format))
+    ",f" #'noon/treefmt-buffer))
 
 ;; -- Agda ------------------------------------------------------------------
 
