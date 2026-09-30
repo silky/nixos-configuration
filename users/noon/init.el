@@ -326,6 +326,131 @@ nothing. Also serves as evil's idle-timer callback, whence BUFFER."
   ;; repeat lives on `r`, exactly as in nvim.
   (define-key evil-normal-state-map "." nil))
 
+;; -- gq/gw: fill that keeps comment leaders (formatoptions+=q) ------------
+;;
+;; evil's gq is `fill-region', which knows a paragraph only as a run of
+;; non-blank lines and a fill prefix only as whatever the first lines
+;; happen to share. In code that goes wrong three ways: `gqip' on a
+;; comment block that sits directly above a definition pulls the code up
+;; into the comment ("-- ... foo :: Int foo = 1"); a comment after code
+;; on the same line wraps as prose, so the continuation is bare text the
+;; compiler then reads; and a haddock line ("-- | ...") wraps with no
+;; leader at all, because "-- | " is not itself a comment starter.
+;;
+;; vim's gq ends a paragraph wherever the comment leader changes, or at
+;; a line that is only a leader, and never joins a line that has code
+;; with one that has not. This does the same, with the leader read from
+;; the comment syntax rather than guessed, plus one thing vim does only
+;; under cindent: a comment trailing code wraps under the comment, with
+;; the leader repeated, instead of breaking the code.
+
+(defun noon/fill--line-kind ()
+  "Classify the current line for `noon/fill-lines'.
+`blank' for an empty line or a bare comment leader; (comment . LEADER)
+for a line that is only a comment, LEADER being everything from the
+line start through the comment starter and its padding, or that width
+in spaces for a block comment; (trailing START . BODY) for code
+followed by a comment starting at START whose text begins at BODY; and
+`code' for anything else."
+  (save-excursion
+    (beginning-of-line)
+    (let ((bol (point)))
+      (cond
+       ((looking-at "[ \t]*$") 'blank)
+       ((not comment-start) 'code)
+       (t
+        (let ((start (comment-search-forward (line-end-position) t)))
+          (cond
+           ((not start) 'code)
+           ;; `comment-search-forward' leaves point past the starter and
+           ;; its padding, at the comment's text.
+           ((not (save-excursion (goto-char start)
+                                 (skip-chars-backward " \t")
+                                 (bolp)))
+            (cons 'trailing (cons start (point))))
+           ((looking-at "[ \t]*$") 'blank)
+           (t
+            (let ((leader (buffer-substring-no-properties bol (point))))
+              ;; A line comment repeats its starter on every line; a
+              ;; block comment ({- -}, <!-- -->) continues by indenting
+              ;; to its text.
+              (cons 'comment
+                    (if (and (string-empty-p
+                              (comment-string-strip comment-end t t))
+                             (string-prefix-p
+                              (comment-string-strip comment-start t t)
+                              (comment-string-strip leader t t)))
+                        leader
+                      (make-string (string-width leader) ?\s))))))))))))
+
+(defun noon/fill--paragraph (from to &optional squeeze-after)
+  "Fill FROM..TO as one paragraph under the current `fill-prefix'.
+Leave point at the end. A prefix too wide for `fill-column' leaves the
+text alone, where `fill-region-as-paragraph' would signal an error."
+  (let ((to (copy-marker to)))
+    (unless (and fill-prefix (>= (length fill-prefix) fill-column))
+      (fill-region-as-paragraph from to nil nil squeeze-after))
+    (goto-char to)
+    (set-marker to nil)))
+
+(defun noon/fill-lines (beg end)
+  "Fill the lines from BEG to END, one paragraph per run of like lines.
+Blank lines and bare comment leaders end a paragraph, and so does any
+change of comment leader. A line with code before its comment is a
+paragraph on its own, together with any continuation lines an earlier
+fill left under that comment."
+  (comment-normalize-vars t)
+  (save-excursion
+    (save-restriction
+      (narrow-to-region beg end)
+      (goto-char (point-min))
+      (while (not (eobp))
+        (let ((kind (noon/fill--line-kind))
+              (from (point)))
+          (pcase kind
+            ('blank (forward-line 1))
+            (`(trailing ,start . ,body)
+             (let* ((fill-prefix
+                     (concat (make-string (save-excursion (goto-char start)
+                                                          (current-column))
+                                          ?\s)
+                             (buffer-substring-no-properties start body)))
+                    (continuation (cons 'comment fill-prefix)))
+               (forward-line 1)
+               (while (and (not (eobp))
+                           (equal (noon/fill--line-kind) continuation))
+                 (forward-line 1))
+               (noon/fill--paragraph start (point) start)))
+            (_
+             (forward-line 1)
+             (while (and (not (eobp))
+                         (equal (noon/fill--line-kind) kind))
+               (forward-line 1))
+             (let ((fill-prefix (cdr-safe kind)))
+               (noon/fill--paragraph from (point))))))))))
+
+(with-eval-after-load 'evil
+  (evil-define-operator noon/fill (beg end)
+    "Fill the lines in the region, keeping comment leaders (vim's gw)."
+    :move-point nil
+    :type line
+    (save-excursion (noon/fill-lines beg end)))
+
+  (evil-define-operator noon/fill-and-move (beg end)
+    "Fill the lines in the region, keeping comment leaders, and move to
+the last filled line (vim's gq)."
+    :move-point nil
+    :type line
+    (let ((last (copy-marker (max beg (1- end)))))
+      (noon/fill-lines beg end)
+      (goto-char last)
+      (set-marker last nil)
+      (evil-first-non-blank)))
+
+  (evil-define-key '(normal visual) 'global
+    "gq" #'noon/fill-and-move
+    "gw" #'noon/fill))
+
 ;; -- Keybindings (port of init.vim) ---------------------------------------
 
 ;; xmonad's modMask is mod1 (Alt), which a terminal delivers as Meta, so
@@ -484,6 +609,25 @@ save in:\" prompt -- worth a deliberate keystroke, not a stray one."
     (evil-define-key 'insert 'global
       (kbd "C-n") #'noon/complete-next
       (kbd "C-p") #'noon/complete-previous)))
+
+;; What the menu shows is whatever the buffer's completion backend has,
+;; and outside eglot that was next to nothing. nix-mode and most other
+;; modes leave `completion-at-point-functions' at its global default,
+;; the tags backend, which has no TAGS table to consult and returns nil
+;; -- so C-n in a nix file did nothing at all, silently. And emacs 30
+;; gave text-mode (hence markdown and yaml) an ispell backend that
+;; needs a plain word list hunspell does not ship, so every C-n there
+;; raised "No plain word-list found" instead of completing. vim's own
+;; C-n completes from the words in the buffer, which is what
+;; cape-dabbrev is; it goes on the end of the global list as the
+;; fallback. Mode backends -- HLS through eglot, elisp's symbols -- sit
+;; earlier in the buffer-local list and still win where they answer.
+(setq text-mode-ispell-word-completion nil)
+(use-package cape
+  :init
+  ;; cape's default scans the buffers of the same major mode: vim's
+  ;; `.,w,b' minus the unrelated ones.
+  (add-hook 'completion-at-point-functions #'cape-dabbrev t))
 
 ;; Vim-like cwd for the pickers: server.el binds default-directory to
 ;; the emacsclient's invocation directory, but only while its internal
@@ -808,6 +952,44 @@ nil, and eglot never starts at all. `find-file-hook' runs after both."
                  (executable-find "haskell-language-server")))
     (eglot-ensure)))
 (add-hook 'find-file-hook #'noon/maybe-start-hls)
+
+;; Two things about (re)connecting, both seen on 2026-09-29.
+;;
+;; The warning that flashes past on `eglot-reconnect'. `eglot-shutdown'
+;; asks the server to `shutdown', then notifies `exit' with `{}' for
+;; params. HLS's LSP library wants `exit' with no params at all and
+;; rejects the message ("Cannot parse Void", on its stderr), so it never
+;; exits; jsonrpc gives it 0.3s, warns "Sentinel for EGLOT ... still
+;; hasn't run, deleting it!" and kills it ("Server exited with status
+;; 9"). jsonrpc has a spelling for "no params"; send that for `exit',
+;; and HLS leaves when asked.
+(advice-add 'jsonrpc-notify :filter-args
+            (lambda (args)
+              (if (eq (nth 1 args) :exit)
+                  (list (nth 0 args) :exit :jsonrpc-omit)
+                args))
+            '((name . noon/exit-without-params)))
+
+;; Diagnostics that never show up after a (re)connect. Once the server
+;; has answered `initialize', eglot switches `eglot--managed-mode' back
+;; on in every buffer of the project, which re-enables `flymake-mode' --
+;; and a re-enable only *defers* the first check: to the next command,
+;; and then until the buffer is displayed in the selected frame. Until
+;; that check runs, eglot holds no report function for the buffer, so
+;; whatever HLS publishes for it is parked in `eglot--pushed-diagnostics'
+;; and shown nowhere. The daemon had 13 Haskell buffers in that state,
+;; one with 11 diagnostics parked and none visible; a buffer shown in a
+;; frame other than the one being typed in stays like that until its
+;; window layout changes. So run the check here, as soon as the
+;; connection is up: eglot gets its report function at once, and in
+;; push mode that costs no server request.
+(defun noon/eglot-start-flymake (server)
+  "Start a flymake check in every buffer SERVER manages."
+  (dolist (buf (eglot--managed-buffers server))
+    (with-current-buffer buf
+      (when (bound-and-true-p flymake-mode)
+        (flymake-start)))))
+(add-hook 'eglot-connect-hook #'noon/eglot-start-flymake)
 
 ;; TAB in a Haskell buffer: `indent-for-tab-command' hands the line to
 ;; haskell-indentation, which never inserts anything -- from anywhere on

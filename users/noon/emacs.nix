@@ -38,6 +38,7 @@
       undo-fu-session
       xclip
       # completion ui
+      cape # dabbrev as the completion-at-point fallback (vim's C-n)
       consult
       corfu # in-buffer popup; needs child frames, hence emacs 31
       marginalia

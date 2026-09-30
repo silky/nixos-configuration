@@ -18,6 +18,8 @@ evil-collection are not.
 | Key | Command | Does |
 |---|---|---|
 | `.` | *evil-easymotion* | prefix: follow with a motion (w, e, j, f, ...) to jump to a target |
+| `gq` | `noon/fill-and-move` |  |
+| `gw` | `noon/fill` |  |
 | `SPC` | `noon/save-buffer` | Save the current buffer; in *scratch*, hint at C-x C-s instead. |
 | `r` | `evil-repeat` | Repeat the last editing command with count replaced by COUNT. |
 | `j` | `evil-next-visual-line` | Move the cursor COUNT screen lines down. |
@@ -59,6 +61,8 @@ evil-collection are not.
 | Key | Command | Does |
 |---|---|---|
 | `.` | *evil-easymotion* | prefix: follow with a motion (w, e, j, f, ...) to jump to a target |
+| `gq` | `noon/fill-and-move` |  |
+| `gw` | `noon/fill` |  |
 | `r` | keyboard macro `P` | replays the keys `P` |
 | `,p` | keyboard macro `"+p` | replays the keys `"+p` |
 | `,y` | keyboard macro `"+y` | replays the keys `"+y` |
