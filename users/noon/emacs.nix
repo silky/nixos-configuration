@@ -53,6 +53,7 @@
       diff-hl
       magit
       # languages (agda2-mode deliberately absent: loaded via `agda-mode locate`)
+      # python, html, js/jsx, css, c, c++ and java use the built-in modes.
       dhall-mode
       elm-mode
       go-mode
@@ -61,14 +62,57 @@
       ledger-mode
       markdown-mode
       nix-mode
+      purescript-mode
       shakespeare-mode
+      tuareg # ocaml
+      unison-ts-mode
       yaml-mode
-      # Grammars for the built-in ts modes (see init.el's .tsx entry).
+      # typst-ts-mode 0.12.2 (and upstream HEAD, 2026-10) puts an autoload
+      # cookie on its `define-compilation-mode' form, so the generated
+      # autoloads file calls that macro at package activation -- before
+      # init.el, when compile.el is not loaded. The load aborts there, and
+      # the `typst-ts-mode' autoload and the .typ association, which come
+      # after it in the file, never register: .typ files open in
+      # fundamental-mode. Cut the form (two lines) out of the autoloads
+      # file; the compilation mode still defines itself when
+      # typst-ts-compile loads. elpaBuild installs straight from the
+      # tarball, so this has to be post-install, not a source patch.
+      (typst-ts-mode.overrideAttrs (old: {
+        postInstall = (old.postInstall or "") + ''
+          f=$(echo "$out"/share/emacs/site-lisp/elpa/typst-ts-mode-*/typst-ts-mode-autoloads.el)
+          grep -q '^(define-compilation-mode typst-ts-compilation-mode' "$f"
+          sed -i '/^(define-compilation-mode typst-ts-compilation-mode/,+1d' "$f"
+          ! grep -q 'define-compilation-mode' "$f"
+        '';
+      }))
+      # lean4-mode is on neither MELPA nor nongnu, so it is built from the
+      # upstream repository. It hard-requires lsp-mode, which therefore
+      # sits alongside eglot in the closure; it only loads when a .lean
+      # file is opened, and init.el drops the `lsp' call from
+      # `lean4-mode-hook', so nothing starts a server.
+      (melpaBuild {
+        pname = "lean4-mode";
+        version = "1.1.2-unstable-2026-09-28";
+        src = pkgs.fetchFromGitHub {
+          owner = "leanprover-community";
+          repo = "lean4-mode";
+          rev = "6d4030e494039383664a0c08348a5c137eb4641c";
+          hash = "sha256-FzeGnxjtCpeYbDU3GzadCTnLGtDPoe1q8aTpaZBck7A=";
+        };
+        packageRequires = [ compat dash lsp-mode magit-section ];
+        # :defaults is the elisp and info; `data' holds the abbreviation
+        # table behind the Lean unicode input method.
+        files = ''(:defaults "data")'';
+      })
+      # Grammars for the ts modes: the built-in typescript ones (see
+      # init.el's .tsx entry) plus typst-ts-mode's and unison-ts-mode's.
       # emacs finds these through the wrapper's load-path, so
       # `treesit-extra-load-path' needs nothing.
       (treesit-grammars.with-grammars (g: [
         g.tree-sitter-tsx
         g.tree-sitter-typescript
+        g.tree-sitter-typst
+        g.tree-sitter-unison
       ]))
     ];
   };

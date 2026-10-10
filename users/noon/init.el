@@ -703,7 +703,9 @@ repo-root-relative, so run from the repo root."
 
 ;; The nix-installed modes register their extensions via autoloads
 ;; (haskell, nix, dhall, elm, purescript, go, yaml, ledger, markdown,
-;; shakespeare, just); toml is the built-in conf-toml-mode.
+;; shakespeare, just, tuareg for ocaml, typst, unison, lean4); python,
+;; html, js/jsx, css, c, c++, java and toml are built-in modes that
+;; claim their extensions themselves.
 (add-to-list 'auto-mode-alist
              '("/cabal\\.project\\(\\.local\\)?\\'" . haskell-cabal-mode))
 
@@ -721,6 +723,15 @@ repo-root-relative, so run from the repo root."
 ;; installed alongside emacs, so these modes are always ready.
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
+
+;; lean: lean4-mode's `lean4-mode-hook' defaults to (lsp) -- lsp-mode is
+;; its hard dependency, and that hook would start `lake serve' on every
+;; .lean file (or warn about a missing server). LSP here means eglot, so
+;; drop it; highlighting and the Lean input method (`\alpha' -> α, as
+;; agda-input) stay. lean4-settings is where the defcustom lives, and it
+;; loads before the mode function can run.
+(with-eval-after-load 'lean4-settings
+  (remove-hook 'lean4-mode-hook #'lsp))
 
 ;; haskell: match vim's classification (haskell-vim + noon-light).
 ;; haskell-mode paints every keyword with haskell-keyword-face, so the
