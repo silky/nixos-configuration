@@ -37,6 +37,7 @@ in
       dev = [
         (agda.withPackages (p: with p; [ standard-library cubical ])) # One can dream
         dnsutils
+        bubblewrap # Some programs want it
         gron # Greppable JSON https://github.com/tomnomnom/gron
         duc # disk usage
         ncdu # disk usage

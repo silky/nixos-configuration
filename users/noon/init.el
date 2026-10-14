@@ -569,7 +569,8 @@ save in:\" prompt -- worth a deliberate keystroke, not a stray one."
         corfu-preselect 'prompt)
   :config
   (global-corfu-mode 1)
-  ;; Completion is asked for, never offered. The ask is vim's own C-n/C-p:
+  ;; Completion is asked for, never offered: TAB in a word or C-n/C-p.
+  ;; The latter are vim's own insert-mode completion keys:
   ;; init.vim never ran nvim-cmp (it is commented out in vim.nix), just
   ;; native insert-mode completion on those two keys.
   ;;
@@ -578,9 +579,9 @@ save in:\" prompt -- worth a deliberate keystroke, not a stray one."
   ;; `corfu-map' in `minor-mode-overriding-map-alist', and evil's insert
   ;; state map outranks that, so C-n/C-p would stay on evil's own dabbrev
   ;; completion the whole time. Which is also what vim's C-n does: first
-  ;; press offers, further presses cycle. RET and TAB need no such help --
-  ;; `newline' and `indent-for-tab-command' come from maps that do sit
-  ;; below corfu's, so they turn into insert/complete on their own.
+  ;; press offers, further presses cycle. TAB also dispatches here so
+  ;; it can complete in a word while retaining indentation in whitespace.
+  ;; RET falls through to corfu's own binding.
   ;; `(and corfu-mode completion-in-region-mode)' is corfu's own test for
   ;; "the menu is mine" (see `corfu--eldoc-advice'): the mode alone is on
   ;; in buffers where plain *Completions* is doing the work, and there
@@ -597,18 +598,35 @@ save in:\" prompt -- worth a deliberate keystroke, not a stray one."
     (if (and corfu-mode completion-in-region-mode)
         (corfu-previous)
       (completion-at-point)))
+  (defun noon/indent-or-complete (arg)
+    "Complete within or after a word; otherwise indent as usual.
+With Corfu open, accept the selection or expand the common prefix.
+Otherwise, a prefix argument or active region requests indentation.
+If there are no completions for a word, leave it unchanged."
+    (interactive "P")
+    (cond
+     ((and corfu-mode completion-in-region-mode)
+      (corfu-complete))
+     ((and (not arg) (not (use-region-p)) (not (bolp))
+           (memq (char-syntax (char-before)) '(?w ?_)))
+      (completion-at-point))
+     ((derived-mode-p 'haskell-mode)
+      (noon/haskell-tab))
+     (t (indent-for-tab-command arg))))
   ;; Walking the menu has to be declared as such. `corfu--prepare' runs on
   ;; pre-command-hook and, for any command not matched by this list,
   ;; commits the previewed candidate and quits -- that is what lets you
   ;; type on after selecting one. Corfu's own commands match it by name;
-  ;; these two have to say so, or the third C-n would insert candidate one
+  ;; our wrappers have to say so, or the third C-n would insert candidate one
   ;; and reopen the menu on it instead of moving to candidate two.
-  (dolist (cmd '(noon/complete-next noon/complete-previous))
+  (dolist (cmd '(noon/complete-next noon/complete-previous
+                 noon/indent-or-complete))
     (add-to-list 'corfu-continue-commands cmd))
   (with-eval-after-load 'evil
     (evil-define-key 'insert 'global
       (kbd "C-n") #'noon/complete-next
-      (kbd "C-p") #'noon/complete-previous)))
+      (kbd "C-p") #'noon/complete-previous
+      (kbd "TAB") #'noon/indent-or-complete)))
 
 ;; What the menu shows is whatever the buffer's completion backend has,
 ;; and outside eglot that was next to nothing. nix-mode and most other
@@ -625,9 +643,31 @@ save in:\" prompt -- worth a deliberate keystroke, not a stray one."
 (setq text-mode-ispell-word-completion nil)
 (use-package cape
   :init
+  (defun noon/dabbrev-at-point ()
+    "Complete buffer words, including when point is inside a word."
+    (let* ((capf (cape-dabbrev))
+           (beg (nth 0 capf))
+           (end (nth 1 capf)))
+      (if (= (point) end)
+          capf
+        ;; Cape's dynamic table searches using the whole completion
+        ;; region. Collect candidates using only the prefix at point,
+        ;; but replace the whole word so its suffix is not duplicated.
+        (let* ((prefix-capf (save-restriction
+                              (narrow-to-region (point-min) (point))
+                              (cape-dabbrev)))
+               (candidates (all-completions
+                            (buffer-substring-no-properties beg (point))
+                            (nth 2 prefix-capf))))
+          (append
+           (list beg end
+                 (delete (buffer-substring-no-properties beg end) candidates))
+           ;; This is the last fallback. Let the completion style match
+           ;; around point instead of CAPF's whole-word precheck.
+           (plist-put (copy-sequence (nthcdr 3 capf)) :exclusive t))))))
   ;; cape's default scans the buffers of the same major mode: vim's
   ;; `.,w,b' minus the unrelated ones.
-  (add-hook 'completion-at-point-functions #'cape-dabbrev t))
+  (add-hook 'completion-at-point-functions #'noon/dabbrev-at-point t))
 
 ;; Vim-like cwd for the pickers: server.el binds default-directory to
 ;; the emacsclient's invocation directory, but only while its internal
@@ -1027,7 +1067,7 @@ If re-indenting is a no-op, insert to the next tab stop anyway."
                (= pos (point)))
       (tab-to-tab-stop))))
 (with-eval-after-load 'haskell-mode
-  (evil-define-key 'insert haskell-mode-map (kbd "TAB") #'noon/haskell-tab))
+  (evil-define-key 'insert haskell-mode-map (kbd "TAB") #'noon/indent-or-complete))
 
 ;; -- Format with the project's treefmt, in the background ------------------
 ;;

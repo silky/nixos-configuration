@@ -95,6 +95,7 @@ evil-collection are not.
 | `C-z` | *unbound* | removed, so the key falls through |
 | `C-n` | `noon/complete-next` | Ask for completion, or move to the next candidate (vim's insert C-n). |
 | `C-p` | `noon/complete-previous` | Ask for completion, or move to the previous candidate (vim's C-p). |
+| `TAB` | `noon/indent-or-complete` | Complete within or after a word; otherwise indent as usual. |
 
 ## Global (Emacs state)
 
@@ -156,7 +157,7 @@ evil-collection are not.
 
 | Key | Command | Does |
 |---|---|---|
-| `TAB` | `noon/haskell-tab` | Indent in the leading whitespace, else insert to the next tab stop. |
+| `TAB` | `noon/indent-or-complete` | Complete within or after a word; otherwise indent as usual. |
 
 ## magit-mode-map (normal state)
 

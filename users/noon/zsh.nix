@@ -167,6 +167,7 @@
     # Text-editing
     e = "emacsclient -t";
     v = "emacsclient -t"; # vmacs
+    restart-emacs = "systemctl --user restart emacs.service";
     vim = "nvim";
 
     pclaude = "CLAUDE_CONFIG_DIR=~/.personal-claude claude";
