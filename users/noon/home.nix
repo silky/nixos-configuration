@@ -74,6 +74,28 @@ in
     in
     web ++ dev ++ apps;
 
+  programs.btop = {
+    enable = true;
+    settings = {
+      color_theme = "kanagawa-lotus";
+      theme_background = false;
+      graph_symbol = "block";
+      cpu_single_graph = true;
+      cpu_graph_upper = "total";
+      proc_gradient = false;
+      proc_colors = false;
+      proc_filter_kernel = true;
+      clock_format = "";
+      save_config_on_exit = false;
+      check_temp = false;
+      show_disks = false;
+      show_battery = false;
+    };
+  };
+
+  # Take over btop's previously generated configuration.
+  xdg.configFile."btop/btop.conf".force = true;
+
   programs.chromium = {
     package = pkgs.ungoogled-chromium;
     enable = true;

@@ -131,6 +131,8 @@
     };
 
   shellAliases = {
+    t = "btop";
+
     # Nix
     rr = "direnv reload";
     nu = "nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
