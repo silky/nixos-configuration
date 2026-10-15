@@ -75,6 +75,7 @@
           gh-gfm-preview = inputs.gh-gfm-preview.packages.x86_64-linux.default;
           nix-graph = inputs.nix-graph.packages.x86_64-linux.default;
           ghostty = inputs.ghostty.packages.x86_64-linux.default;
+          btop = self.callPackage ./packages/btop { inherit (super) btop; };
           pulsemixer = super.pulsemixer.overrideAttrs (old: {
             patches = (old.patches or [ ]) ++ [
               ./modules/nixos/pulsemixer-focus-default.patch
@@ -123,6 +124,9 @@
       pkgs = import nixpkgs { system = "x86_64-linux"; inherit overlays; };
     in
     {
+      # Build/run the patched monitor without rebuilding the entire system.
+      packages.x86_64-linux.btop = pkgs.btop;
+
       devShells."x86_64-linux".xmonad =
         let
           ghc = pkgs.haskellPackages.ghcWithPackages (p: with p; [

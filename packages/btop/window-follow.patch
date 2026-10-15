@@ -1,0 +1,519 @@
+diff --git a/src/btop.cpp b/src/btop.cpp
+index c04295c..e858ec7 100644
+--- a/src/btop.cpp
++++ b/src/btop.cpp
+@@ -681,8 +681,8 @@ namespace Runner {
+ 						"{mv4}{hiFg}3 {mainFg}| Show NET box"
+ 						"{mv5}{hiFg}4 {mainFg}| Show PROC box"
+ 						"{mv6}{hiFg}5-0 {mainFg}| Show GPU boxes"
+-						"{mv7}{hiFg}esc {mainFg}| Show menu"
+-						"{mv8}{hiFg}q {mainFg}| Quit",
++						"{mv7}{hiFg}m {mainFg}| Show menu"
++						"{mv8}{hiFg}esc, q {mainFg}| Quit",
+ 						"banner"_a = Draw::banner_gen(y, 0, true),
+ 						"titleFg"_a = Theme::c("title"), "b"_a = Fx::b, "hiFg"_a = Theme::c("hi_fg"), "mainFg"_a = Theme::c("main_fg"),
+ 						"mv1"_a = Mv::to(y+6, x),
+@@ -950,6 +950,9 @@ static auto configure_tty_mode(std::optional<bool> force_tty) {
+ 
+ 	//? Config init
+ 	init_config(cli.low_color, cli.filter);
++	if (cli.follow_pid_file) {
++		Config::set("proc_window_file", *cli.follow_pid_file);
++	}
+ 
+ 	//? Try to find and set a UTF-8 locale
+ 	if (std::setlocale(LC_ALL, "") != nullptr and not std::string_view { std::setlocale(LC_ALL, "") }.contains(";")
+@@ -1148,6 +1151,25 @@ static auto configure_tty_mode(std::optional<bool> force_tty) {
+ 				Global::resized = true;
+ 			}
+ 
++			// Read a tiny atomically replaced file independently of the resource refresh rate.
++			// Freeze targeting while typing a filter or confirming an action in a menu.
++			if (Config::getB("proc_window_follow") and Proc::shown and not Menu::active and not Config::getB("proc_filtering")) {
++				const auto target = WindowFollow::read_target(Config::getS("proc_window_file"));
++				if (target != Config::getS("proc_window_target")) {
++					atomic_wait(Runner::active);
++					Config::unlock();
++					Config::set("proc_window_target", target);
++					Config::set("proc_start", 0);
++					Config::set("proc_selected", 0);
++					Config::set("selected_pid", 0);
++					Config::set("show_detailed", false);
++					Config::set("follow_process", false);
++					Config::set("followed_pid", 0);
++					Config::set("restore_detailed_pid", 0);
++					Runner::run("proc", false, true);
++				}
++			}
++
+ 			//? Make sure terminal size hasn't changed (in case of SIGWINCH not working properly)
+ 			term_resize(Global::resized);
+ 
+@@ -1185,7 +1207,7 @@ static auto configure_tty_mode(std::optional<bool> force_tty) {
+ 					future_time = current_time;
+ 				}
+ 				//? Poll for input and process any input detected
+-				else if (Input::poll(min((uint64_t)1000, future_time - current_time))) {
++				else if (Input::poll(min((uint64_t)(Config::getB("proc_window_follow") ? 100 : 1000), future_time - current_time))) {
+ 					if (not Runner::active) Config::unlock();
+ 
+ 					if (Menu::active) Menu::process(Input::get());
+diff --git a/src/btop_cli.cpp b/src/btop_cli.cpp
+index a5f7f7c..52d15c4 100644
+--- a/src/btop_cli.cpp
++++ b/src/btop_cli.cpp
+@@ -133,6 +133,19 @@ namespace Cli {
+ 				cli.filter = std::make_optional(arg);
+ 				continue;
+ 			}
++			if (arg == "--follow-pid-file") {
++#ifdef __linux__
++				if (++it == args.end() or it->empty()) {
++					error("--follow-pid-file requires a file path");
++					return std::unexpected { 1 };
++				}
++				cli.follow_pid_file = std::string(*it);
++				continue;
++#else
++				error("--follow-pid-file is supported on Linux only");
++				return std::unexpected { 1 };
++#endif
++			}
+ 			if (arg == "-p" || arg == "--preset") {
+ 				// This flag requires an argument.
+ 				if (++it == args.end()) {
+@@ -252,6 +265,7 @@ namespace Cli {
+ 			"  {2}-c, --config{1} <file>     Path to a config file\n"
+ 			"  {2}-d, --debug{1}             Start in debug mode with additional logs and metrics\n"
+ 			"  {2}-f, --filter{1} <filter>   Set an initial process filter\n"
++			"  {2}    --follow-pid-file{1} <file>  Set desktop helper target (Linux; off until w is pressed)\n"
+ 			"  {2}    --force-utf{1}         Override automatic UTF locale detection\n"
+ 			"  {2}-l, --low-color{1}         Disable true color, 256 colors only\n"
+ 			"  {2}-p, --preset{1} <id>       Start with a preset (0-9)\n"
+diff --git a/src/btop_cli.hpp b/src/btop_cli.hpp
+index 69e1f9d..97e7cfa 100644
+--- a/src/btop_cli.hpp
++++ b/src/btop_cli.hpp
+@@ -20,6 +20,8 @@ namespace Cli {
+ 		bool debug {};
+ 		// Set an initial process filter.
+ 		std::optional<std::string> filter;
++		// Linux desktop helper target file (PID and /proc start time).
++		std::optional<std::string> follow_pid_file;
+ 		// Only use ANSI supported graph symbols and colors
+ 		std::optional<bool> force_tty;
+ 		// Use UTF-8 locale even if not detected
+diff --git a/src/btop_config.cpp b/src/btop_config.cpp
+index c921177..81f5d86 100644
+--- a/src/btop_config.cpp
++++ b/src/btop_config.cpp
+@@ -278,6 +278,9 @@ namespace Config {
+ 		{"base_10_bitrate", "Auto"},
+ 		{"log_level", "WARNING"},
+ 		{"proc_filter", ""},
++		// Runtime state: deliberately omitted from the saved config.
++		{"proc_window_file", ""},
++		{"proc_window_target", "waiting"},
+ 		{"proc_command", ""},
+ 		{"selected_name", ""},
+ 	#ifdef GPU_SUPPORT
+@@ -341,6 +344,7 @@ namespace Config {
+ 		{"lowcolor", false},
+ 		{"show_detailed", false},
+ 		{"proc_filtering", false},
++		{"proc_window_follow", false},
+ 		{"proc_aggregate", false},
+ 		{"pause_proc_list", false},
+ 		{"keep_dead_proc_usage", false},
+diff --git a/src/btop_draw.cpp b/src/btop_draw.cpp
+index fbc99c0..c86fee6 100644
+--- a/src/btop_draw.cpp
++++ b/src/btop_draw.cpp
+@@ -1690,7 +1690,8 @@ namespace Proc {
+ 		int followed_pid = Config::getI("followed_pid");
+ 		int followed = Config::getI("proc_followed");
+ 		bool should_selection_return_to_followed = Config::getB("should_selection_return_to_followed");
+-		auto proc_banner_shown = pause_proc_list or follow_process;
++		const bool window_follow = not Config::getS("proc_window_file").empty();
++		auto proc_banner_shown = pause_proc_list or follow_process or window_follow;
+ 		Config::set("proc_banner_shown", proc_banner_shown);
+ 		start = Config::getI("proc_start");
+ 		selected = Config::getI("proc_selected");
+@@ -1733,7 +1734,7 @@ namespace Proc {
+ 			else if (restore_detailed_pid == 0) {
+ 				Config::set("followed_pid", followed_pid = 0);
+ 				Config::set("follow_process", follow_process = false);
+-				Config::set("proc_banner_shown", proc_banner_shown = pause_proc_list);
++				Config::set("proc_banner_shown", proc_banner_shown = pause_proc_list or window_follow);
+ 				Config::set("proc_followed", 0);
+ 				if (not proc_banner_shown) select_max++;
+ 			}
+@@ -2144,15 +2145,18 @@ namespace Proc {
+ 		out += Fx::reset;
+ 		while (lc++ < height - 3) out += Mv::to(y+lc+1, x+1) + string(width - 2, ' ');
+ 		if (proc_banner_shown) {
++			std::string banner = (pause_proc_list and follow_process) ? "Paused list and Following process"
++				: pause_proc_list ? "Process list paused" : follow_process ? "Following process" : "";
++			if (window_follow) banner = window_filter.label() + (banner.empty() ? "" : " | " + banner);
++			banner = uresize(banner, width - 2);
+ 			fmt::format_to(std::back_inserter(out), "{}{}{}{}{:^{}}{}",
+ 				Mv::to(y + height - 2, x + 1),
+-				(pause_proc_list and follow_process) ? Theme::c("proc_banner_bg")
++				window_follow ? Fx::reset_base
++					: (pause_proc_list and follow_process) ? Theme::c("proc_banner_bg")
+ 					: pause_proc_list ? Theme::c("proc_pause_bg")
+ 					: Theme::c("proc_follow_bg"),
+-				Theme::c("proc_banner_fg"), Fx::b,
+-				(pause_proc_list and follow_process) ? "Paused list and Following process"
+-					: pause_proc_list ? "Process list paused"
+-					: "Following process", width - 2,
++				Theme::c(window_follow ? "main_fg" : "proc_banner_fg"), Fx::b,
++				banner, width - 2,
+ 				Fx::reset);
+ 		}
+ 
+diff --git a/src/btop_follow.hpp b/src/btop_follow.hpp
+new file mode 100644
+index 0000000..fa4037f
+--- /dev/null
++++ b/src/btop_follow.hpp
+@@ -0,0 +1,121 @@
++// SPDX-License-Identifier: Apache-2.0
++#pragma once
++
++#include <charconv>
++#include <cstdint>
++#include <fstream>
++#include <limits>
++#include <optional>
++#include <sstream>
++#include <string>
++#include <unordered_map>
++#include <unordered_set>
++#include <vector>
++
++// Desktop helpers publish a process identity, never a command/name expression.
++// All state below is owned by btop's collector/renderer thread.
++namespace WindowFollow {
++
++enum class Kind { waiting, unavailable, process };
++
++struct Target {
++	Kind kind = Kind::unavailable;
++	uint64_t pid = 0, start_time = 0;
++
++	bool operator==(const Target&) const = default;
++};
++
++inline bool number(const std::string& text, uint64_t& value) {
++	const auto [end, error] = std::from_chars(text.data(), text.data() + text.size(), value);
++	return error == std::errc{} and end == text.data() + text.size();
++}
++
++inline Target parse(const std::string& text) {
++	std::istringstream input(text);
++	std::string first, second, extra;
++	input >> first;
++	if (first == "waiting" and not (input >> extra)) return {Kind::waiting};
++	if (first == "unavailable") return {};
++	Target target{Kind::process};
++	if (not (input >> second) or (input >> extra)
++		or not number(first, target.pid) or not number(second, target.start_time)
++		or target.pid == 0 or target.pid > std::numeric_limits<int>::max() or target.start_time == 0) return {};
++	return target;
++}
++
++inline std::string read_target(const std::string& path) {
++	std::ifstream input(path);
++	char line[128]{};
++	if (not input.getline(line, sizeof(line))) return "unavailable";
++	return line;
++}
++
++struct Identity {
++	uint64_t ppid = 0, start_time = 0;
++};
++
++inline std::optional<Identity> read_identity(const std::string& path) {
++	std::ifstream input(path);
++	std::string stat;
++	if (not std::getline(input, stat)) return {};
++	// comm may contain spaces and parentheses; fields start after the last ')'.
++	const auto end = stat.rfind(')');
++	if (end == std::string::npos) return {};
++	std::istringstream fields(stat.substr(end + 1));
++	std::string value;
++	Identity identity;
++	for (int field = 3; field <= 22; ++field) {
++		if (not (fields >> value)) return {};
++		if (field == 4 and not number(value, identity.ppid)) return {};
++		if (field == 22 and not number(value, identity.start_time)) return {};
++	}
++	return identity;
++}
++
++class Filter {
++	std::unordered_set<uint64_t> members;
++
++public:
++	Target target{Kind::waiting};
++	bool enabled = false;
++	bool alive = false;
++
++	bool scoped() const { return enabled and target.kind != Kind::waiting; }
++	bool includes(uint64_t pid) const { return not scoped() or members.contains(pid); }
++
++	template<class Processes>
++	bool refresh(Target next, bool next_enabled, const Processes& processes) {
++		const bool changed = target != next or enabled != next_enabled;
++		target = next;
++		enabled = next_enabled;
++		members.clear();
++		alive = false;
++		if (not scoped() or target.kind != Kind::process) return changed;
++
++		std::unordered_map<uint64_t, std::vector<uint64_t>> children;
++		for (const auto& process : processes) {
++			if (process.state == 'X') continue;
++			children[process.ppid].push_back(process.pid);
++			if (process.pid == target.pid and process.cpu_s == target.start_time) alive = true;
++		}
++		if (not alive) return changed;
++		std::vector<uint64_t> pending{target.pid};
++		while (not pending.empty()) {
++			const auto pid = pending.back();
++			pending.pop_back();
++			if (not members.insert(pid).second) continue;
++			if (auto it = children.find(pid); it != children.end())
++				pending.insert(pending.end(), it->second.begin(), it->second.end());
++		}
++		return changed;
++	}
++
++	std::string label() const {
++		if (not enabled) return "[w] Window: off";
++		std::string text = "[w] Window: follow ";
++		if (target.kind == Kind::waiting) return text + "waiting";
++		if (target.kind == Kind::unavailable) return text + "unavailable";
++		return text + (alive ? "PID " : "exited PID ") + std::to_string(target.pid);
++	}
++};
++}
+diff --git a/src/btop_input.cpp b/src/btop_input.cpp
+index 7383b8b..1f593b3 100644
+--- a/src/btop_input.cpp
++++ b/src/btop_input.cpp
+@@ -221,10 +221,10 @@ namespace Input {
+ 			//? Global input actions
+ 			if (not filtering) {
+ 				bool keep_going = false;
+-				if (key == "q") {
++				if (is_in(key, "escape", "q")) {
+ 					clean_quit(0);
+ 				}
+-				else if (is_in(key, "escape", "m")) {
++				else if (key == "m") {
+ 					Menu::show(Menu::Menus::Main);
+ 					return;
+ 				}
+@@ -343,6 +343,10 @@ namespace Input {
+ 					Proc::filter = Draw::TextEdit{Config::getS("proc_filter")};
+ 					old_filter = Proc::filter.text;
+ 				}
++				else if (key == "w" and not Config::getS("proc_window_file").empty()) {
++					Config::flip("proc_window_follow");
++					no_update = false;
++				}
+ 				else if (key == "e") {
+ 					Config::flip("proc_tree");
+ 					no_update = false;
+diff --git a/src/btop_menu.cpp b/src/btop_menu.cpp
+index d1abcf0..3ceb594 100644
+--- a/src/btop_menu.cpp
++++ b/src/btop_menu.cpp
+@@ -171,7 +171,7 @@ namespace Menu {
+ 	const vector<array<string, 2>> help_text = {
+ 		{"Mouse 1", "Clicks buttons and selects in process list."},
+ 		{"Mouse scroll", "Scrolls any scrollable list/text under cursor."},
+-		{"Esc, m", "Toggles main menu."},
++		{"m", "Toggles main menu."},
+ 		{"p", "Cycle view presets forwards."},
+ 		{"shift + p", "Cycle view presets backwards."},
+ 		{"1", "Toggle CPU box."},
+@@ -184,7 +184,7 @@ namespace Menu {
+ 		{"F1, ?, h", "Shows this window."},
+ 		{"ctrl + z", "Sleep program and put in background."},
+ 		{"ctrl + r", "Reloads config file from disk."},
+-		{"q, ctrl + c", "Quits program."},
++		{"Esc, q, ctrl + c", "Quits program."},
+ 		{"+, -", "Add/Subtract 100ms to/from update timer."},
+ 		{"Up, Down", "Select in process list."},
+ 		{"Enter", "Show detailed information for selected process."},
+@@ -200,6 +200,7 @@ namespace Menu {
+ 		{"y", "Toggle synced scaling mode for network graphs."},
+ 		{"f, /", "To enter a process filter. Start with ! for regex."},
+ 		{"F", "Follow selected process."},
++		{"w", "Toggle window following (with helper)."},
+ 		{"u", "Pause process list."},
+ 		{"delete", "Clear any entered filter."},
+ 		{"c", "Toggle per-core cpu usage of processes."},
+diff --git a/src/btop_shared.cpp b/src/btop_shared.cpp
+index 462cba7..4e41b1e 100644
+--- a/src/btop_shared.cpp
++++ b/src/btop_shared.cpp
+@@ -94,6 +94,7 @@ namespace Gpu {
+ #endif
+ 
+ namespace Proc {
++	WindowFollow::Filter window_filter;
+ bool set_priority(pid_t pid, int priority) {
+   if (setpriority(PRIO_PROCESS, pid, priority) == 0) {
+     return true;
+@@ -195,6 +196,7 @@ bool set_priority(pid_t pid, int priority) {
+ 
+ 	void _tree_gen(proc_info& cur_proc, vector<proc_info>& in_procs, vector<tree_proc>& out_procs,
+ 		int cur_depth, bool collapsed, const string& filter, bool found, bool no_update, bool should_filter) {
++		if (not window_filter.includes(cur_proc.pid)) return;
+ 		bool filtering = false;
+ 
+ 		//? If filtering, include children of matching processes
+@@ -205,6 +207,7 @@ bool set_priority(pid_t pid, int priority) {
+ 				filter_found++;
+ 			}
+ 			else {
++				cur_proc.filtered = false;
+ 				found = true;
+ 				cur_depth = 0;
+ 			}
+@@ -232,6 +235,7 @@ bool set_priority(pid_t pid, int priority) {
+ 
+ 		//? Recursive iteration over all children
+ 		for (auto& p : rng::equal_range(in_procs, cur_proc.pid, rng::less{}, &proc_info::ppid)) {
++			if (not window_filter.includes(p.pid)) continue;
+ 			if (collapsed and not filtering) {
+ 				cur_proc.filtered = true;
+ 			}
+diff --git a/src/btop_shared.hpp b/src/btop_shared.hpp
+index c35a681..b95cc33 100644
+--- a/src/btop_shared.hpp
++++ b/src/btop_shared.hpp
+@@ -32,6 +32,8 @@ tab-size = 4
+ 
+ #include <unistd.h>
+ 
++#include "btop_follow.hpp"
++
+ // From `man 3 getifaddrs`: <net/if.h> must be included before <ifaddrs.h>
+ // clang-format off
+ #include <net/if.h>
+@@ -353,6 +355,7 @@ namespace Net {
+ }
+ 
+ namespace Proc {
++	extern WindowFollow::Filter window_filter;
+ 	extern atomic<int> numpids;
+ 
+ 	extern string box;
+diff --git a/src/linux/btop_collect.cpp b/src/linux/btop_collect.cpp
+index 64eaffe..2911544 100644
+--- a/src/linux/btop_collect.cpp
++++ b/src/linux/btop_collect.cpp
+@@ -3091,11 +3091,26 @@ namespace Proc {
+ 					continue;
+ 				}
+ 
++				std::optional<WindowFollow::Identity> identity;
++				if (not Config::getS("proc_window_file").empty()) {
++					identity = WindowFollow::read_identity((d.path() / "stat").string());
++					if (not identity) continue;
++				}
+ 				found.push_back(pid);
+ 
+ 				//? Check if pid already exists in current_procs
+ 				auto find_old = rng::find(current_procs, pid, &proc_info::pid);
+ 				bool no_cache{};
++				if (identity and find_old != current_procs.end() and find_old->cpu_s != 0
++					and find_old->cpu_s != identity->start_time) {
++					// A paused row represents the old identity; never silently replace it.
++					if (pause_proc_list) {
++						found.pop_back();
++						continue;
++					}
++					*find_old = proc_info{pid};
++					no_cache = true;
++				}
+ 				//? Only add new processes if not paused
+ 				if (find_old == current_procs.end()) {
+ 					if (not pause_proc_list) {
+@@ -3108,6 +3123,7 @@ namespace Proc {
+ 				else if (dead_procs.contains(pid)) continue;
+ 
+ 				auto& new_proc = *find_old;
++				if (identity) new_proc.ppid = identity->ppid;
+ 
+ 				//? Get program name, command and username
+ 				if (no_cache) {
+@@ -3296,20 +3312,18 @@ namespace Proc {
+ 		}
+ 		//* ---------------------------------------------Collection done-----------------------------------------------
+ 
++		const bool window_changed = window_filter.refresh(
++			WindowFollow::parse(Config::getS("proc_window_target")), Config::getB("proc_window_follow"), current_procs);
++		should_filter = should_filter or window_changed;
++		sorted_change = sorted_change or window_changed;
++
+ 		//* Match filter if defined
+ 		if (should_filter) {
+ 			filter_found = 0;
+ 			for (auto& p : current_procs) {
+-				if (not tree and not filter.empty()) {
+-					if (!matches_filter(p, filter)) {
+-						p.filtered = true;
+-						filter_found++;
+-					} else {
+-						p.filtered = false;
+-					}
+-				} else {
+-					p.filtered = false;
+-				}
++				p.filtered = not window_filter.includes(p.pid)
++					or (not tree and not filter.empty() and not matches_filter(p, filter));
++				if (p.filtered) filter_found++;
+ 			}
+ 		}
+ 
+@@ -3375,9 +3389,19 @@ namespace Proc {
+ 			//? Stable sort to retain selected sorting among processes with the same parent
+ 			rng::stable_sort(current_procs, rng::less{}, & proc_info::ppid);
+ 
+-			//? Start recursive iteration over processes with the lowest shared parent pids
+-			for (auto& p : rng::equal_range(current_procs, current_procs.at(0).ppid, rng::less{}, &proc_info::ppid)) {
+-				_tree_gen(p, current_procs, tree_procs, 0, false, filter, false, no_update, should_filter);
++			if (window_filter.scoped()) {
++				// Render the selected application as the root, independent of collapsed ancestors.
++				for (auto& p : current_procs) p.tree_index = current_procs.size();
++				if (auto root = rng::find(current_procs, window_filter.target.pid, &proc_info::pid);
++					root != current_procs.end() and window_filter.includes(root->pid)) {
++					if (window_changed) root->collapsed = false;
++					_tree_gen(*root, current_procs, tree_procs, 0, false, filter, false, no_update, should_filter);
++				}
++			}
++			else if (not current_procs.empty()) {
++				// Start recursive iteration over processes with the lowest shared parent pids.
++				for (auto& p : rng::equal_range(current_procs, current_procs.front().ppid, rng::less{}, &proc_info::ppid))
++					_tree_gen(p, current_procs, tree_procs, 0, false, filter, false, no_update, should_filter);
+ 			}
+ 
+ 			//? Recursive sort over tree structure to account for collapsed processes in the tree
+@@ -3401,6 +3425,11 @@ namespace Proc {
+ 			}
+ 		}
+ 
++		// Count the final visibility once, including entries outside the selected tree.
++		if (not Config::getS("proc_window_file").empty())
++			filter_found = rng::count_if(current_procs, [&](const auto& p) {
++				return p.filtered or (tree and p.tree_index == current_procs.size());
++			});
+ 		numpids = (int)current_procs.size() - filter_found;
+ 
+ 		return current_procs;
