@@ -14,6 +14,14 @@
   boot.kernelPackages = pkgs.linuxPackages_latest;
   services.logind.settings.Login.HandleLidSwitch = "suspend";
 
+  # Keep XMonad's borderless Full layout composited for smooth video and scrolling.
+  services.picom = {
+    enable = true;
+    backend = "glx";
+    vSync = true;
+    settings.unredir-if-possible = false;
+  };
+
   # ---------------------------------------------------------------------------
   #
   # ~ Additional Hardware
