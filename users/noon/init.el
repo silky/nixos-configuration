@@ -744,7 +744,7 @@ repo-root-relative, so run from the repo root."
 ;; The nix-installed modes register their extensions via autoloads
 ;; (haskell, nix, dhall, elm, purescript, go, yaml, ledger, markdown,
 ;; shakespeare, just, tuareg for ocaml, typst, unison, lean4); python,
-;; html, js/jsx, css, c, c++, java and toml are built-in modes that
+;; html, js/jsx, css, c, c++, java, rust and toml are built-in modes that
 ;; claim their extensions themselves.
 (add-to-list 'auto-mode-alist
              '("/cabal\\.project\\(\\.local\\)?\\'" . haskell-cabal-mode))

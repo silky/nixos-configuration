@@ -104,11 +104,12 @@
         # table behind the Lean unicode input method.
         files = ''(:defaults "data")'';
       })
-      # Grammars for the ts modes: the built-in typescript ones (see
+      # Grammars for the ts modes: built-in Rust and TypeScript (see
       # init.el's .tsx entry) plus typst-ts-mode's and unison-ts-mode's.
       # emacs finds these through the wrapper's load-path, so
       # `treesit-extra-load-path' needs nothing.
       (treesit-grammars.with-grammars (g: [
+        g.tree-sitter-rust
         g.tree-sitter-tsx
         g.tree-sitter-typescript
         g.tree-sitter-typst
